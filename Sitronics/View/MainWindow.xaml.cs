@@ -25,7 +25,7 @@ namespace Sitronics.View
         public MainWindow()
         {
             InitializeComponent();
-            if(Connection.CurrentUser.Admin.Role == "Руководитель")
+            if(Connection.CurrentUser?.Admin?.Role == "Руководитель")
                 ChatRadioButton.Visibility = Visibility.Collapsed;
         }
 

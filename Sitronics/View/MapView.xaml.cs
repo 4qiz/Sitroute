@@ -35,6 +35,7 @@ namespace Sitronics.View
 
         private void MapView_Loaded(object sender, RoutedEventArgs e)
         {
+
             List<PointLatLng> points = new List<PointLatLng>();
             Random random = new();
 
@@ -58,7 +59,7 @@ namespace Sitronics.View
             using (var context = new SitrouteDataContext())
             {
                 var busStations = context.BusStations.ToList();
-                var buses = context.Buses.Where(b=>b.Location!=null).ToList();
+                var buses = context.Buses.Where(b => b.Location != null).ToList();
                 var routes = context.Routes.Include(r => r.RouteByBusStations).ThenInclude(rp => rp.IdBusStationNavigation);
                 foreach (var dbroute in routes)
                 {
