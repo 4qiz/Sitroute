@@ -1,23 +1,5 @@
-﻿using GMap.NET.MapProviders;
-using GMap.NET.WindowsPresentation;
-using GMap.NET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Sitronics.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 
 namespace Sitronics.View
 {
@@ -38,7 +20,8 @@ namespace Sitronics.View
 
         private void AddStopButton_Click(object sender, RoutedEventArgs e)
         {
-            new AddStopWindow().ShowDialog();
+            var fm = new AddStopWindow();
+            fm.Show();
         }
 
         //private void MapView_Loaded(object sender, RoutedEventArgs e)
