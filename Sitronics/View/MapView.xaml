@@ -15,7 +15,7 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
             <Button Content="Добавить Остановку" Click="AddStopButton_Click"/>
-            <Button Content="Добавить Маршрут"/>
+            <Button Content="Добавить Маршрут" Click="AddRouteButton_Click"/>
             <Button Content="Добавить Автобус"
                     Click="Button_Click"/>
         </StackPanel>

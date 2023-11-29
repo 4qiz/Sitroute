@@ -1,6 +1,7 @@
 ﻿using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
+using Sitronics.Data;
 using Sitronics.Models;
 using System;
 using System.Collections.Generic;
@@ -35,78 +36,78 @@ namespace Sitronics.View
 
         private void CreateNewBusStopComboBox()
         {
-        //    using (var context = new SitrouteContext())
-        //    {
-        //        var busStations = context.BusStations.ToList();
-        //        ComboBox comboBox = new ComboBox();
-        //        comboBox.ItemsSource = busStations;
-        //        comboBox.SelectedIndex = 0;
-        //        comboBox.DisplayMemberPath = "Name";
-        //        comboBox.Margin = new Thickness(0, 5, 0, 0);
-        //        comboBoxesStackPanel.Children.Add(comboBox);
-        //    }
+            using (var context = new SitrouteDataContext())
+            {
+                var busStations = context.BusStations.ToList();
+                ComboBox comboBox = new ComboBox();
+                comboBox.ItemsSource = busStations;
+                comboBox.SelectedIndex = 0;
+                comboBox.DisplayMemberPath = "Name";
+                comboBox.Margin = new Thickness(0, 5, 0, 0);
+                comboBoxesStackPanel.Children.Add(comboBox);
+            }
         }
 
         private void MapView_Loaded(object sender, RoutedEventArgs e)
         {
-        //    GMaps.Instance.Mode = AccessMode.ServerAndCache;
-        //    // choose your provider here
-        //    mapView.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
-        //    mapView.MinZoom = 10;
-        //    mapView.MaxZoom = 17;
-        //    // whole world zoom
-        //    mapView.Zoom = 14;
-        //    mapView.ShowCenter = false;
-        //    // lets the map use the mousewheel to zoom
-        //    mapView.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
-        //    // lets the user drag the map
-        //    mapView.CanDragMap = true;
-        //    // lets the user drag the map with the left mouse button
-        //    mapView.DragButton = MouseButton.Left;
-        //    routingProvider =
-        //        mapView.MapProvider as RoutingProvider ?? GMapProviders.OpenStreetMap;
-        //    mapView.SetPositionByKeywords("Архангельский Колледж Телекоммуникаций");
+            GMaps.Instance.Mode = AccessMode.ServerAndCache;
+            // choose your provider here
+            mapView.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
+            mapView.MinZoom = 10;
+            mapView.MaxZoom = 17;
+            // whole world zoom
+            mapView.Zoom = 14;
+            mapView.ShowCenter = false;
+            // lets the map use the mousewheel to zoom
+            mapView.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
+            // lets the user drag the map
+            mapView.CanDragMap = true;
+            // lets the user drag the map with the left mouse button
+            mapView.DragButton = MouseButton.Left;
+            routingProvider =
+                mapView.MapProvider as RoutingProvider ?? GMapProviders.OpenStreetMap;
+            mapView.SetPositionByKeywords("Архангельский Колледж Телекоммуникаций");
         }
 
         private void AddBusStopButton_Click(object sender, RoutedEventArgs e)
         {
-        //    CreateNewBusStopComboBox();
+            CreateNewBusStopComboBox();
         }
 
         private void SaveRouteButton_Click(object sender, RoutedEventArgs e)
         {
-        //    MapRoute route;
-        //    GMapRoute mapRoute;
-        //    RouteByBusStation rbp;
-        //    Models.Route dbroute = new();
-        //    BusStation busStation;
-        //    List<PointLatLng> points = new List<PointLatLng>();
+            MapRoute route;
+            GMapRoute mapRoute;
+            RouteByBusStation rbp;
+            Models.Route dbroute = new();
+            BusStation busStation;
+            List<PointLatLng> points = new List<PointLatLng>();
 
-        //    dbroute.Name = routeNameTextBox.Text;
-        //    var comboBoxes = comboBoxesStackPanel.Children;
-        //    foreach (ComboBox comboBox in comboBoxes)
-        //    {
-        //        busStation = (BusStation)comboBox.SelectedItem;
-        //        rbp = new() { IdBusStation = busStation.IdBusStation };
-        //        dbroute.RouteByBusStations.Add(rbp);
-        //        //points.Add(new PointLatLng(busStation.IdPointRouteNavigation.Location.Coordinate.Y, busStation.IdPointRouteNavigation.Location.Coordinate.X));
-        //    }
-        //    for (int i = 0; i < points.Count - 1; i++)
-        //    {
-        //        route = routingProvider.GetRoute(
-        //        points[i], //start
-        //        points[i + 1], //end
-        //        false, //avoid highways 
-        //        false, //walking mode\
-        //        (int)mapView.Zoom);
-        //        mapRoute = new GMapRoute(route.Points);
-        //        mapView.Markers.Add(mapRoute);
-        //    }
-        //    using (var context = new SitrouteContext())
-        //    {
-        //        context.Routes.Add(dbroute);
-        //        context.SaveChanges();
-        //    }
+            dbroute.Name = routeNameTextBox.Text;
+            var comboBoxes = comboBoxesStackPanel.Children;
+            foreach (ComboBox comboBox in comboBoxes)
+            {
+                busStation = (BusStation)comboBox.SelectedItem;
+                rbp = new() { IdBusStation = busStation.IdBusStation };
+                dbroute.RouteByBusStations.Add(rbp);
+                points.Add(new PointLatLng(busStation.Location.Coordinate.Y, busStation.Location.Coordinate.X));
+            }
+            for (int i = 0; i < points.Count - 1; i++)
+            {
+                route = routingProvider.GetRoute(
+                points[i], //start
+                points[i + 1], //end
+                false, //avoid highways 
+                false, //walking mode\
+                (int)mapView.Zoom);
+                mapRoute = new GMapRoute(route.Points);
+                mapView.Markers.Add(mapRoute);
+            }
+            using (var context = new SitrouteDataContext())
+            {
+                context.Routes.Add(dbroute);
+                context.SaveChanges();
+            }
         }
 
 

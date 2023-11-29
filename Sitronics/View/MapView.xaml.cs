@@ -94,5 +94,11 @@ namespace Sitronics.View
                 mapView.Markers.Add(mapRoute);
             }
         }
+
+        private void AddRouteButton_Click(object sender, RoutedEventArgs e)
+        {
+            var fm = new AddRouteWindow();
+            fm.Show();
+        }
     }
 }

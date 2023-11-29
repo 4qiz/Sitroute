@@ -18,6 +18,7 @@ using Sitronics.Models;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using Sitronics.Data;
 
 namespace Sitronics.View
 {
@@ -36,48 +37,48 @@ namespace Sitronics.View
 
         private void MapView_Loaded(object sender, RoutedEventArgs e)
         {
-        //    GMaps.Instance.Mode = AccessMode.ServerAndCache;
-        //    // choose your provider here
-        //    mapView.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
-        //    mapView.MinZoom = 10;
-        //    mapView.MaxZoom = 17;
-        //    // whole world zoom
-        //    mapView.Zoom = 14;
-        //    mapView.ShowCenter = false;
-        //    // lets the map use the mousewheel to zoom
-        //    mapView.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
-        //    // lets the user drag the map
-        //    mapView.CanDragMap = true;
-        //    // lets the user drag the map with the left mouse button
-        //    mapView.DragButton = MouseButton.Left;
-        //    RoutingProvider routingProvider =
-        //    mapView.MapProvider as RoutingProvider ?? GMapProviders.OpenStreetMap;
-        //    mapView.SetPositionByKeywords("Архангельский Колледж Телекоммуникаций");
+            GMaps.Instance.Mode = AccessMode.ServerAndCache;
+            // choose your provider here
+            mapView.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
+            mapView.MinZoom = 10;
+            mapView.MaxZoom = 17;
+            // whole world zoom
+            mapView.Zoom = 14;
+            mapView.ShowCenter = false;
+            // lets the map use the mousewheel to zoom
+            mapView.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
+            // lets the user drag the map
+            mapView.CanDragMap = true;
+            // lets the user drag the map with the left mouse button
+            mapView.DragButton = MouseButton.Left;
+            RoutingProvider routingProvider =
+            mapView.MapProvider as RoutingProvider ?? GMapProviders.OpenStreetMap;
+            mapView.SetPositionByKeywords("Архангельский Колледж Телекоммуникаций");
         }
 
         private void SaveBusStopButton_Click(object sender, RoutedEventArgs e)
         {
-        //    using (var context = new SitrouteContext())
-        //    {
-        //        var busStations = context.BusStations;
-        //        var busStation = new BusStation
-        //        {
-        //            Location = new NetTopologySuite.Geometries.Point(point.Lng, point.Lat) { SRID = 4326 },
-        //            Name = busStopNameTextBox.Text,
-        //        };
-        //        busStations.Add(busStation);
-        //        context.SaveChanges();
-        //    }
-        //    System.Windows.MessageBox.Show("Автобусная остановка успешно добавлена");
+            using (var context = new SitrouteDataContext())
+            {
+                var busStations = context.BusStations;
+                var busStation = new BusStation
+                {
+                    Location = new NetTopologySuite.Geometries.Point(point.Lng, point.Lat) { SRID = 4326 },
+                    Name = busStopNameTextBox.Text,
+                };
+                busStations.Add(busStation);
+                context.SaveChanges();
+            }
+            System.Windows.MessageBox.Show("Автобусная остановка успешно добавлена");
         }
 
         private void MapView_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-        //    int x = Convert.ToInt32(e.GetPosition(mapView).X);
-        //    int y = Convert.ToInt32(e.GetPosition(mapView).Y);
-        //    point = mapView.FromLocalToLatLng(x, y);
-        //    Debug.WriteLine(point.Lat + " " + point.Lng);
-        //    lastMarker = MapManager.CreateMarker(point, ref mapView, lastMarker);
+            int x = Convert.ToInt32(e.GetPosition(mapView).X);
+            int y = Convert.ToInt32(e.GetPosition(mapView).Y);
+            point = mapView.FromLocalToLatLng(x, y);
+            Debug.WriteLine(point.Lat + " " + point.Lng);
+            lastMarker = MapManager.MapManager.CreateMarker(point, ref mapView, lastMarker);
         }
 
         private void SearchPlaceButton_Click(object sender, RoutedEventArgs e)
