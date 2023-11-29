@@ -67,9 +67,9 @@
                         <ColumnDefinition Width="5"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="LOG IN"
+                    <TextBlock Text="Авторизация"
                                Foreground="DarkGray"
-                               FontSize="10"
+                               FontSize="12"
                                FontFamily="Montserrat"
                                Grid.Column="0"
                                VerticalAlignment="Center"
@@ -155,20 +155,20 @@
                                Foreground="White"
                                FontSize="25"
                                FontWeight="Medium"
-                               FontFamily="Montserrat"
+                               FontFamily="pack://application:,,,/Fonts/#Orbitron Medium"
                                HorizontalAlignment="Center"/>
 
-                    <TextBlock Text="Learning to code is useful no matter what your career ambitions are."
+                    <TextBlock Text="Научиться программировать полезно независимо от ваших карьерных амбиций."
                                Foreground="LightGray"
-                               FontSize="12"
+                               FontSize="16"
                                FontWeight="Medium"
-                               FontFamily="Montserrat"
+                               FontFamily="pack://application:,,,/Fonts/#Cruinn"
                                TextWrapping="Wrap"
                                TextAlignment="Center"
                                Margin="0,5,0,0"/>
 
 
-                    <TextBlock Text="Username"
+                    <TextBlock Text="Логин"
                                Foreground="DarkGray"
                                FontSize="12"
                                FontWeight="Medium"
@@ -196,7 +196,7 @@
                         </TextBox.Background>
                     </TextBox>
 
-                    <TextBlock Text="Password"
+                    <TextBlock Text="Пароль"
                                Foreground="DarkGray"
                                FontSize="12"
                                FontWeight="Medium"
@@ -219,12 +219,12 @@
                     <Button x:Name="btnLogin" 
                             Command="{Binding LoginCommand}"
                             BorderThickness="0"
-                            Content="LOG IN"
+                            Content="Войти"
                             Foreground="White"
-                            FontSize="12"
-                            FontFamily="Montserrat"
+                            FontSize="18"
+                            FontFamily="pack://application:,,,/Fonts/#Cruinn"
                             Cursor="Hand"                           
-                            Margin="0,30,0,0">
+                            Margin="0,25,0,0">
 
                         <Button.Style>
                             <Style TargetType="Button">
@@ -239,8 +239,8 @@
 
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
-                                <Border Width="150" Height="40"
-                                        CornerRadius="20"
+                                <Border Width="120" Height="32"
+                                        CornerRadius="15"
                                         Background="{TemplateBinding Background}">
                                     <ContentPresenter VerticalAlignment="Center"
                                                       HorizontalAlignment="Center"/>

@@ -40,6 +40,10 @@
             <local:StopInfoView/>
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
+            <local:SettingsView/>
+        </DataTemplate>
+
     </Window.Resources>
 
     <Border CornerRadius="10"                    
@@ -155,7 +159,7 @@
                         VerticalAlignment="Bottom">
                         <RadioButton Style="{StaticResource menuButton}"
                                  Tag="{StaticResource color3}"
-                                 Command="{Binding ShowCustomerViewCommand}">
+                                 Command="{Binding ShowSettingsViewCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <fa:IconImage Icon="Tools" Style="{StaticResource menuButtonIcon}"/>
                                 <TextBlock Text="Настройки" Style="{StaticResource menuButtonText}"/>
