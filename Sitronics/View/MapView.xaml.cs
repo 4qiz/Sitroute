@@ -58,7 +58,7 @@ namespace Sitronics.View
             using (var context = new SitrouteDataContext())
             {
                 var busStations = context.BusStations.ToList();
-                var buses = context.Buses.ToList();
+                var buses = context.Buses.Where(b=>b.Location!=null).ToList();
                 var routes = context.Routes.Include(r => r.RouteByBusStations).ThenInclude(rp => rp.IdBusStationNavigation);
                 foreach (var dbroute in routes)
                 {
