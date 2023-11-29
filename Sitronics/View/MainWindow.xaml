@@ -23,8 +23,13 @@
         <DataTemplate DataType="{x:Type viewModel:MapViewModel}">
             <local:MapView/>
         </DataTemplate>
+        
         <DataTemplate DataType="{x:Type viewModel:ChatViewModel}">
             <local:ChatView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:BusInfoViewModel}">
+            <local:BusInfoView/>
         </DataTemplate>
 
     </Window.Resources>
@@ -111,7 +116,7 @@
 
                         <RadioButton Style="{StaticResource menuButton}"
                             Tag="{StaticResource color3}"
-                            Command="{Binding ShowChatViewCommand}">
+                            Command="{Binding ShowBusInfoViewCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <fa:IconImage Icon="Bus" Style="{StaticResource menuButtonIcon}"/>
                                 <TextBlock Text="Автобусы" Style="{StaticResource menuButtonText}"/>

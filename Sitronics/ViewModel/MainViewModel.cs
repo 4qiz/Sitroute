@@ -82,17 +82,16 @@ namespace Sitronics.ViewModel
         }
 
         //--> Commands
-        public ICommand ShowHomeViewCommand { get; }
         public ICommand ShowMapViewCommand { get; }
+        public ICommand ShowBusInfoViewCommand { get; }
         public ICommand ShowChatViewCommand { get; }
 
         public MainViewModel()
         {
-            //userRepository = new UserRepository();
-            //CurrentUserAccount = new UserAccountModel();
 
             // Initialize commands
             ShowMapViewCommand = new ViewModelCommand(ExecuteShowMapViewCommand);
+            ShowBusInfoViewCommand = new ViewModelCommand(ExecuteShowBusInfoViewCommand);
             ShowChatViewCommand = new ViewModelCommand(ExecuteShowChatViewCommand);
 
             //Default view
@@ -107,7 +106,14 @@ namespace Sitronics.ViewModel
             Caption = "Карта";
             Icon = IconChar.Map;
         }
-        
+
+        private void ExecuteShowBusInfoViewCommand(object obj)
+        {
+            CurrentChildView = new BusInfoViewModel();
+            Caption = "Автобусы";
+            Icon = IconChar.Bus;
+        }
+
         private void ExecuteShowChatViewCommand(object obj)
         {
             CurrentChildView = new ChatViewModel();
