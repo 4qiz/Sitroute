@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Sitronics.Data;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Sitronics.View
 {
@@ -24,6 +16,11 @@ namespace Sitronics.View
         public AddBusWindow()
         {
             InitializeComponent();
+
+            using (var context = new SitrouteDataContext())
+            {
+                routeComboBox.ItemsSource = context.Routes.ToList();
+            }
         }
 
         [DllImport("user32.dll")]
@@ -53,6 +50,21 @@ namespace Sitronics.View
         {
             if (WindowState == WindowState.Normal) WindowState = WindowState.Maximized;
             else WindowState = WindowState.Normal;
+        }
+
+        private void AddBusButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void NumberBusTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var regex = new Regex(@"[а-я]\d{3}[а-я]{2}", RegexOptions.IgnoreCase);
+            MatchCollection matches = regex.Matches(numberBusTextBox.Text);
+            if (matches.Count > 0)
+                addBusButton.IsEnabled = true;
+            else
+                addBusButton.IsEnabled = false;
         }
     }
 }

@@ -85,7 +85,13 @@
                         </Button>
                     </StackPanel>
 
-
+                    <StackPanel Grid.Row="2">
+                        <TextBlock Text="Номер автобуса" Foreground="White"/>
+                        <TextBox x:Name="numberBusTextBox" MaxLength="6" TextChanged="NumberBusTextBox_TextChanged"/>
+                        <TextBlock Text="Маршрут" Foreground="White"/>
+                        <ComboBox x:Name="routeComboBox" DisplayMemberPath="Name" SelectedIndex="0"/>
+                        <Button x:Name="addBusButton" Content="Добавить маршрут" IsEnabled="False" Click="AddBusButton_Click"/>
+                    </StackPanel>
                 </Grid>
             </Border>
         </Grid>

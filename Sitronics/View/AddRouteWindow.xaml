@@ -122,8 +122,10 @@
                                            Foreground="White"
                        />
                                 <TextBox x:Name="routeNameTextBox" 
-                 Margin="0,10,0,0"
-                 Width="250"
+                                 MaxLength="10"
+                                 Margin="0,10,0,0"
+                                 Width="250"
+                                 TextChanged="RouteNameTextBox_TextChanged"       
                  />
                                 <Button 
             Content="Добавить остановку" 
@@ -132,11 +134,13 @@
             Margin="0,10,0,0"
             />
                                 <Button 
+                x:Name="saveRouteButton"
                 Content="Сохранить" 
                 Click="SaveRouteButton_Click"
                 Width="250"
                 Margin="0,10,0,10"
                 HorizontalAlignment="Left"
+                IsEnabled="False"
                 />
                             </StackPanel>
 
