@@ -87,6 +87,7 @@ namespace Sitronics.ViewModel
         public ICommand ShowRouteInfoViewCommand { get; }
         public ICommand ShowStopInfoViewCommand { get; }
         public ICommand ShowChatViewCommand { get; }
+        public ICommand ShowSettingsViewCommand { get; }
 
         public MainViewModel()
         {
@@ -96,6 +97,7 @@ namespace Sitronics.ViewModel
             ShowRouteInfoViewCommand = new ViewModelCommand(ExecuteShowRouteInfoViewCommand);
             ShowStopInfoViewCommand = new ViewModelCommand(ExecuteShowStopInfoViewCommand);
             ShowChatViewCommand = new ViewModelCommand(ExecuteShowChatViewCommand);
+            ShowSettingsViewCommand = new ViewModelCommand(ExecuteShowSettingsViewCommand);
 
             //Default view
             ExecuteShowMapViewCommand(null);
@@ -136,6 +138,13 @@ namespace Sitronics.ViewModel
             CurrentChildView = new ChatViewModel();
             Caption = "Чат";
             Icon = IconChar.Message;
+        }
+
+        private void ExecuteShowSettingsViewCommand(object obj)
+        {
+            CurrentChildView = new SettingsViewModel();
+            Caption = "Настройки";
+            Icon = IconChar.Tools;
         }
 
         private void LoadCurrentUserData()

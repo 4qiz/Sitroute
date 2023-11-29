@@ -36,7 +36,7 @@ namespace Sitronics.View
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            Close();
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e) { }
