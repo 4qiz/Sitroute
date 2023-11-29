@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NetTopologySuite.Geometries;
 
 namespace Sitronics.Models;
 
@@ -10,6 +11,8 @@ public partial class Factor
     public decimal SpeedСoefficient { get; set; }
 
     public decimal? Length { get; set; }
+
+    public Geometry? Location { get; set; }
 
     public int IdType { get; set; }
 

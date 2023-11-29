@@ -24,9 +24,7 @@
             BorderThickness="6"
             BorderBrush="#eaeaea"
                 Grid.Row="1">
-            <gmaps:GMapControl x:Name="mapView" 
-                               />
-                               <!--Loaded="MapView_Loaded"--> 
+            <gmaps:GMapControl x:Name="mapView" Loaded="MapView_Loaded"/>
         </Border>
     </Grid>
 </UserControl>

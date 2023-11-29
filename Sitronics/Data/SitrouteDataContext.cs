@@ -34,13 +34,15 @@ public partial class SitrouteDataContext : DbContext
 
     public virtual DbSet<Schedule> Schedules { get; set; }
 
+    public virtual DbSet<Time> Times { get; set; }
+
     public virtual DbSet<TypeFactor> TypeFactors { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;Initial Catalog=Sitronics;Integrated Security=True;User ID=DESKTOP-RKMQ39T\\vanya;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;Initial Catalog=Sitronics;Integrated Security=True;User ID=DESKTOP-RKMQ39T\\vanya;Trust Server Certificate=True", x => x.UseNetTopologySuite());
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -150,6 +152,7 @@ public partial class SitrouteDataContext : DbContext
 
             entity.HasOne(d => d.IdSenderNavigation).WithMany(p => p.MessageIdSenderNavigations)
                 .HasForeignKey(d => d.IdSender)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserInChat_User");
         });
 
@@ -179,11 +182,9 @@ public partial class SitrouteDataContext : DbContext
 
         modelBuilder.Entity<Schedule>(entity =>
         {
-            entity.HasKey(e => new { e.IdBus, e.IdBusStation });
+            entity.HasKey(e => new { e.IdBus, e.IdBusStation, e.IdTime });
 
             entity.ToTable("Schedule");
-
-            entity.Property(e => e.Time).HasColumnType("datetime");
 
             entity.HasOne(d => d.IdBusNavigation).WithMany(p => p.Schedules)
                 .HasForeignKey(d => d.IdBus)
@@ -194,6 +195,22 @@ public partial class SitrouteDataContext : DbContext
                 .HasForeignKey(d => d.IdBusStation)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Schedule_BusStation1");
+
+            entity.HasOne(d => d.IdTimeNavigation).WithMany(p => p.Schedules)
+                .HasForeignKey(d => d.IdTime)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Schedule_Time");
+        });
+
+        modelBuilder.Entity<Time>(entity =>
+        {
+            entity.HasKey(e => e.IdTime);
+
+            entity.ToTable("Time");
+
+            entity.Property(e => e.Time1)
+                .HasColumnType("datetime")
+                .HasColumnName("Time");
         });
 
         modelBuilder.Entity<TypeFactor>(entity =>
