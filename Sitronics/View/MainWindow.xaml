@@ -88,13 +88,19 @@
                                 Margin="15,25,0,40">
 
                         <!--<Image Source="/Images/Logo.png" Height="30"/>-->
-                        <TextBlock Text="Sitroute"
-                                   Foreground="{StaticResource titleColor2}"
-                                   FontSize="20"
-                                   FontFamily="Montserrat"
+                            <TextBlock Text="S i t r o u t e"
+                                   FontSize="25"
+                                   FontFamily="pack://application:,,,/Fonts/#Orbitron Medium"
                                    FontWeight="Medium"
                                    VerticalAlignment="Center"
-                                   Margin="10,0,0,0"/>
+                                   Margin="30,0,0,0">
+                                <TextBlock.Foreground>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#FF6800FF" Offset="0.0" />
+                                        <GradientStop Color="#FFF300FF" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </TextBlock.Foreground>
+                            </TextBlock>
                     </StackPanel>
 
                     <!--Menu Buttons-->

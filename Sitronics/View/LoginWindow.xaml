@@ -151,7 +151,7 @@
                     <!--<Image Source="/Images/Logo.png"
                            Width="100" Height="100"/>-->
 
-                    <TextBlock Text="Sitroute"
+                    <TextBlock Text="S i t r o u t e"
                                FontSize="25"
                                FontWeight="Medium"
                                FontFamily="pack://application:,,,/Fonts/#Orbitron Medium"
