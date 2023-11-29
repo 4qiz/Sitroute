@@ -35,46 +35,53 @@ namespace Sitronics.View
 
         private void MapView_Loaded(object sender, RoutedEventArgs e)
         {
-            List<PointLatLng> points = new List<PointLatLng>();
-            Random random = new();
-
-            GMaps.Instance.Mode = AccessMode.ServerAndCache;
-            // choose your provider here
-            mapView.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
-            mapView.MinZoom = 10;
-            mapView.MaxZoom = 17;
-            // whole world zoom
-            mapView.Zoom = 14;
-            mapView.ShowCenter = false;
-            // lets the map use the mousewheel to zoom
-            mapView.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
-            // lets the user drag the map
-            mapView.CanDragMap = true;
-            // lets the user drag the map with the left mouse button
-            mapView.DragButton = MouseButton.Left;
-            RoutingProvider routingProvider =
-            mapView.MapProvider as RoutingProvider ?? GMapProviders.OpenStreetMap;
-            mapView.SetPositionByKeywords("Архангельский Колледж Телекоммуникаций");
-            using (var context = new SitrouteDataContext())
+            try
             {
-                var busStations = context.BusStations.ToList();
-                var buses = context.Buses.ToList();
-                var routes = context.Routes.Include(r => r.RouteByBusStations).ThenInclude(rp => rp.IdBusStationNavigation);
-                foreach (var dbroute in routes)
+                List<PointLatLng> points = new List<PointLatLng>();
+                Random random = new();
+
+                GMaps.Instance.Mode = AccessMode.ServerAndCache;
+                // choose your provider here
+                mapView.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
+                mapView.MinZoom = 10;
+                mapView.MaxZoom = 17;
+                // whole world zoom
+                mapView.Zoom = 14;
+                mapView.ShowCenter = false;
+                // lets the map use the mousewheel to zoom
+                mapView.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
+                // lets the user drag the map
+                mapView.CanDragMap = true;
+                // lets the user drag the map with the left mouse button
+                mapView.DragButton = MouseButton.Left;
+                RoutingProvider routingProvider =
+                mapView.MapProvider as RoutingProvider ?? GMapProviders.OpenStreetMap;
+                mapView.SetPositionByKeywords("Архангельский Колледж Телекоммуникаций");
+                using (var context = new SitrouteDataContext())
                 {
-                    var routeColor = new SolidColorBrush(Color.FromArgb(255, (byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255)));
-                    points.Clear();
-                    foreach (var routePoint in dbroute.RouteByBusStations)
+                    var busStations = context.BusStations.ToList();
+                    var buses = context.Buses.ToList();
+                    var routes = context.Routes.Include(r => r.RouteByBusStations).ThenInclude(rp => rp.IdBusStationNavigation);
+                    foreach (var dbroute in routes)
                     {
-                        points.Add(new PointLatLng(routePoint.IdBusStationNavigation.Location.Coordinate.Y, routePoint.IdBusStationNavigation.Location.Coordinate.X));
+                        var routeColor = new SolidColorBrush(Color.FromArgb(255, (byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255)));
+                        points.Clear();
+                        foreach (var routePoint in dbroute.RouteByBusStations)
+                        {
+                            points.Add(new PointLatLng(routePoint.IdBusStationNavigation.Location.Coordinate.Y, routePoint.IdBusStationNavigation.Location.Coordinate.X));
+                        }
+                        AddRouteOnMap(points, routeColor, routingProvider);
                     }
-                    AddRouteOnMap(points, routeColor, routingProvider);
+                    foreach (var bus in buses)
+                    {
+                        var point = new PointLatLng(bus.Location.Coordinate.Y, bus.Location.Coordinate.X);
+                        MapManager.MapManager.CreateMarker(point, ref mapView);
+                    }
                 }
-                foreach (var bus in buses)
-                {
-                    var point = new PointLatLng(bus.Location.Coordinate.Y, bus.Location.Coordinate.X);
-                    MapManager.MapManager.CreateMarker(point, ref mapView);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
