@@ -29,7 +29,8 @@ namespace Sitronics.View
 
         private void AddStopButton_Click(object sender, RoutedEventArgs e)
         {
-            new AddStopWindow().ShowDialog();
+            var fm = new AddStopWindow();
+            fm.Show();
         }
 
         private void MapView_Loaded(object sender, RoutedEventArgs e)

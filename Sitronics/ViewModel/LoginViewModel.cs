@@ -94,9 +94,11 @@ namespace Sitronics.ViewModel
         private bool CanExecuteLoginCommand(object obj)
         {
             bool validData;
-            if (string.IsNullOrWhiteSpace(Username) || Username.Length < 1 ||
-                Password == null || Password.Length <= 3)
+            if (string.IsNullOrWhiteSpace(Username) || Username.Length <= 1 ||
+                Password == null || Password.Length <= 1)
+            {
                 validData = false;
+            }
             else
                 validData = true;
             return validData;
