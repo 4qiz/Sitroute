@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\Cruinn Light.ttf" />
+    <None Remove="Fonts\Orbitron-Medium.ttf" />
     <None Remove="Images\key-icon.png" />
     <None Remove="Images\user-icon.png" />
   </ItemGroup>
@@ -33,6 +35,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Fonts\Cruinn Light.ttf" />
+    <Resource Include="Fonts\Orbitron-Medium.ttf" />
     <Resource Include="Images\key-icon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

@@ -18,7 +18,8 @@ namespace Sitronics
                 {
                     var mainView = new MainWindow();
                     mainView.Show();
-                    loginView.Close();
+                    
+                    
                 }
             };
         }
