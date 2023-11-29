@@ -14,7 +14,7 @@ namespace Sitronics.ViewModel
     {
         //Fields
         private User _currentUserAccount;
-        private string userName = $"Здравствуйте, {Connection.CurrentUser?.SecondName} {Connection.CurrentUser?.FirstName} {Connection.CurrentUser?.Patronymic}";
+        private string userName = $"{Connection.CurrentUser.SecondName} {Connection.CurrentUser.FirstName} {Connection.CurrentUser.Patronymic}";
         private ViewModelBase _currentChildView;
         private string _caption;
         private IconChar _icon;

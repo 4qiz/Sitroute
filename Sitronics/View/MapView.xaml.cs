@@ -22,9 +22,10 @@ namespace Sitronics.View
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void AddBusButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("sdfg");
+            var fm = new AddBusWindow();
+            fm.Show();
         }
 
         private void AddStopButton_Click(object sender, RoutedEventArgs e)

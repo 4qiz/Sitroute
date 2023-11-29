@@ -3,21 +3,11 @@ using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
 using Sitronics.Data;
 using Sitronics.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Sitronics.View
 {
@@ -27,6 +17,7 @@ namespace Sitronics.View
     public partial class AddRouteWindow : Window
     {
         RoutingProvider routingProvider;
+        int countBusStation = 0;
 
         public AddRouteWindow()
         {
@@ -72,6 +63,7 @@ namespace Sitronics.View
         private void AddBusStopButton_Click(object sender, RoutedEventArgs e)
         {
             CreateNewBusStopComboBox();
+            countBusStation++;
         }
 
         private void SaveRouteButton_Click(object sender, RoutedEventArgs e)
@@ -85,12 +77,14 @@ namespace Sitronics.View
 
             dbroute.Name = routeNameTextBox.Text;
             var comboBoxes = comboBoxesStackPanel.Children;
+            var serialNumberBusStation = 1;
             foreach (ComboBox comboBox in comboBoxes)
             {
                 busStation = (BusStation)comboBox.SelectedItem;
-                rbp = new() { IdBusStation = busStation.IdBusStation };
+                rbp = new() { IdBusStation = busStation.IdBusStation, SerialNumberBusStation = serialNumberBusStation };
                 dbroute.RouteByBusStations.Add(rbp);
                 points.Add(new PointLatLng(busStation.Location.Coordinate.Y, busStation.Location.Coordinate.X));
+                serialNumberBusStation++;
             }
             for (int i = 0; i < points.Count - 1; i++)
             {
@@ -138,6 +132,14 @@ namespace Sitronics.View
         {
             if (WindowState == WindowState.Normal) WindowState = WindowState.Maximized;
             else WindowState = WindowState.Normal;
+        }
+
+        private void RouteNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (routeNameTextBox.Text.Length > 0 && countBusStation > 1)
+                saveRouteButton.IsEnabled = true;
+            else
+                saveRouteButton.IsEnabled = false;
         }
     }
 }
