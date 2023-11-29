@@ -32,6 +32,14 @@
             <local:BusInfoView/>
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type viewModel:RouteInfoViewModel}">
+            <local:RouteInfoView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:StopInfoViewModel}">
+            <local:StopInfoView/>
+        </DataTemplate>
+
     </Window.Resources>
 
     <Border CornerRadius="10"                    
@@ -98,7 +106,7 @@
 
                         <RadioButton Style="{StaticResource menuButton}"
                                 Tag="{StaticResource color3}"
-                                Command="{Binding ShowChatViewCommand}">
+                                Command="{Binding ShowRouteInfoViewCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <fa:IconImage Icon="LocationPin" Style="{StaticResource menuButtonIcon}"/>
                                 <TextBlock Text="Маршруты" Style="{StaticResource menuButtonText}"/>
@@ -107,7 +115,7 @@
                     
                         <RadioButton Style="{StaticResource menuButton}"
                             Tag="{StaticResource color3}"
-                            Command="{Binding ShowChatViewCommand}">
+                            Command="{Binding ShowStopInfoViewCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <fa:IconImage Icon="Stop" Style="{StaticResource menuButtonIcon}"/>
                                 <TextBlock Text="Остановки" Style="{StaticResource menuButtonText}"/>

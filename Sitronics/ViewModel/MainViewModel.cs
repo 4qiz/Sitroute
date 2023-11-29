@@ -14,7 +14,7 @@ namespace Sitronics.ViewModel
     {
         //Fields
         private User _currentUserAccount;
-        private string userName = $"Здравствуйте, {Connection.CurrentUser.SecondName} {Connection.CurrentUser.FirstName} {Connection.CurrentUser?.Patronymic}";
+        private string userName = $"Здравствуйте, {Connection.CurrentUser?.SecondName} {Connection.CurrentUser?.FirstName} {Connection.CurrentUser?.Patronymic}";
         private ViewModelBase _currentChildView;
         private string _caption;
         private IconChar _icon;
@@ -84,14 +84,17 @@ namespace Sitronics.ViewModel
         //--> Commands
         public ICommand ShowMapViewCommand { get; }
         public ICommand ShowBusInfoViewCommand { get; }
+        public ICommand ShowRouteInfoViewCommand { get; }
+        public ICommand ShowStopInfoViewCommand { get; }
         public ICommand ShowChatViewCommand { get; }
 
         public MainViewModel()
         {
-
             // Initialize commands
             ShowMapViewCommand = new ViewModelCommand(ExecuteShowMapViewCommand);
             ShowBusInfoViewCommand = new ViewModelCommand(ExecuteShowBusInfoViewCommand);
+            ShowRouteInfoViewCommand = new ViewModelCommand(ExecuteShowRouteInfoViewCommand);
+            ShowStopInfoViewCommand = new ViewModelCommand(ExecuteShowStopInfoViewCommand);
             ShowChatViewCommand = new ViewModelCommand(ExecuteShowChatViewCommand);
 
             //Default view
@@ -112,6 +115,20 @@ namespace Sitronics.ViewModel
             CurrentChildView = new BusInfoViewModel();
             Caption = "Автобусы";
             Icon = IconChar.Bus;
+        }
+
+        private void ExecuteShowRouteInfoViewCommand(object obj)
+        {
+            CurrentChildView = new RouteInfoViewModel();
+            Caption = "Маршрут";
+            Icon = IconChar.LocationPin;
+        }
+
+        private void ExecuteShowStopInfoViewCommand(object obj)
+        {
+            CurrentChildView = new StopInfoViewModel();
+            Caption = "Остановка";
+            Icon = IconChar.Stop;
         }
 
         private void ExecuteShowChatViewCommand(object obj)
