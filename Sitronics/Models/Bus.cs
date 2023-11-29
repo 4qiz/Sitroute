@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NetTopologySuite.Geometries;
 
 namespace Sitronics.Models;
 
@@ -10,6 +11,8 @@ public partial class Bus
     public bool IsBroken { get; set; }
 
     public string Number { get; set; } = null!;
+
+    public Geometry? Location { get; set; }
 
     public int? IdRoute { get; set; }
 

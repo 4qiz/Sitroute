@@ -15,7 +15,7 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
             <Button Content="Добавить Остановку" Click="AddStopButton_Click"/>
-            <Button Content="Добавить Маршрут"/>
+            <Button Content="Добавить Маршрут" Click="AddRouteButton_Click"/>
             <Button Content="Добавить Автобус"
                     Click="Button_Click"/>
         </StackPanel>
@@ -24,9 +24,7 @@
             BorderThickness="6"
             BorderBrush="#eaeaea"
                 Grid.Row="1">
-            <gmaps:GMapControl x:Name="mapView" 
-                               />
-                               <!--Loaded="MapView_Loaded"--> 
+            <gmaps:GMapControl x:Name="mapView" Loaded="MapView_Loaded"/>
         </Border>
     </Grid>
 </UserControl>

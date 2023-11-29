@@ -9,7 +9,7 @@ public partial class RouteByBusStation
 
     public int IdBusStation { get; set; }
 
-    public int SerialNumberPoint { get; set; }
+    public int SerialNumberBusStation { get; set; }
 
     public virtual BusStation IdBusStationNavigation { get; set; } = null!;
 

@@ -1,11 +1,6 @@
-﻿using GMap.NET.WindowsPresentation;
-using GMap.NET;
-using System;
-using System.Collections.Generic;
+﻿using GMap.NET;
+using GMap.NET.WindowsPresentation;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -13,7 +8,6 @@ namespace Sitronics.MapManager
 {
     public static class MapManager
     {
-
         public static GMapMarker CreateMarker(PointLatLng point, ref GMapControl mapView, GMapMarker lastMarker = null)
         {
             var converter = TypeDescriptor.GetConverter(typeof(System.Windows.Media.Geometry));

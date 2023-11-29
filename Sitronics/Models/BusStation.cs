@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NetTopologySuite.Geometries;
 
 namespace Sitronics.Models;
 
@@ -10,6 +11,8 @@ public partial class BusStation
     public int? PeopleCount { get; set; }
 
     public string Name { get; set; } = null!;
+
+    public Geometry Location { get; set; } = null!;
 
     public virtual ICollection<RouteByBusStation> RouteByBusStations { get; set; } = new List<RouteByBusStation>();
 
