@@ -69,6 +69,7 @@ public partial class SitrouteDataContext : DbContext
 
             entity.Property(e => e.Charge).HasDefaultValueSql("((100))");
             entity.Property(e => e.Number).HasMaxLength(6);
+            entity.Property(e => e.Сapacity).HasDefaultValueSql("((60))");
 
             entity.HasOne(d => d.IdRouteNavigation).WithMany(p => p.Buses)
                 .HasForeignKey(d => d.IdRoute)
@@ -124,7 +125,7 @@ public partial class SitrouteDataContext : DbContext
 
             entity.ToTable("Factor");
 
-            entity.Property(e => e.Length).HasColumnType("decimal(6, 3)");
+            entity.Property(e => e.Radius).HasColumnType("decimal(6, 3)");
             entity.Property(e => e.SpeedСoefficient).HasColumnType("decimal(3, 2)");
 
             entity.HasOne(d => d.IdRouteNavigation).WithMany(p => p.Factors)
@@ -144,7 +145,7 @@ public partial class SitrouteDataContext : DbContext
 
             entity.ToTable("Message");
 
-            entity.Property(e => e.Value).HasMaxLength(300);
+            entity.Property(e => e.Value).HasMaxLength(500);
 
             entity.HasOne(d => d.IdRecipientNavigation).WithMany(p => p.MessageIdRecipientNavigations)
                 .HasForeignKey(d => d.IdRecipient)

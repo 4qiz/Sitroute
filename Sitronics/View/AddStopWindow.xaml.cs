@@ -83,7 +83,7 @@ namespace Sitronics.View
 
         private void SearchPlaceButton_Click(object sender, RoutedEventArgs e)
         {
-        //    mapView.SetPositionByKeywords(AddressTextBox.Text);
+            mapView.SetPositionByKeywords(AddressTextBox.Text);
         }
 
 

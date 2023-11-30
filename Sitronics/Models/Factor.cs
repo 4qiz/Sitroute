@@ -10,7 +10,7 @@ public partial class Factor
 
     public decimal SpeedСoefficient { get; set; }
 
-    public decimal? Length { get; set; }
+    public decimal? Radius { get; set; }
 
     public Geometry? Location { get; set; }
 

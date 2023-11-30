@@ -60,10 +60,8 @@ namespace Sitronics.View
                 context.Buses.Add(new Bus()
                 {
                     Number = numberBusTextBox.Text,
-                    Charge = 100,
                     IdRoute = (routeComboBox.SelectedItem as Route).IdRoute
-                }
-                );
+                });
                 context.SaveChanges();
             }
         }

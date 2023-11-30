@@ -9,6 +9,8 @@ public partial class Route
 
     public string Name { get; set; } = null!;
 
+    public bool IsBacked { get; set; }
+
     public virtual ICollection<Bus> Buses { get; set; } = new List<Bus>();
 
     public virtual ICollection<Factor> Factors { get; set; } = new List<Factor>();

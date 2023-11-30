@@ -16,9 +16,11 @@ public partial class Bus
 
     public int? IdRoute { get; set; }
 
-    public int Charge { get; set; }
+    public int? Charge { get; set; }
 
     public int? AverageChargeDrop { get; set; }
+
+    public int Сapacity { get; set; }
 
     public virtual Route? IdRouteNavigation { get; set; }
 
