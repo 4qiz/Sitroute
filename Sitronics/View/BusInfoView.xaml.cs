@@ -1,4 +1,5 @@
 ﻿using LiveCharts;
+using LiveCharts.Wpf;
 using Microsoft.EntityFrameworkCore;
 using Sitronics.Data;
 using Sitronics.Models;
@@ -17,27 +18,31 @@ namespace Sitronics.View
         {
             InitializeComponent();
 
-            Bus currentBus = new();
+            //Bus currentBus = new();
             List<Route> routes = new();
 
             using (var context = new SitrouteDataContext())
             {
-                routes = context.Routes.ToList();
-                currentBus = context.Buses.Include(b => b.Schedules).ThenInclude(s => s.IdBusStationNavigation)
-                    .Where(b => b.IdBus == 1).First();
+                routes = context.Routes
+                    .Include(r => r.Buses)
+                    .ThenInclude(b => b.Schedules)
+                    .ThenInclude(s => s.IdBusStationNavigation)
+                    .ToList();
+                //currentBus = context.Buses.Include(b => b.Schedules).ThenInclude(s => s.IdBusStationNavigation)
+                //    .Where(b => b.IdBus == 1).First();
             }
             foreach (var route in routes)
             {
                 var busesStackPanel = new StackPanel();
-                foreach (var item in route.Buses)
+                foreach (var bus in route.Buses)
                 {
                     var busExpander = new Expander()
                     {
-                        Header = route.Name,
+                        Header = bus.Number,
                         FontSize = 20,
                         Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255)),
-                        Margin = new Thickness() { Left = 20},
-                        
+                        Margin = new Thickness() { Left = 20 },
+                        Content = GetBusInfoStackPanel(bus)
                     };
                     busesStackPanel.Children.Add(busExpander);
                 }
@@ -52,32 +57,97 @@ namespace Sitronics.View
                 routesStackPanel.Children.Add(routeExpander);
             }
 
-            numberBusTextBlock.Text = "Номер:" + currentBus.Number.ToUpper();
-            countPeopleTextBlock.Text = "Людей в автобусе:" + (currentBus.Schedules.Sum(s => s.PeopleCountBoardingBus) -
-                currentBus.Schedules.Sum(s => s.PeopleCountGettingOffBus)).ToString();
+            //numberBusTextBlock.Text = "Номер:" + currentBus.Number.ToUpper();
+            //countPeopleTextBlock.Text = "Людей в автобусе:" + (currentBus.Schedules.Sum(s => s.PeopleCountBoardingBus) -
+            //    currentBus.Schedules.Sum(s => s.PeopleCountGettingOffBus)).ToString();
 
-            ChartValues<int> peopleCountBoardingBus = new();
-            ChartValues<int> peopleCountGettingOffBus = new();
-            List<string> labels = new();
-            var shedules = currentBus.Schedules
-                .Where(s => s.PeopleCountBoardingBus != null && s.PeopleCountGettingOffBus != null).ToList();
-            int step = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(Math.Max(shedules.Max(s => s.PeopleCountBoardingBus).Value,
-                shedules.Max(s => s.PeopleCountGettingOffBus).Value) / 10)));
-            foreach (var shedule in shedules)
-            {
-                peopleCountBoardingBus.Add(shedule.PeopleCountBoardingBus ?? 0);
-                peopleCountGettingOffBus.Add(shedule.PeopleCountGettingOffBus ?? 0);
-                labels.Add(shedule.IdBusStationNavigation.Name);
-            }
-            peopleCountBoardingBusLineSeries.Values = peopleCountBoardingBus;
-            peopleCountGettingOffBusLineSeries.Values = peopleCountGettingOffBus;
-            xAxis.Labels = labels;
-            yAxis.Separator = new LiveCharts.Wpf.Separator() { Step = step };
+            //ChartValues<int> peopleCountBoardingBus = new();
+            //ChartValues<int> peopleCountGettingOffBus = new();
+            //List<string> labels = new();
+            //var shedules = currentBus.Schedules
+            //    .Where(s => s.PeopleCountBoardingBus != null && s.PeopleCountGettingOffBus != null).ToList();
+            //int step = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(Math.Max(shedules.Max(s => s.PeopleCountBoardingBus).Value,
+            //    shedules.Max(s => s.PeopleCountGettingOffBus).Value) / 10)));
+            //foreach (var shedule in shedules)
+            //{
+            //    peopleCountBoardingBus.Add(shedule.PeopleCountBoardingBus ?? 0);
+            //    peopleCountGettingOffBus.Add(shedule.PeopleCountGettingOffBus ?? 0);
+            //    labels.Add(shedule.IdBusStationNavigation.Name);
+            //}
+            //peopleCountBoardingBusLineSeries.Values = peopleCountBoardingBus;
+            //peopleCountGettingOffBusLineSeries.Values = peopleCountGettingOffBus;
+            //xAxis.Labels = labels;
+            //yAxis.Separator = new LiveCharts.Wpf.Separator() { Step = step };
         }
 
         public StackPanel GetBusInfoStackPanel(Bus bus)
         {
             var busInfoStackPanel = new StackPanel();
+            var shedules = bus.Schedules
+                .Where(s => s.PeopleCountBoardingBus != null && s.PeopleCountGettingOffBus != null).ToList();
+            busInfoStackPanel.Children.Add(new TextBlock()
+            {
+                Text = "Номер:" + bus.Number.ToUpper(),
+                FontSize = 30,
+                Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255))
+            });
+            if (shedules.Count > 0)
+            {
+                busInfoStackPanel.Children.Add(new TextBlock()
+                {
+                    Text = "Людей в автобусе:" + (bus.Schedules.Sum(s => s.PeopleCountBoardingBus) -
+                        bus.Schedules.Sum(s => s.PeopleCountGettingOffBus)).ToString(),
+                    FontSize = 20,
+                    Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255))
+                });
+                ChartValues<int> peopleCountBoardingBus = new();
+                ChartValues<int> peopleCountGettingOffBus = new();
+                List<string> labels = new();
+                foreach (var shedule in shedules)
+                {
+                    peopleCountBoardingBus.Add(shedule.PeopleCountBoardingBus ?? 0);
+                    peopleCountGettingOffBus.Add(shedule.PeopleCountGettingOffBus ?? 0);
+                    labels.Add(shedule.IdBusStationNavigation.Name);
+                }
+                var busCartesianChart = new CartesianChart()
+                {
+                    Height = 300
+                };
+                busCartesianChart.Series.Add(new LineSeries()
+                {
+                    Title = "Вошедшие в автобус",
+                    LineSmoothness = 0,
+                    Values = peopleCountBoardingBus
+                });
+                busCartesianChart.Series.Add(new LineSeries()
+                {
+                    Title = "Вышедшие из автобуса",
+                    LineSmoothness = 0,
+                    Values = peopleCountGettingOffBus
+                });
+                int step = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(Math.Max(shedules.Max(s => s.PeopleCountBoardingBus).Value,
+                    shedules.Max(s => s.PeopleCountGettingOffBus).Value) / 10)));
+                busCartesianChart.AxisY.Add(new Axis
+                {
+                    MinValue = 0,
+                    Title = "Количество людей",
+                    Separator = new LiveCharts.Wpf.Separator() { Step = step }
+                });
+                busCartesianChart.AxisX.Add(new Axis
+                {
+                    Title = "Остановки",
+                    Separator = new LiveCharts.Wpf.Separator() { Step = 1 },
+                    Labels = labels
+                });
+                busInfoStackPanel.Children.Add(busCartesianChart);
+            }
+            else
+                busInfoStackPanel.Children.Add(new TextBlock()
+                {
+                    Text = "Этот автобус еще не собрал статистику",
+                    FontSize = 10,
+                    Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255))
+                });
             return busInfoStackPanel;
         }
     }
