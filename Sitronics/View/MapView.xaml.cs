@@ -25,7 +25,7 @@ namespace Sitronics.View
         private void AddBusButton_Click(object sender, RoutedEventArgs e)
         {
             var fm = new AddBusWindow();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         private void AddStopButton_Click(object sender, RoutedEventArgs e)

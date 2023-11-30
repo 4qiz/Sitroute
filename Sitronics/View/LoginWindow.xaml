@@ -14,8 +14,10 @@
         Background="Transparent"
         AllowsTransparency="True"
         xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
-        MouseDown="Window_MouseDown">
+        MouseDown="Window_MouseDown"
+        KeyDown="Window_KeyDown">
 
+    
     <Window.DataContext>
         <viewModel:LoginViewModel/>
     </Window.DataContext>
@@ -153,7 +155,8 @@
              Height="28"
              VerticalContentAlignment="Center"
              Margin="0,0,0,0"
-             Padding="20,0,0,0">
+             Padding="20,0,0,0"
+                                 Style="{x:Null}">
 
                             <TextBox.Background>
                                 <ImageBrush ImageSource="/Images/user-icon.png"
@@ -199,7 +202,8 @@
             FontFamily="Montserrat"        
             FontSize="16"
             Cursor="Hand"                           
-            Margin="0,10,0,0">
+            Margin="0,10,0,0"
+            IsDefault="True">
 
                             <Button.Style>
                                 <Style TargetType="Button">

@@ -225,12 +225,12 @@
     <SolidColorBrush x:Key="B_onSurface">#E5E1E6</SolidColorBrush>
     <SolidColorBrush x:Key="B_surfaceVariant">#47464F</SolidColorBrush>
     <SolidColorBrush x:Key="B_onSurfaceVariant">#C8C5D0</SolidColorBrush>
-    <SolidColorBrush x:Key="B_outline">#928F9A</SolidColorBrush>
     <SolidColorBrush x:Key="B_inverseOnSurface">#1C1B1F</SolidColorBrush>
     <SolidColorBrush x:Key="B_inverseSurface">#E5E1E6</SolidColorBrush>
     <SolidColorBrush x:Key="B_inversePrimary">#534FC2</SolidColorBrush>
     <SolidColorBrush x:Key="B_shadow">#000000</SolidColorBrush>
     <SolidColorBrush x:Key="B_surfaceTint">#C3C0FF</SolidColorBrush>
+    <SolidColorBrush x:Key="B_outline">#928F9A</SolidColorBrush>
     <SolidColorBrush x:Key="B_outlineVariant">#47464F</SolidColorBrush>
     <SolidColorBrush x:Key="B_scrim">#000000</SolidColorBrush>
 

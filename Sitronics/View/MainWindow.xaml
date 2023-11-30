@@ -36,6 +36,10 @@
             <local:RouteInfoView/>
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type viewModel:ScheduleViewModel}">
+            <local:ScheduleView/>
+        </DataTemplate>
+
         <DataTemplate DataType="{x:Type viewModel:StopInfoViewModel}">
             <local:StopInfoView/>
         </DataTemplate>
@@ -75,92 +79,101 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel>
+                        <StackPanel
+                            Margin="5">
 
-                        <!--Logo-->
-                    <StackPanel Orientation="Horizontal"
+                            <!--Logo-->
+                            <StackPanel Orientation="Horizontal"
                                 Height="35"
                                 Margin="15,25,0,40">
 
-                        <!--<Image Source="/Images/Logo.png" Height="30"/>-->
-                            <TextBlock Text="SITROUTE"
+                                <!--<Image Source="/Images/Logo.png" Height="30"/>-->
+                                <TextBlock Text="SITROUTE"
                                    FontSize="25"
                                    FontFamily="pack://application:,,,/Fonts/#Orbitron Medium"
                                    FontWeight="Medium"
                                    VerticalAlignment="Center"
                                    Margin="30,0,0,0">
-                                <TextBlock.Foreground>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                        <GradientStop Color="#FF6800FF" Offset="0.0" />
-                                        <GradientStop Color="#FFF300FF" Offset="1.0" />
-                                    </LinearGradientBrush>
-                                </TextBlock.Foreground>
-                            </TextBlock>
-                    </StackPanel>
+                                    <TextBlock.Foreground>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="{StaticResource sitronicsLogo1}" Offset="0"/>
+                                            <GradientStop Color="{StaticResource sitronicsLogo0}" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </TextBlock.Foreground>
+                                </TextBlock>
+                            </StackPanel>
 
-                    <!--Menu Buttons-->
-                        <RadioButton Style="{StaticResource menuButton}"
-                                 Tag="{StaticResource color1}"
+                            <!--Menu Buttons-->
+                            <RadioButton Style="{StaticResource menuButton}"
+                                 Tag="{StaticResource B_onBackground}"
                                  IsChecked="True"
-                                 Command="{Binding ShowMapViewCommand}">
-                            <StackPanel Orientation="Horizontal">
-                                <fa:IconImage Icon="Map" Style="{StaticResource menuButtonIcon}"/>
-                                <TextBlock Text="Карта" Style="{StaticResource menuButtonText}"/>
-                            </StackPanel>
-                        </RadioButton>
+                                 Command="{Binding ShowMapViewCommand}"
+                                         GroupName="Menu">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:IconImage Icon="Map" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Карта" Style="{StaticResource menuButtonText}"/>
+                                </StackPanel>
+                            </RadioButton>
 
-                        <RadioButton Style="{StaticResource menuButton}"
-                                Tag="{StaticResource color3}"
-                                Command="{Binding ShowRouteInfoViewCommand}">
-                            <StackPanel Orientation="Horizontal">
-                                <fa:IconImage Icon="LocationPin" Style="{StaticResource menuButtonIcon}"/>
-                                <TextBlock Text="Маршруты" Style="{StaticResource menuButtonText}"/>
-                            </StackPanel>
-                        </RadioButton>
-                    
-                        <RadioButton Style="{StaticResource menuButton}"
-                            Tag="{StaticResource color3}"
-                            Command="{Binding ShowStopInfoViewCommand}">
-                            <StackPanel Orientation="Horizontal">
-                                <fa:IconImage Icon="Stop" Style="{StaticResource menuButtonIcon}"/>
-                                <TextBlock Text="Остановки" Style="{StaticResource menuButtonText}"/>
-                            </StackPanel>
-                        </RadioButton>
+                            <RadioButton Style="{StaticResource menuButton}"
+                                Tag="{StaticResource B_onBackground}"
+                                Command="{Binding ShowRouteInfoViewCommand}"
+                                         GroupName="Menu">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:IconImage Icon="LocationPin" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Маршруты" Style="{StaticResource menuButtonText}"/>
+                                </StackPanel>
+                            </RadioButton>
 
-                        <RadioButton Style="{StaticResource menuButton}"
-                            Tag="{StaticResource color3}"
-                            Command="{Binding ShowBusInfoViewCommand}">
-                            <StackPanel Orientation="Horizontal">
-                                <fa:IconImage Icon="Bus" Style="{StaticResource menuButtonIcon}"/>
-                                <TextBlock Text="Автобусы" Style="{StaticResource menuButtonText}"/>
-                            </StackPanel>
-                        </RadioButton>
+                            <RadioButton Style="{StaticResource menuButton}"
+                            Tag="{StaticResource B_onBackground}"
+                            Command="{Binding ShowStopInfoViewCommand}"
+                                         GroupName="Menu">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:IconImage Icon="Stop" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Остановки" Style="{StaticResource menuButtonText}"/>
+                                </StackPanel>
+                            </RadioButton>
 
-                        <RadioButton Style="{StaticResource menuButton}"
-                                Tag="{StaticResource color3}"
-                                Command="{Binding ShowChatViewCommand}">
-                            <StackPanel Orientation="Horizontal">
-                                <fa:IconImage Icon="ChartColumn" Style="{StaticResource menuButtonIcon}"/>
-                                <TextBlock Text="Статистика" Style="{StaticResource menuButtonText}"/>
-                            </StackPanel>
-                        </RadioButton>
+                            <RadioButton Style="{StaticResource menuButton}"
+                            Tag="{StaticResource B_onBackground}"
+                            Command="{Binding ShowBusInfoViewCommand}"
+                                         GroupName="Menu">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:IconImage Icon="Bus" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Автобусы" Style="{StaticResource menuButtonText}"/>
+                                </StackPanel>
+                            </RadioButton>
 
-                        <RadioButton Style="{StaticResource menuButton}"
-                                 Tag="{StaticResource color2}"
+                            <RadioButton Style="{StaticResource menuButton}"
+                                Tag="{StaticResource B_onBackground}"
+                                Command="{Binding ShowScheduleViewCommand}"
+                                         GroupName="Menu">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:IconImage Icon="CalendarDays" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Расписание" Style="{StaticResource menuButtonText}"/>
+                                </StackPanel>
+                            </RadioButton>
+
+                            <RadioButton Style="{StaticResource menuButton}"
+                                 Tag="{StaticResource B_onBackground}"
                                  Command="{Binding ShowChatViewCommand}"
-                                 x:Name="ChatRadioButton">
-                        <StackPanel Orientation="Horizontal">
-                            <fa:IconImage Icon="Message" Style="{StaticResource menuButtonIcon}"/>
-                            <TextBlock Text="Чат" Style="{StaticResource menuButtonText}"/>
+                                 x:Name="ChatRadioButton"
+                                         GroupName="Menu">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:IconImage Icon="Message" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Чат" Style="{StaticResource menuButtonText}"/>
+                                </StackPanel>
+                            </RadioButton>
                         </StackPanel>
-                    </RadioButton>
-                </StackPanel>
-                
-                <StackPanel Grid.Row="1"
+                        
+                        <StackPanel Grid.Row="1"
                         VerticalAlignment="Bottom">
                         <RadioButton Style="{StaticResource menuButton}"
-                                 Tag="{StaticResource color3}"
-                                 Command="{Binding ShowSettingsViewCommand}">
+                                 Tag="{StaticResource B_secondary}"
+                                 Command="{Binding ShowSettingsViewCommand}"
+                                     GroupName="Menu"
+                                     Margin="0,0,0,5">
                             <StackPanel Orientation="Horizontal">
                                 <fa:IconImage Icon="Tools" Style="{StaticResource menuButtonIcon}"/>
                                 <TextBlock Text="Настройки" Style="{StaticResource menuButtonText}"/>
@@ -257,15 +270,16 @@
                                        Foreground="{StaticResource titleColor3}"
                                        FontFamily="Montserrat"
                                        FontSize="12"
-                                       VerticalAlignment="Center"/>
-                            <Ellipse Height="35" Width="35"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+                            <!--<Ellipse Height="35" Width="35"
                                      Stroke="{StaticResource color2}"
                                      StrokeThickness="2"
                                      Margin="10,0,10,0">
-                                <!--<Ellipse.Fill>
+                                --><!--<Ellipse.Fill>
                                     --><!--<ImageBrush ImageSource="/Images/logo.png"/>--><!--
-                                </Ellipse.Fill>-->
-                            </Ellipse>
+                                </Ellipse.Fill>--><!--
+                            </Ellipse>-->
 
                             <Button Style="{StaticResource iconButton}"
                                     Tag="{StaticResource color3}">
