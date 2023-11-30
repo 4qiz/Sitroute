@@ -81,13 +81,14 @@
 
                         <StackPanel Grid.Row="2"
                                 Margin="30">
-                            <TextBlock Text="Номер автобуса" Foreground="White"
-                                   HorizontalAlignment="Center"
-                                   Margin="10"/>
+                            <TextBlock Text="Номер автобуса" 
+                                       Foreground="{StaticResource B_onSurface}"
+                                       Margin="1"
+                                       FontSize="16"/>
                             <Border CornerRadius="5"
                             BorderBrush="{StaticResource B_outline}"
                             BorderThickness="1"
-                            Margin="0,0,0,0"
+                            Margin="0,0,0,10"
                             Padding="5">
                                 <TextBox x:Name="numberBusTextBox" 
                                      MaxLength="6" 
@@ -97,7 +98,10 @@
                                          />
                             </Border>
                             
-                            <TextBlock Text="Маршрут" Foreground="White" Margin="5" />
+                            <TextBlock Text="Маршрут" 
+                                       Foreground="{StaticResource B_onSurface}"
+                                       Margin="1"
+                                       FontSize="16"/>
                             <ComboBox x:Name="routeComboBox" 
                                       DisplayMemberPath="Name" 
                                       SelectedIndex="0" 
