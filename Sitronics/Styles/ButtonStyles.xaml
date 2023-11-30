@@ -6,8 +6,8 @@
 
     <Style x:Key="DefaultButtonStyle" TargetType="{x:Type Button}">
         <!--  Universal WPF UI focus  -->
-        <Setter Property="Background" Value="{StaticResource B_secondaryContainer}" />
-        <Setter Property="Foreground" Value="{StaticResource B_onSecondaryContainer}" />
+        <Setter Property="Background" Value="{StaticResource B_tertiaryContainer}" />
+        <Setter Property="Foreground" Value="{StaticResource B_onTertiaryContainer}" />
         <Setter Property="BorderBrush"  Value="{StaticResource B_outline}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="5" />
@@ -33,7 +33,7 @@
                         Margin="5"
                        HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                       Background="{StaticResource B_secondaryContainer}"
+                       Background="{StaticResource B_tertiaryContainer}"
                        BorderBrush="{StaticResource B_outline}"
                        BorderThickness="0"
                        CornerRadius="5">
@@ -43,24 +43,24 @@
                            VerticalAlignment="Center"
                            Content="{TemplateBinding Content}"
                            ContentTemplate="{TemplateBinding ContentTemplate}"
-                           TextElement.Foreground="#FFFFFF" />
+                           TextElement.Foreground="{StaticResource B_onTertiaryContainer}" />
 
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="#e5e5e5" />
                             <Setter Property="BorderBrush" Value="#e5e5e5" />
-                            <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="#e5e5e5" />
+                            <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{StaticResource B_tertiary}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Background" Value="#e5e5e5" />
                             <Setter Property="BorderBrush" Value="#e5e5e5" />
-                            <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="#e5e5e5" />
+                            <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{StaticResource B_tertiary}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter Property="Background" Value="#e5e5e5" />
                             <Setter Property="BorderBrush" Value="#e5e5e5" />
-                            <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="#e5e5e5" />
+                            <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{StaticResource B_tertiary}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

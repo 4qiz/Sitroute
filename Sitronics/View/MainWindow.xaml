@@ -186,7 +186,7 @@
             <!--Main Section-->
                 <Border CornerRadius="0,10,10,0"
                     Grid.Column="1"
-                    Background="{StaticResource B_background}">
+                    Background="{StaticResource B_surface}">
                     <Grid>
                     <Grid.RowDefinitions>
                         <!--Control bar-->
