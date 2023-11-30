@@ -61,14 +61,15 @@
                         FlowDirection="RightToLeft"
                         Background="Transparent"
                         Margin="0,0,5,0"
-                        MouseEnter="pnlControlBar_MouseEnter"
-                        MouseDown="pnlControlBar_MouseLeftButtonDown">
-                            <Button x:Name="btnClose"
+                        MouseLeftButtonDown="pnlControlBar_MouseLeftButtonDown"
+                        MouseEnter="pnlControlBar_MouseEnter">
+                        <Button x:Name="btnClose"
                             Style="{StaticResource controlButton}"
                             Tag="{StaticResource color4}"
-                            Click="btnClose_Click">
-                                <fa:IconImage Icon="Xmark" Style="{StaticResource controlButtonIcon}"/>
-                            </Button>
+                            Click="btnClose_Click"
+                            IsCancel="True">
+                            <fa:IconImage Icon="Xmark" Style="{StaticResource controlButtonIcon}"/>
+                        </Button>
 
                             <Button x:Name="btnMinimize"
                             Style="{StaticResource controlButton}"

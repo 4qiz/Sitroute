@@ -1,4 +1,5 @@
 ﻿using Sitronics.Data;
+using Sitronics.Models;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -48,7 +49,17 @@ namespace Sitronics.View
 
         private void AddBusButton_Click(object sender, RoutedEventArgs e)
         {
-
+            using(var context = new SitrouteDataContext())
+            {
+                context.Buses.Add(new Bus()
+                {
+                    Number = numberBusTextBox.Text,
+                    Charge = 100,
+                    IdRoute = (routeComboBox.SelectedItem as Route).IdRoute
+                }
+                );
+                context.SaveChanges();
+            }
         }
 
         private void NumberBusTextBox_TextChanged(object sender, TextChangedEventArgs e)
