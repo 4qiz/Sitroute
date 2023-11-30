@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Sitronics.Data;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -24,6 +26,13 @@ namespace Sitronics.View
         public LoginWindow()
         {
             InitializeComponent();
+
+            using(var context = new SitrouteDataContext())
+            {
+                var seconds = context.RouteByBusStations
+                    .Include(rbbs => rbbs.IdBusStationNavigation);
+            }
+
         }
 
         [DllImport("user32.dll")]

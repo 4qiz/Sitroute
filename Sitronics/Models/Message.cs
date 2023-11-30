@@ -13,6 +13,8 @@ public partial class Message
 
     public int? IdRecipient { get; set; }
 
+    public DateTime Time { get; set; }
+
     public virtual User? IdRecipientNavigation { get; set; }
 
     public virtual User IdSenderNavigation { get; set; } = null!;

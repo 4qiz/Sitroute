@@ -5,11 +5,13 @@ namespace Sitronics.Models;
 
 public partial class Schedule
 {
+    public int IdSchedule { get; set; }
+
     public int IdBus { get; set; }
 
     public int IdBusStation { get; set; }
 
-    public int IdTime { get; set; }
+    public DateTime Time { get; set; }
 
     public int? PeopleCountBoardingBus { get; set; }
 
@@ -18,6 +20,4 @@ public partial class Schedule
     public virtual Bus IdBusNavigation { get; set; } = null!;
 
     public virtual BusStation IdBusStationNavigation { get; set; } = null!;
-
-    public virtual Time IdTimeNavigation { get; set; } = null!;
 }
