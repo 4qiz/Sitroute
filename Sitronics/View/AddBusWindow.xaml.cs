@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sitronics.View
 {
@@ -17,6 +18,8 @@ namespace Sitronics.View
         public AddBusWindow()
         {
             InitializeComponent();
+
+            capacityTextBox.Text = "60";
 
             using (var context = new SitrouteDataContext())
             {
@@ -57,17 +60,36 @@ namespace Sitronics.View
                     IdRoute = (routeComboBox.SelectedItem as Route).IdRoute
                 });
                 context.SaveChanges();
+                MessageBox.Show("Автобус добавлен");
             }
         }
 
         private void NumberBusTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            CorrectInfoInTextBoxes();
+        }
+
+        private void CorrectInfoInTextBoxes()
+        {
             var regex = new Regex(@"[а-я]\d{3}[а-я]{2}", RegexOptions.IgnoreCase);
             MatchCollection matches = regex.Matches(numberBusTextBox.Text);
-            if (matches.Count > 0)
+            if (matches.Count > 0 && capacityTextBox.Text != "")
                 addBusButton.IsEnabled = true;
             else
                 addBusButton.IsEnabled = false;
+        }
+
+        private void CapacityTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CorrectInfoInTextBoxes();
+        }
+
+        private void CapacityTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!Char.IsDigit(e.Text, 0))
+            {
+                e.Handled = true;
+            }
         }
     }
 }

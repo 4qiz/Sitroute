@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using Sitronics.Data;
+using Sitronics.Models;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Sitronics.View
 {
@@ -24,6 +17,7 @@ namespace Sitronics.View
         public LoginWindow()
         {
             InitializeComponent();
+
         }
 
         [DllImport("user32.dll")]
@@ -61,7 +55,7 @@ namespace Sitronics.View
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Escape)
+            if (e.Key == Key.Escape)
             {
                 Environment.Exit(0);
             }

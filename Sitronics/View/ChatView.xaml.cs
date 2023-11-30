@@ -20,6 +20,8 @@ namespace Sitronics.View
         {
             InitializeComponent();
 
+            scrollViewer.ScrollToBottom();
+
             List<Message> messages;
             using (var context = new SitrouteDataContext())
             {
@@ -42,10 +44,10 @@ namespace Sitronics.View
                 BorderBrush = new SolidColorBrush(color),
                 BorderThickness = new Thickness(5),
                 Margin = new Thickness(5), 
+                HorizontalAlignment = horizontalAlignment,
                 Child = new TextBlock()
                 {
                     Text = message,
-                    HorizontalAlignment = horizontalAlignment,
                     FontSize = 20,
                     Foreground = new SolidColorBrush(color),
                     TextWrapping = TextWrapping.Wrap

@@ -106,13 +106,25 @@
                                       DisplayMemberPath="Name" 
                                       SelectedIndex="0" 
                                       Margin="5"/>
-                            
-                            <Button x:Name="addBusButton" 
-                                    Content="Добавить Автобус" 
-                                    IsEnabled="False" 
-                                    Click="AddBusButton_Click"
-                                    HorizontalAlignment="Center" 
-                                    Margin="5"/>
+
+                            <TextBlock Text="Вместимость автобуса" Foreground="White"
+                               HorizontalAlignment="Center"
+                               Margin="10"/>
+                            <Border CornerRadius="5"
+                                    BorderBrush="{StaticResource B_outline}"
+                                    BorderThickness="1"
+                                    Margin="0,0,0,0"
+                                    Padding="5">
+                                <TextBox x:Name="capacityTextBox"
+                                         Style="{StaticResource DefTB}"
+                                         TextChanged="CapacityTextBox_TextChanged" 
+                                         PreviewTextInput="CapacityTextBox_PreviewTextInput"
+                                         Background="{StaticResource B_background}"
+                                         />
+                            </Border>
+
+                            <Button x:Name="addBusButton" Content="Добавить Автобус" IsEnabled="False" Click="AddBusButton_Click"
+                                HorizontalAlignment="Center" Margin="5"/>
                         </StackPanel>
                     </Grid>
                 </Border>
