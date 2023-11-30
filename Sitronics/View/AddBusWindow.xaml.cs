@@ -46,12 +46,6 @@ namespace Sitronics.View
             WindowState = WindowState.Minimized;
         }
 
-        private void btnMaximize_Click(object sender, RoutedEventArgs e)
-        {
-            if (WindowState == WindowState.Normal) WindowState = WindowState.Maximized;
-            else WindowState = WindowState.Normal;
-        }
-
         private void AddBusButton_Click(object sender, RoutedEventArgs e)
         {
 
