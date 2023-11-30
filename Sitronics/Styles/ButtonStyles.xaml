@@ -119,9 +119,9 @@
     <!--Menu button text-->
     <Style x:Key="menuButtonText" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/>
-        <Setter Property="FontFamily" Value="Montserrat"/>
+        <Setter Property="FontFamily" Value="Roboto"/>
         <Setter Property="FontWeight" Value="Medium"/>
-        <Setter Property="FontSize" Value="13.5"/>
+        <Setter Property="FontSize" Value="16"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
@@ -132,7 +132,7 @@
         <!--Normal button style-->
         <Setter Property="Width" Value="35"/>
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="{StaticResource plainTextColor3}"/>
+        <Setter Property="Foreground" Value="{StaticResource B_onSurfaceVariant}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -147,7 +147,7 @@
         <Style.Triggers>
             <!--Button Style on hover-->
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource panelActiveColor}"/>
+                <Setter Property="Background" Value="{StaticResource B_surface}"/>
                 <Setter Property="Foreground" Value="{Binding Path=Tag, RelativeSource={RelativeSource Self}}"/>
             </Trigger>
         </Style.Triggers>
