@@ -22,166 +22,182 @@
                     Stretch="None"/>
     </Border.Background>-->
 
-        <Border CornerRadius="10"                    
-        BorderThickness="1">
+            <Border CornerRadius="10"                    
+            BorderThickness="1">
 
-            <Border.BorderBrush>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="{StaticResource sitronicsLogo1}" Offset="0"/>
-                    <GradientStop Color="{StaticResource sitronicsLogo0}" Offset="1"/>
-                </LinearGradientBrush>
-            </Border.BorderBrush>
+                <Border.BorderBrush>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="{StaticResource sitronicsLogo1}" Offset="0"/>
+                        <GradientStop Color="{StaticResource sitronicsLogo0}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.BorderBrush>
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <!--Content section-->
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <!--Content section-->
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                
+                
 
-                <!--Main Section-->
-                <Border CornerRadius="10"
-                    Grid.Column="1"
-                    Background="{StaticResource B_background}">
-                    <Grid>
-                    <Grid.RowDefinitions>
-                        <!--Control bar-->
-                        <RowDefinition Height="25"/>
-                        <!--Header / Caption-->
-                        <RowDefinition Height="35"/>
-                        <!--Content section / Child views-->
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <!--Close buttons-->
-                    <StackPanel x:Name="pnlControlBar"
-                        Grid.Row="0"
-                                    Grid.ColumnSpan="2"
-                        Orientation="Horizontal"
-                        FlowDirection="RightToLeft"
-                        Background="Transparent"
-                        Margin="0,0,5,0"
-                        MouseLeftButtonDown="pnlControlBar_MouseLeftButtonDown"
-                        MouseEnter="pnlControlBar_MouseEnter">
-                        <Button x:Name="btnClose"
-                            Style="{StaticResource controlButton}"
-                            Tag="{StaticResource color4}"
-                            Click="btnClose_Click"
-                                IsCancel="True">
-                            <fa:IconImage Icon="Xmark" Style="{StaticResource controlButtonIcon}"/>
-                        </Button>
-
-                        <Button x:Name="btnMaximize"
-                                Style="{StaticResource controlButton}"
-                                Tag="{StaticResource color6}"
-                                Click="btnMaximize_Click">
-                            <fa:IconImage Icon="Square" Style="{StaticResource controlButtonIcon}"/>
-                        </Button>
-
-                        <Button x:Name="btnMinimize"
-                            Style="{StaticResource controlButton}"
-                            Tag="{StaticResource color8}"
-                            Click="btnMinimize_Click">
-                            <fa:IconImage Icon="WindowMinimize" Width="12" Style="{StaticResource controlButtonIcon}"/>
-                        </Button>
-                    </StackPanel>
-
-                    <TextBlock Text="Добавление маршрута"
-    Foreground="{StaticResource B_onBackground}"
-    FontSize="12"
-    FontFamily="Montserrat"
-    FontWeight="Medium"
-    VerticalAlignment="Center"
-    Grid.Row="0"
-           Margin="10,0,0,0"/>
-
-                    <Grid Margin="20"
-                          Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="270"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
+                    <!--Main Section-->
+                <Border CornerRadius="0,10,10,0"
+                        Grid.Column="1"
+                        Background="{StaticResource B_background}">
+                    
+                        <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition MinHeight="400"/>
+                            <!--Control bar-->
+                            <RowDefinition Height="25"/>
+                            <!--Header / Caption-->
+                            <RowDefinition Height="10"/>
+                            <!--Content section / Child views-->
+                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <!--<StackPanel 
-                HorizontalAlignment="Center"
-                >-->
-                        <Grid >
+                        <Grid  Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+
+                            <TextBlock Text="Добавление маршрута"
+                                Foreground="{StaticResource B_onBackground}"
+                                FontSize="12"
+                                FontFamily="Montserrat"
+                                FontWeight="Medium"
+                                VerticalAlignment="Center"
+                                Grid.Column="0"
+                                Margin="10,0,0,0"/>
+                                
+                            <!--Close buttons-->
+                            <StackPanel x:Name="pnlControlBar"
+                            Grid.Column="1"
+                            Grid.ColumnSpan="2"
+                            Orientation="Horizontal"
+                            FlowDirection="RightToLeft"
+                            Background="Transparent"
+                            Margin="0,0,5,0"
+                            MouseLeftButtonDown="pnlControlBar_MouseLeftButtonDown"
+                            MouseEnter="pnlControlBar_MouseEnter">
+
+                                <Button x:Name="btnClose"
+                                Style="{StaticResource controlButton}"
+                                Tag="{StaticResource color4}"
+                                Click="btnClose_Click"
+                                    IsCancel="True"
+                                    >
+                                    <fa:IconImage Icon="Xmark" Style="{StaticResource controlButtonIcon}"/>
+                                </Button>
+
+                                <Button x:Name="btnMaximize"
+                                    Style="{StaticResource controlButton}"
+                                    Tag="{StaticResource color6}"
+                                    Click="btnMaximize_Click">
+                                    <fa:IconImage Icon="Square" Style="{StaticResource controlButtonIcon}"/>
+                                </Button>
+
+                                <Button x:Name="btnMinimize"
+                                Style="{StaticResource controlButton}"
+                                Tag="{StaticResource color8}"
+                                Click="btnMinimize_Click">
+                                    <fa:IconImage Icon="WindowMinimize" Width="12" Style="{StaticResource controlButtonIcon}"/>
+                                </Button>
+
+                            </StackPanel>
+                        </Grid>
+                       
+
+                        <Grid Margin="20"
+                              Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="270"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="400"/>
+                                <RowDefinition MinHeight="400"/>
                             </Grid.RowDefinitions>
 
-                            <StackPanel HorizontalAlignment="Left">
+                            
+                            <Grid >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="400"/>
+                                </Grid.RowDefinitions>
 
-                                <TextBlock 
-                   Text="Название маршрута"
-                   Margin="1,10,0,0"
-                   FontSize="14"
-                                           Foreground="White"
-                       />
+                                <StackPanel HorizontalAlignment="Left">
+
+                                    <TextBlock 
+                                        Text="Название маршрута"
+                                        Margin="1,10,0,0"
+                                        FontSize="14"
+                                        Foreground="White">
+                                    </TextBlock>
+
                                     <Border CornerRadius="5"
-BorderBrush="{StaticResource B_outline}"
-BorderThickness="1"
-Margin="0,0,0,10"
-Padding="5">
+                                            BorderBrush="{StaticResource B_outline}"
+                                            BorderThickness="1"
+                                            Margin="0,0,0,10"
+                                            Padding="5">
+
                                         <TextBox x:Name="routeNameTextBox"
-         MaxLength="6" 
-         Style="{StaticResource DefTB}"
-         TextChanged="RouteNameTextBox_TextChanged" 
-         Background="{StaticResource B_background}"
-             />
+                                            MaxLength="6" 
+                                            Style="{StaticResource DefTB}"
+                                            TextChanged="RouteNameTextBox_TextChanged" 
+                                            Background="{StaticResource B_background}">
+                                        </TextBox>
+
                                     </Border>
 
                                     <Button 
-x:Name="saveRouteButton"
-Content="Сохранить" 
-Click="SaveRouteButton_Click"
-Width="250"
-Margin="0,10,0,10"
-HorizontalAlignment="Left"
-IsEnabled="False"
-/>
+                                        x:Name="saveRouteButton"
+                                        Content="Сохранить" 
+                                        Click="SaveRouteButton_Click"
+                                        Width="260"
+                                        Margin="0,10,0,0"
+                                        HorizontalAlignment="Left"
+                                        IsEnabled="False">
+                                    </Button>
+
                                     <Button 
-            Content="Добавить остановку" 
-            Click="AddBusStopButton_Click"
-            Width="260"
-            Margin="0,10,0,0"
-            />
-                                
-                            </StackPanel>
+                                        Content="Добавить остановку" 
+                                        Click="AddBusStopButton_Click"
+                                        Width="260"
+                                        Margin="0,10,0,0">
+                                    </Button>
 
-                            <ScrollViewer Grid.Column="0"
-                      Grid.Row="1"
-                  VerticalScrollBarVisibility="Hidden"
-                      Visibility="Visible"
-                      HorizontalAlignment="Left"
-                      >
-                                <StackPanel x:Name="comboBoxesStackPanel"
-                        Width="250"
-                        Margin="0,10,0,0"
-                        >
                                 </StackPanel>
-                            </ScrollViewer>
+
+                                <ScrollViewer Grid.Column="0"
+                                      Grid.Row="1"
+                                      VerticalScrollBarVisibility="Hidden"
+                                      Visibility="Visible"
+                                      HorizontalAlignment="Left">
+
+                                    <StackPanel x:Name="comboBoxesStackPanel"
+                                        Width="250"
+                                        Margin="0,10,0,0">
+                                    </StackPanel>
+
+                                </ScrollViewer>
+
+                            </Grid>
+                            <!--</StackPanel>-->
+
+                            <Border ClipToBounds="True"
+                                CornerRadius="10"
+                                BorderThickness="6"
+                                BorderBrush="#eaeaea"
+                                Grid.Column="1">
+
+                                <gmaps:GMapControl x:Name="mapView" Loaded="MapView_Loaded" />
+
+                            </Border>
                         </Grid>
-                        <!--</StackPanel>-->
-
-                        <Border ClipToBounds="True"
-        CornerRadius="10"
-        BorderThickness="6"
-        BorderBrush="#eaeaea"
-            Grid.Column="1" 
-            Margin="0,0,0,0">
-                            <gmaps:GMapControl x:Name="mapView" 
-                       Loaded="MapView_Loaded"  
-                       />
-                        </Border>
                     </Grid>
-
-                </Grid>
-            </Border>
-        </Grid>
-    </Border>
+                </Border>
+            </Grid>
+        </Border>
     </Border>
 </Window>
