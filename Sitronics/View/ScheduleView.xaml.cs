@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using Microsoft.EntityFrameworkCore;
+using Sitronics.Data;
+using Sitronics.Models;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Sitronics.View
 {
@@ -23,6 +13,27 @@ namespace Sitronics.View
         public ScheduleView()
         {
             InitializeComponent();
+            BusScheduleAlgorithm algorithm = new BusScheduleAlgorithm();
+            DateTime startTime = DateTime.Parse("2022-01-02 08:00:00");
+            DateTime endTime = DateTime.Parse("2022-01-02 22:00:00");
+            using (var context = new SitrouteDataContext())
+            {
+                var route = context.Routes
+                    .Include(r => r.RouteByBusStations)
+                    .ThenInclude(r => r.IdBusStationNavigation)
+                    .Include(r => r.Buses);
+                var buses = route.FirstOrDefault().RouteByBusStations;
+                List<Schedule> schedule = algorithm.GenerateBusSchedule(
+                    startTime,
+                    endTime,
+                    5,
+                    route.FirstOrDefault().RouteByBusStations.ToList(),
+                    route.FirstOrDefault().Buses.ToList(),
+                    "",
+                    ""
+                    );
+                scheduleDataGrid.ItemsSource = schedule.OrderBy(s => s.IdBusStation).ThenBy(s => s.Time);
+            }
         }
     }
 }
