@@ -12,9 +12,9 @@ namespace Sitronics
             int workMinutes = endDate.Hour * 60 + endDate.Minute - startDate.Hour * 60 + startDate.Minute;
             int routeTime = frequencyInMinutes * (routeByBusStation.Count - 1) * 2; // Минут от начальной до конечной туда и обратно
             int busCount = buses.Count;
-            int delay = (int)(routeTime / busCount);
+            int delay = (int)(routeTime / (busCount / 2));
             int rushTimeDelay = 3;
-            int chillTime = 15;
+            int chillTime = 0;
             DateTime busStartTime;
             var x = 1;
             var rounds = workMinutes / (routeTime * 2);
@@ -25,7 +25,7 @@ namespace Sitronics
                 {
                     if (i >= busCount / 2)
                         busStartTime = busStartTime.AddMinutes(routeTime / 2);
-                    busStartTime = busStartTime.AddMinutes(IsRushTime(busStartTime) ? rushTimeDelay * i : delay * i);
+                    busStartTime = busStartTime.AddMinutes(IsRushTime(busStartTime) ? rushTimeDelay * (i % (busCount / 2)) : delay * (i % (busCount / 2)));
                     schedules.AddRange(MakeBusSchedule(buses[i], routeByBusStation, busStartTime));
                     busStartTime = startDate.AddMinutes(routeTime * j + chillTime);
                 }
@@ -39,7 +39,7 @@ namespace Sitronics
             List<Schedule> schedules = new List<Schedule>();
 
             RouteByBusStation startBusStop, endBusStop;
-            int busTimeBetweenStations = 0; 
+            int busTimeBetweenStations = 0;
             for (int i = 0; i < busStops.Count; i++)
             {
                 if (i != 0)
@@ -47,7 +47,7 @@ namespace Sitronics
                 else
                     startBusStop = busStops[i];
                 endBusStop = busStops[i];
-                busTimeBetweenStations = GetIntervalInMinutesBetweenBusStations((int)bus.IdRoute, startBusStop.IdBusStation, endBusStop.IdBusStation);
+                busTimeBetweenStations = Math.Abs(GetIntervalInMinutesBetweenBusStations((int)bus.IdRoute, startBusStop.IdBusStation, endBusStop.IdBusStation));
                 busStartTime = busStartTime.AddMinutes(busTimeBetweenStations);
                 var schedule = new Schedule
                 {
