@@ -24,7 +24,7 @@ namespace Sitronics.View
                     routeComboBox.ItemsSource = route.ToList();
                     routeComboBox.SelectedIndex = 0;
                     routeComboBox.DisplayMemberPath = "Name";
-                    
+
                     stopComboBox.ItemsSource = ((Route)routeComboBox.SelectedItem).RouteByBusStations.ToList();
                     stopComboBox.SelectedIndex = 0;
                     stopComboBox.DisplayMemberPath = "IdBusStationNavigation.Name";
@@ -38,6 +38,10 @@ namespace Sitronics.View
         private async Task LoadSchedule(Route selectedRoute, BusStation busStation)
         {
             BusScheduleAlgorithm algorithm = new BusScheduleAlgorithm();
+
+            MessageBox.Show(algorithm.GetAmountPeopleOnBusStations(selectedRoute.IdRoute).ToString());
+            MessageBox.Show(algorithm.GetPeopleOnRouteByDay(DateTime.Parse("2023-11-30"), selectedRoute.IdRoute).ToString());
+            MessageBox.Show(algorithm.GetAveragePeopleOnBusStationByRoute(selectedRoute.IdRoute, busStation.IdBusStation).ToString());
             DateTime startTime = DateTime.Parse("2022-01-02 08:00:00");
             DateTime endTime = DateTime.Parse("2022-01-02 22:00:00");
             using (var context = new SitrouteDataContext())
@@ -49,6 +53,7 @@ namespace Sitronics.View
                     .Include(r => r.Buses)
                     .FirstOrDefault();
                 var buses = route.RouteByBusStations;
+
                 List<Schedule> schedule = await Task.Run(() => algorithm.GenerateBusSchedule(
                     startTime,
                     endTime,
@@ -58,7 +63,7 @@ namespace Sitronics.View
                     "",
                     ""
                     ));
-                scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time);//.OrderBy(s => s.IdBusStation).ThenBy(s => s.Time);
+                scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { s.Time, s.IdBus });//.OrderBy(s => s.IdBusStation).ThenBy(s => s.Time);
                 //schedule2DataGrid.ItemsSource = schedule2.OrderByDescending(s => s.IdBusStation).ThenBy(s => s.Time); */
 
             }
@@ -85,7 +90,14 @@ namespace Sitronics.View
 
         private async void LoadScheduleButton_Click(object sender, RoutedEventArgs e)
         {
-            await LoadSchedule((Route)routeComboBox.SelectedItem, ((RouteByBusStation)stopComboBox.SelectedItem).IdBusStationNavigation);
+            try
+            {
+                await LoadSchedule((Route)routeComboBox.SelectedItem, ((RouteByBusStation)stopComboBox.SelectedItem).IdBusStationNavigation);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
