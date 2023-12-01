@@ -13,7 +13,9 @@
         Background="Transparent"
         AllowsTransparency="True"
         MinHeight="720"
-        MinWidth="1024">
+        MinWidth="1024"
+        KeyDown="Window_KeyDown">
+    
     <Window.DataContext>
         <viewModel:MainViewModel/>
     </Window.DataContext>
@@ -104,7 +106,7 @@
                             </StackPanel>
 
                             <!--Menu Buttons-->
-                            <RadioButton Style="{StaticResource menuButton}"
+                            <RadioButton x:Name="MapRadioButton" Style="{StaticResource menuButton}"
                                  Tag="{StaticResource B_onBackground}"
                                  IsChecked="True"
                                  Command="{Binding ShowMapViewCommand}"
@@ -145,7 +147,7 @@
                                 </StackPanel>
                             </RadioButton>
 
-                            <RadioButton Style="{StaticResource menuButton}"
+                            <RadioButton x:Name="ScheduleRadioButton" Style="{StaticResource menuButton}"
                                 Tag="{StaticResource B_onBackground}"
                                 Command="{Binding ShowScheduleViewCommand}"
                                          GroupName="Menu">
@@ -169,14 +171,14 @@
                         
                         <StackPanel Grid.Row="1"
                         VerticalAlignment="Bottom">
-                        <RadioButton Style="{StaticResource menuButton}"
+                        <RadioButton x:Name="InfoRadioButton" Style="{StaticResource menuButton}"
                                  Tag="{StaticResource B_secondary}"
                                  Command="{Binding ShowSettingsViewCommand}"
                                      GroupName="Menu"
                                      Margin="0,0,0,5">
                             <StackPanel Orientation="Horizontal">
-                                <fa:IconImage Icon="Tools" Style="{StaticResource menuButtonIcon}"/>
-                                <TextBlock Text="Настройки" Style="{StaticResource menuButtonText}"/>
+                                <fa:IconImage Icon="CircleQuestion" Style="{StaticResource menuButtonIcon}"/>
+                                <TextBlock Text="Справка" Style="{StaticResource menuButtonText}"/>
                             </StackPanel>
                         </RadioButton>
                     </StackPanel>
