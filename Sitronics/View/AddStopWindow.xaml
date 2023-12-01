@@ -36,7 +36,7 @@
 
 
                 <!--Main Section-->
-                <Border CornerRadius="0,10,10,0"
+                <Border CornerRadius="10"
                     Grid.Column="1"
                     Background="{StaticResource B_background}">
 
@@ -58,7 +58,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="Добавление остановки"
-                                Foreground="{StaticResource titleColor2}"
+                                Foreground="{StaticResource B_onBackground}"
                                 FontSize="12"
                                 FontFamily="Montserrat"
                                 FontWeight="Medium"
@@ -180,7 +180,8 @@
                                 CornerRadius="10"
                                 BorderThickness="6"
                                 BorderBrush="#eaeaea"
-                                Grid.Column="1">
+                                Grid.Column="1"
+                                    Margin="5,0,0,0">
 
                                 <gmaps:GMapControl x:Name="mapView" 
                                    MouseRightButtonDown="MapView_MouseRightButtonDown" 
