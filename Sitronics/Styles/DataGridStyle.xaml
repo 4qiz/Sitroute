@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
-    <Style  TargetType="{x:Type DataGridRow}">
+    <!--<Style  TargetType="{x:Type DataGridRow}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{StaticResource B_onBackground}"/>
         <Setter Property="Padding" Value="10,0,0,10"/>
@@ -47,7 +47,7 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
 
-    </Style>
+    </Style>-->
 
 
     <!--<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />

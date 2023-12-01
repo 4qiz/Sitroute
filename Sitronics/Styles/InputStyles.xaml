@@ -145,14 +145,14 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsHighlighted" Value="True">
-                            <Setter TargetName="ContentBorder" Property="Background" Value="{StaticResource B_error}" />
+                            <Setter TargetName="ContentBorder" Property="Background" Value="{StaticResource B_surfaceVariant}" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="ActiveRectangle" Property="Visibility" Value="Visible" />
                             <Setter TargetName="PART_ContentPresenter" Property="TextElement.Foreground" Value="{StaticResource B_onBackground}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="{StaticResource B_onBackground}" />
+                            <Setter Property="Foreground" Value="{StaticResource B_onSurfaceVariant}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
