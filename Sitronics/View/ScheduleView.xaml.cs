@@ -27,12 +27,12 @@ namespace Sitronics.View
                     startTime,
                     endTime,
                     5,
-                    route.FirstOrDefault().RouteByBusStations.ToList(),
-                    route.FirstOrDefault().Buses.ToList(),
+                    route.FirstOrDefault(r => r.IdRoute == 1).RouteByBusStations.ToList(),
+                    route.FirstOrDefault(r => r.IdRoute == 1).Buses.ToList(),
                     "",
                     ""
                     );
-                scheduleDataGrid.ItemsSource = schedule.OrderBy(s => s.IdBusStation).ThenBy(s => s.Time);
+                scheduleDataGrid.ItemsSource = schedule;//.OrderBy(s => s.IdBusStation).ThenBy(s => s.Time);
             }
         }
     }

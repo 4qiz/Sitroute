@@ -23,6 +23,8 @@ namespace Sitronics
                 busStartTime = startDate;
                 for (int j = 1; j <= (workMinutes / routeTime); j++)
                 {
+                    if (i >= busCount / 2)
+                        busStartTime = busStartTime.AddMinutes(routeTime / 2);
                     busStartTime = busStartTime.AddMinutes(IsRushTime(busStartTime) ? rushTimeDelay * i : delay * i);
                     schedules.AddRange(MakeBusSchedule(buses[i], routeByBusStation, busStartTime));
                     busStartTime = startDate.AddMinutes(routeTime * j + chillTime);
@@ -36,18 +38,25 @@ namespace Sitronics
         {
             List<Schedule> schedules = new List<Schedule>();
 
-            for (int i = 1; i < busStops.Count; i++)
+            RouteByBusStation startBusStop, endBusStop;
+            int busTimeBetweenStations = 0; 
+            for (int i = 0; i < busStops.Count; i++)
             {
-                RouteByBusStation startBusStop = busStops[i - 1];
-                RouteByBusStation endBusStop = busStops[i];
+                if (i != 0)
+                    startBusStop = busStops[i - 1];
+                else
+                    startBusStop = busStops[i];
+                endBusStop = busStops[i];
+                busTimeBetweenStations = GetIntervalInMinutesBetweenBusStations((int)bus.IdRoute, startBusStop.IdBusStation, endBusStop.IdBusStation);
+                busStartTime = busStartTime.AddMinutes(busTimeBetweenStations);
                 var schedule = new Schedule
                 {
                     IdBus = bus.IdBus,
-                    IdBusStation = startBusStop.IdBusStation,
+                    IdBusStation = endBusStop.IdBusStation,
                     Time = busStartTime
                 };
                 schedules.Add(schedule);
-                busStartTime = busStartTime.AddMinutes(GetIntervalInMinutesBetweenBusStations((int)bus.IdRoute, bus.IdBus, startBusStop.IdBusStation, endBusStop.IdBusStation)); // busStartTime.AddMinute(время до остановки)
+
             }
             return schedules;
         }
@@ -82,6 +91,29 @@ namespace Sitronics
             // Внедрить логику, чтобы проверить, подходят ли дорожные условия для поездок на автобусе
             return true;
         }
+        private static int GetIntervalInMinutesBetweenBusStations(int idRoute, int idStartBusStation, int idEndBusStation)
+        {
+            using (var context = new SitrouteDataContext())
+            {
+                var routeByBusStations = context.RouteByBusStations
+                    .Include(s => s.IdBusStationNavigation)
+                    .ThenInclude(bs => bs.Schedules)
+                    .Where(s => s.IdRoute == idRoute)
+                    .ToList();
+
+                return Convert.ToInt32(Math.Round((
+                    GetArrivalTime(routeByBusStations, idEndBusStation) -
+                    GetArrivalTime(routeByBusStations, idStartBusStation)).TotalMinutes));
+            }
+        }
+
+        private static DateTime GetArrivalTime(List<RouteByBusStation> routeByBusStations, int idBusStation)
+        {
+            return routeByBusStations.Where(s => s.IdBusStation == idBusStation).First().IdBusStationNavigation.Schedules
+                                        .OrderBy(s => s.Time)
+                                        .First().Time;
+        }
+        /*
         private int GetIntervalInMinutesBetweenBusStations(int idRoute, int idBus, int idStartBusStation, int idEndBusStation)
         {
             using (var context = new SitrouteDataContext())
@@ -105,6 +137,6 @@ namespace Sitronics
                                     .OrderBy(s => s.Time)
                                     .Select(s => new { s.Time })
                                     .First().Time;
-        }
+        }*/
     }
 }
