@@ -27,12 +27,22 @@ namespace Sitronics.View
                     startTime,
                     endTime,
                     5,
-                    route.FirstOrDefault().RouteByBusStations.ToList(),
-                    route.FirstOrDefault().Buses.ToList(),
+                    route.FirstOrDefault(r => r.IdRoute == 1).RouteByBusStations.ToList(),
+                    route.FirstOrDefault(r => r.IdRoute == 1).Buses.ToList(),
+                    "",
+                    ""
+                    );
+                List<Schedule> schedule2 = algorithm.GenerateBusSchedule(
+                    startTime,
+                    endTime,
+                    5,
+                    route.FirstOrDefault(r => r.IdRoute == 1).RouteByBusStations.Reverse().ToList(),
+                    route.FirstOrDefault(r => r.IdRoute == 1).Buses.Reverse().ToList(),
                     "",
                     ""
                     );
                 scheduleDataGrid.ItemsSource = schedule.OrderBy(s => s.IdBusStation).ThenBy(s => s.Time);
+                //schedule2DataGrid.ItemsSource = schedule2.OrderByDescending(s => s.IdBusStation).ThenBy(s => s.Time);
             }
         }
     }

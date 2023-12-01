@@ -6,7 +6,35 @@
              xmlns:local="clr-namespace:Sitronics.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    
     <Grid>
-        <DataGrid x:Name="scheduleDataGrid" Background="Black"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        
+        <StackPanel Grid.Column="0"
+                    Width="200"
+                    Margin="10">
+            <TextBlock Text="Выберите маршрут"
+                       Foreground="{StaticResource B_onSurface}"/>
+            <ComboBox x:Name="routeComboBox"/>
+        </StackPanel>
+        
+        <StackPanel Grid.Column="1"
+                    Width="200"
+                    Margin="10">
+            <TextBlock Text="Выберите остановку"
+                       Foreground="{StaticResource B_onSurface}"/>
+            <ComboBox x:Name="stopComboBox"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Column="2">
+            <DataGrid x:Name="scheduleDataGrid" />
+                
+        </ScrollViewer>
     </Grid>
 </UserControl>
