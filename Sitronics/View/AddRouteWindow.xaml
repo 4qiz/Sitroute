@@ -41,7 +41,7 @@
                 
 
                     <!--Main Section-->
-                <Border CornerRadius="0,10,10,0"
+                <Border CornerRadius="10"
                         Grid.Column="1"
                         Background="{StaticResource B_background}">
                     
