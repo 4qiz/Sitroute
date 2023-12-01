@@ -11,16 +11,38 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+        <ScrollViewer x:Name="scrollViewer" 
+                      VerticalScrollBarVisibility="Visible" 
+                      HorizontalScrollBarVisibility="Disabled">
+            
             <StackPanel x:Name="chatStackPanel"/>
+            
         </ScrollViewer>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="newMessageTextBox" TextWrapping="Wrap" MaxLength="500"/>
-            <Button x:Name="sendMessageButton" IsDefault="True" Width="40" Content="->" Grid.Column="1"
+
+            <Border CornerRadius="5"
+        BorderBrush="{StaticResource B_primary}"
+        BorderThickness="1"
+        Padding="5">
+
+                <TextBox x:Name="newMessageTextBox" 
+         TextWrapping="Wrap" 
+         MaxLength="500"
+         Background="{StaticResource B_surface}"
+                         Style="{StaticResource DefTB}"/>
+
+            </Border>
+
+            
+            <Button x:Name="sendMessageButton" 
+                    IsDefault="True" 
+                    Width="40" 
+                    Content="->" 
+                    Grid.Column="1"
                     Click="SendMessageButton_Click"/>
         </Grid>
     </Grid>

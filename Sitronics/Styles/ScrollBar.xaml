@@ -86,9 +86,9 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
                     <Border
-                    Background="{StaticResource B_onPrimaryContainer}"
+                    Background="{StaticResource B_outline}"
                     BorderBrush="White"
-                    BorderThickness="1"
+                    BorderThickness="0"
                     CornerRadius="{TemplateBinding Border.CornerRadius}" />
                 </ControlTemplate>
             </Setter.Value>
@@ -327,7 +327,7 @@
     </ControlTemplate>
 
     <Style x:Key="UiScrollBar" TargetType="{x:Type ScrollBar}">
-        <Setter Property="Background" Value="Aqua" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="SnapsToDevicePixels" Value="True" />

@@ -16,6 +16,7 @@ namespace Sitronics.View
         {
             IdDriver = 1
         };
+
         public ChatView()
         {
             InitializeComponent();
@@ -42,7 +43,8 @@ namespace Sitronics.View
             chatStackPanel.Children.Add(new Border()
             {
                 BorderBrush = new SolidColorBrush(color),
-                BorderThickness = new Thickness(5),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(5),
                 Margin = new Thickness(5), 
                 HorizontalAlignment = horizontalAlignment,
                 Child = new TextBlock()
