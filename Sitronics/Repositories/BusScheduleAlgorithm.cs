@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sitronics.Data;
 using Sitronics.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sitronics
 {
@@ -28,8 +29,8 @@ namespace Sitronics
                 {
                     if (i >= halfBusCount)
                         busStartTime = busStartTime.AddMinutes(halfRouteTime);
-                    busStartTime = busStartTime.AddMinutes(IsRushTime(busStartTime) ? rushTimeDelay * (i % (halfBusCount)) : delay * (i % (halfBusCount)));
-                    schedules.AddRange(MakeBusSchedule(buses[i], routeByBusStation, busStartTime));
+                    busStartTime = busStartTime.AddMinutes(IsRushTime(busStartTime) ? rushTimeDelay * i : delay * i);
+                    schedules.AddRange(MakeBusSchedule(buses[i], routeByBusStation, busStartTime, weatherInfo));
                     busStartTime = startDate.AddMinutes(routeTime * j + chillTime);
                 }
             }
@@ -38,12 +39,12 @@ namespace Sitronics
         }
 
 
-        public List<Schedule> MakeBusSchedule(Bus bus, List<RouteByBusStation> busStops, DateTime busStartTime)
+        public List<Schedule> MakeBusSchedule(Bus bus, List<RouteByBusStation> busStops, DateTime busStartTime, string weatherCondition)
         {
             List<Schedule> schedules = new List<Schedule>();
 
             RouteByBusStation startBusStop, endBusStop;
-            int busTimeBetweenStations;
+            double busTimeBetweenStations;
             for (int i = 0; i < busStops.Count; i++)
             {
                 if (i != 0)
@@ -51,7 +52,8 @@ namespace Sitronics
                 else
                     startBusStop = busStops[i];
                 endBusStop = busStops[i];
-                busTimeBetweenStations = Math.Abs(GetIntervalInMinutesBetweenBusStations((int)bus.IdRoute, startBusStop.IdBusStation, endBusStop.IdBusStation));
+                busTimeBetweenStations = Math.Abs(GetIntervalInMinutesBetweenBusStations(
+                    (int)bus.IdRoute, startBusStop.IdBusStation, endBusStop.IdBusStation)) / GetWeatherFactor(weatherCondition);
                 busStartTime = busStartTime.AddMinutes(busTimeBetweenStations);
                 var schedule = new Schedule
                 {
@@ -69,8 +71,10 @@ namespace Sitronics
         {
             var start = new TimeSpan(8, 0, 0);
             var end = new TimeSpan(10, 0, 0);
+            var start2 = new TimeSpan(17, 0, 0);
+            var end2 = new TimeSpan(21, 0, 0);
             TimeSpan now = currentDateTime.TimeOfDay;
-            return (now >= start) && (now <= end);
+            return (now >= start) && (now < end) || (now >= start2) && (now < end2);
         }
 
         public int CalculateBusCount(int minutesToSolveRoute, int delay)
@@ -80,20 +84,54 @@ namespace Sitronics
 
         private double GetWeatherFactor(string weatherInfo)
         {
-            var badWeatherFactors = new Dictionary<string, double>();
-            badWeatherFactors.Add("icy condition", 0.6);
-            badWeatherFactors.Add("fog", 0.7);
-            badWeatherFactors.Add("snowfall", 0.8);
+            var badWeatherFactors = new Dictionary<string, double>
+            {
+                { "icy condition", 0.6 },
+                { "fog", 0.7 },
+                { "snowfall", 0.8 }
+            };
             if (badWeatherFactors.ContainsKey(weatherInfo))
                 return badWeatherFactors[weatherInfo];
             else
                 return 1;
         }
 
-        private bool IsGoodRoadConditions(string roadConditions)
+        public int GetAmountPeopleOnBusStations(int idRoute)
         {
-            // Внедрить логику, чтобы проверить, подходят ли дорожные условия для поездок на автобусе
-            return true;
+            using (var context = new SitrouteDataContext())
+            {
+                var route = context.Routes
+                    .Where(r => r.IdRoute == idRoute)
+                    .Include(r => r.RouteByBusStations)
+                    .ThenInclude(r => r.IdBusStationNavigation).FirstOrDefault();
+                return (int)route.RouteByBusStations.Sum(r => r.IdBusStationNavigation.PeopleCount);
+            }
+        }
+
+        public int GetPeopleOnRouteByDay(DateTime date, int idRoute)
+        {
+            using (var context = new SitrouteDataContext())
+            {
+                var route = context.Routes
+                    .Where(r => r.IdRoute == idRoute)
+                    .Include(r => r.Buses)
+                    .ThenInclude(b => b.Schedules).FirstOrDefault(r => r.IdRoute == idRoute);
+
+                return (int)route.Buses.Sum(b => b.Schedules.Where(s => s.Time.Date == date.Date).Sum(s => s.PeopleCountBoardingBus));
+            }
+        }
+
+        public double GetAveragePeopleOnBusStationByRoute(int idRoute, int idBusStation)
+        {
+            using (var context = new SitrouteDataContext())
+            {
+                var route = context.Routes
+                    .Where(r => r.IdRoute == idRoute)
+                    .Include(r => r.Buses)
+                    .ThenInclude(b => b.Schedules).FirstOrDefault(r => r.IdRoute == idRoute);
+                double peopleOnBoard = (double)route.Buses.Average(b => b.Schedules.Where(s => s.IdBusStation == idBusStation).Average(s => s.PeopleCountBoardingBus));
+                return peopleOnBoard;
+            }
         }
         private int GetIntervalInMinutesBetweenBusStations(int idRoute, int idStartBusStation, int idEndBusStation)
         {
