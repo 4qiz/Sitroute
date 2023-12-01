@@ -21,7 +21,7 @@
                     Margin="10">
             <TextBlock Text="Выберите маршрут"
                        Foreground="{StaticResource B_onSurface}"/>
-            <ComboBox x:Name="routeComboBox"/>
+            <ComboBox x:Name="routeComboBox" SelectionChanged="RouteComboBox_SelectionChanged"/>
         </StackPanel>
         
         <StackPanel Grid.Column="1"
@@ -30,11 +30,12 @@
             <TextBlock Text="Выберите остановку"
                        Foreground="{StaticResource B_onSurface}"/>
             <ComboBox x:Name="stopComboBox"/>
+            <Button x:Name="loadScheduleButton" Content="Загрузить расписание" Click="LoadScheduleButton_Click"/>
         </StackPanel>
         <ScrollViewer Grid.Column="2"
                       Margin="0,29,0,0"
                       PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-            <StackPanel Loaded="StackPanel_Loaded">
+            <StackPanel>
                 <DataGrid x:Name="scheduleDataGrid" 
                           ScrollViewer.CanContentScroll="True"
                           Width="400"/>
