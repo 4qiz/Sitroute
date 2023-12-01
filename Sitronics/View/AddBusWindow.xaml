@@ -105,7 +105,7 @@
                             <ComboBox x:Name="routeComboBox" 
                                       DisplayMemberPath="Name" 
                                       SelectedIndex="0" 
-                                      Margin="5"/>
+                                      Margin="0,5,0,5"/>
 
                             <TextBlock Text="Вместимость автобуса" 
                                        Foreground="{StaticResource B_onSurface}"
