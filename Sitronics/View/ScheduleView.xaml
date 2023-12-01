@@ -31,9 +31,12 @@
                        Foreground="{StaticResource B_onSurface}"/>
             <ComboBox x:Name="stopComboBox"/>
         </StackPanel>
-        <ScrollViewer Grid.Column="2">
-            <StackPanel Loaded="StackPanel_Loaded">
-                <DataGrid x:Name="scheduleDataGrid" />
+        <ScrollViewer Grid.Column="2"
+                      Margin="0,29,0,0">
+            <StackPanel >
+                <DataGrid x:Name="scheduleDataGrid" 
+                          ScrollViewer.CanContentScroll="true"
+                          Width="400"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>
