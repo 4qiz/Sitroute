@@ -31,10 +31,10 @@
                        Foreground="{StaticResource B_onSurface}"/>
             <ComboBox x:Name="stopComboBox"/>
         </StackPanel>
-
-        <StackPanel Grid.Column="2" Loaded="StackPanel_Loaded">
-            <DataGrid x:Name="scheduleDataGrid" />
-                
+        <ScrollViewer Grid.Column="2">
+            <StackPanel Loaded="StackPanel_Loaded">
+                <DataGrid x:Name="scheduleDataGrid" />
+            </StackPanel>
         </ScrollViewer>
     </Grid>
 </UserControl>
