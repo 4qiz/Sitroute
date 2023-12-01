@@ -1,26 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sitronics.Data;
 using Sitronics.Models;
-using System.Windows.Media;
 
 namespace Sitronics
 {
     public class BusScheduleAlgorithm
     {
-        public List<Schedule> GenerateBusSchedule(DateTime startDate, DateTime endDate, int frequencyInMinutes, List<RouteByBusStation> routeByBusStation, List<Bus> buses, string weatherInfo, string roadConditions)
+        public List<Schedule> GenerateBusSchedule(DateTime startDate, DateTime endDate, int idRoute, List<RouteByBusStation> routeByBusStation, List<Bus> buses, string weatherInfo, string roadConditions)
         {
             List<Schedule> schedules = new List<Schedule>();
             DateTime busStartTime;
             int workMinutes = endDate.Hour * 60 + endDate.Minute - startDate.Hour * 60 + startDate.Minute;
-            int routeTime = frequencyInMinutes * (routeByBusStation.Count - 1) * 2;
+            int routeTime = GetIntervalInMinutesBetweenBusStations(idRoute, routeByBusStation.First().IdBusStation, routeByBusStation.Last().IdBusStation);//frequencyInMinutes * (routeByBusStation.Count - 1) * 2;
             int busCount = buses.Count;
             int delay = routeTime / (busCount / 2);
+
             int rushTimeDelay = 3;
             int chillTime = 0;
 
             int round = workMinutes / routeTime;
             int halfRouteTime = routeTime / 2;
-            int halfBusCount = busCount / 2; 
+            int halfBusCount = busCount / 2;
             for (int i = 0; i < busCount; i++)
             {
                 busStartTime = startDate;
@@ -110,11 +110,6 @@ namespace Sitronics
                     GetArrivalTime(routeByBusStations, idStartBusStation)).TotalMinutes));
             }
         }
-        
-        public int GetRouteWayTime()
-        {
-            return 1;
-        }
 
         private DateTime GetArrivalTime(List<RouteByBusStation> routeByBusStations, int idBusStation)
         {
@@ -122,30 +117,5 @@ namespace Sitronics
                                         .OrderBy(s => s.Time)
                                         .First().Time;
         }
-        /*
-        private int GetIntervalInMinutesBetweenBusStations(int idRoute, int idBus, int idStartBusStation, int idEndBusStation)
-        {
-            using (var context = new SitrouteDataContext())
-            {
-                var routeByBusStations = context.RouteByBusStations
-                    .Include(s => s.IdBusStationNavigation)
-                    .ThenInclude(bs => bs.Schedules)
-                    .Where(s => s.IdRoute == idRoute)
-                    .ToList();
-
-                return Convert.ToInt32(Math.Round((
-                    GetArrivalTime(routeByBusStations, idEndBusStation, idBus) -
-                    GetArrivalTime(routeByBusStations, idStartBusStation, idBus)).TotalMinutes));
-            }
-        }
-
-        private DateTime GetArrivalTime(List<RouteByBusStation> routeByBusStations, int idBusStation, int idBus)
-        {
-            return routeByBusStations.Where(s => s.IdBusStation == idBusStation).First().IdBusStationNavigation.Schedules
-                                    .Where(s => s.IdBus == idBus)
-                                    .OrderBy(s => s.Time)
-                                    .Select(s => new { s.Time })
-                                    .First().Time;
-        }*/
     }
 }
