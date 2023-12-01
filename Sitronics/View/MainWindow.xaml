@@ -117,7 +117,7 @@
                                 </StackPanel>
                             </RadioButton>
 
-                            <RadioButton Style="{StaticResource menuButton}"
+                            <RadioButton x:Name="RoutesRadioButton" Style="{StaticResource menuButton}"
                                 Tag="{StaticResource B_onBackground}"
                                 Command="{Binding ShowRouteInfoViewCommand}"
                                          GroupName="Menu">
@@ -127,7 +127,7 @@
                                 </StackPanel>
                             </RadioButton>
 
-                            <RadioButton Style="{StaticResource menuButton}"
+                            <RadioButton x:Name="StopsRadioButton" Style="{StaticResource menuButton}"
                             Tag="{StaticResource B_onBackground}"
                             Command="{Binding ShowStopInfoViewCommand}"
                                          GroupName="Menu">
@@ -137,7 +137,7 @@
                                 </StackPanel>
                             </RadioButton>
 
-                            <RadioButton Style="{StaticResource menuButton}"
+                            <RadioButton x:Name="BusesRadioButton" Style="{StaticResource menuButton}"
                             Tag="{StaticResource B_onBackground}"
                             Command="{Binding ShowBusInfoViewCommand}"
                                          GroupName="Menu">
@@ -283,8 +283,8 @@
                                 </Ellipse.Fill>--><!--
                             </Ellipse>-->
 
-                            <Button Style="{StaticResource iconButton}"
-                                    Tag="{StaticResource color3}">
+                            <Button x:Name="ClockButton" Style="{StaticResource iconButton}"
+                                    Tag="{StaticResource color3}" Click="ClockButton_Click">
                                 <fa:IconImage Icon="Clock" Style="{StaticResource iconButtonIcon}"/>
                             </Button>
 

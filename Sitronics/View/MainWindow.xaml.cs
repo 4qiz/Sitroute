@@ -1,23 +1,10 @@
-﻿using FontAwesome.Sharp;
-using Microsoft.Identity.Client;
-using Sitronics.Repositories;
-using Sitronics.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Sitronics.Repositories;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Sitronics.View
 {
@@ -29,7 +16,7 @@ namespace Sitronics.View
         public MainWindow()
         {
             InitializeComponent();
-            if(Connection.CurrentUser?.Admin?.Role == "Руководитель")
+            if (Connection.CurrentUser?.Admin?.Role == "Руководитель")
                 ChatRadioButton.Visibility = Visibility.Collapsed;
         }
 
@@ -64,44 +51,23 @@ namespace Sitronics.View
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.F1)
+            if (e.Key == Key.F1)
             {
-                if (FindName("InfoRadioButton") is RadioButton radioButton)
-                {
-                    var command = radioButton.Command;
-                    if (command != null && command.CanExecute(null))
-                    {
-                        command.Execute(null);
-                        InfoRadioButton.IsChecked = true;
-                    }
-                }
+                ExecuteRadioButtonCommandAndCheckIsChecked("InfoRadioButton");
             }
 
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.M)
             {
-                if (FindName("MapRadioButton") is RadioButton radioButton)
-                {
-                    var command = radioButton.Command;
-                    if (command != null && command.CanExecute(null))
-                    {
-                        command.Execute(null);
-                        MapRadioButton.IsChecked = true;
-                    }
-                }
+
+                ExecuteRadioButtonCommandAndCheckIsChecked("MapRadioButton");
             }
 
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.T)
             {
-                if (FindName("ScheduleRadioButton") is RadioButton radioButton)
-                {
-                    var command = radioButton.Command;
-                    if (command != null && command.CanExecute(null))
-                    {
-                        command.Execute(null);
-                        ScheduleRadioButton.IsChecked = true;
-                    }
-                }
+
+                ExecuteRadioButtonCommandAndCheckIsChecked("ScheduleRadioButton");
             }
+
         }
 
         private void MessagesButton_Click(object sender, RoutedEventArgs e)
@@ -117,7 +83,26 @@ namespace Sitronics.View
                         ChatRadioButton.IsChecked = true;
                     }
                 }
-            }            
+            }
+        }
+
+        public void ExecuteRadioButtonCommandAndCheckIsChecked(string controlName)
+        {
+            // Find the control by name
+            if (FindName(controlName) is RadioButton radioButton)
+            {
+                var command = radioButton.Command;
+                if (command != null && command.CanExecute(null))
+                {
+                    command.Execute(null);
+                    radioButton.IsChecked = true;
+                }
+            }
+        }
+
+        private void ClockButton_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("control.exe", "timedate.cpl,,0");
         }
     }
 }
