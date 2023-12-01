@@ -50,7 +50,7 @@
     </Style>-->
 
 
-    <!--<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     <system:Double x:Key="DefaultDataGridFontSize">14</system:Double>
 
     <Color x:Key="DisabledControlLightColor">#FFE8EDF9</Color>
@@ -771,5 +771,5 @@
     </Style>
 
     <Style BasedOn="{StaticResource DefaultDataGridColumnHeadersPresenterStyle}" TargetType="{x:Type DataGridColumnHeadersPresenter}" />
-    <Style BasedOn="{StaticResource DefaultDataGridStyle}" TargetType="{x:Type DataGrid}" />-->
+    <Style BasedOn="{StaticResource DefaultDataGridStyle}" TargetType="{x:Type DataGrid}" />
 </ResourceDictionary>

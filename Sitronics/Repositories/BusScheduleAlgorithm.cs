@@ -10,13 +10,13 @@ namespace Sitronics
         {
             List<Schedule> schedules = new List<Schedule>();
             int workMinutes = endDate.Hour * 60 + endDate.Minute - startDate.Hour * 60 + startDate.Minute;
-            int routeTime = frequencyInMinutes * (routeByBusStation.Count - 1) * 2; // Минут от начальной до конечной туда и обратно
+            int routeTime = frequencyInMinutes * (routeByBusStation.Count - 1) * 2;
             int busCount = buses.Count;
-            int delay = (int)(routeTime / (busCount / 2));
+            int delay = routeTime / (busCount / 2);
             int rushTimeDelay = 3;
             int chillTime = 0;
             DateTime busStartTime;
-            var x = 1;
+
             var rounds = workMinutes / (routeTime * 2);
             for (int i = 0; i < busCount; i++)
             {
@@ -30,6 +30,7 @@ namespace Sitronics
                     busStartTime = startDate.AddMinutes(routeTime * j + chillTime);
                 }
             }
+
             return schedules;
         }
 
