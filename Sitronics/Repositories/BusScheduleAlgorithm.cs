@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sitronics.Data;
 using Sitronics.Models;
+using System.Windows.Media;
 
 namespace Sitronics
 {
@@ -9,23 +10,25 @@ namespace Sitronics
         public List<Schedule> GenerateBusSchedule(DateTime startDate, DateTime endDate, int frequencyInMinutes, List<RouteByBusStation> routeByBusStation, List<Bus> buses, string weatherInfo, string roadConditions)
         {
             List<Schedule> schedules = new List<Schedule>();
+            DateTime busStartTime;
             int workMinutes = endDate.Hour * 60 + endDate.Minute - startDate.Hour * 60 + startDate.Minute;
             int routeTime = frequencyInMinutes * (routeByBusStation.Count - 1) * 2;
             int busCount = buses.Count;
             int delay = routeTime / (busCount / 2);
             int rushTimeDelay = 3;
             int chillTime = 0;
-            DateTime busStartTime;
 
-            var rounds = workMinutes / (routeTime * 2);
+            int round = workMinutes / routeTime;
+            int halfRouteTime = routeTime / 2;
+            int halfBusCount = busCount / 2; 
             for (int i = 0; i < busCount; i++)
             {
                 busStartTime = startDate;
-                for (int j = 1; j <= (workMinutes / routeTime); j++)
+                for (int j = 1; j <= round; j++)
                 {
-                    if (i >= busCount / 2)
-                        busStartTime = busStartTime.AddMinutes(routeTime / 2);
-                    busStartTime = busStartTime.AddMinutes(IsRushTime(busStartTime) ? rushTimeDelay * (i % (busCount / 2)) : delay * (i % (busCount / 2)));
+                    if (i >= halfBusCount)
+                        busStartTime = busStartTime.AddMinutes(halfRouteTime);
+                    busStartTime = busStartTime.AddMinutes(IsRushTime(busStartTime) ? rushTimeDelay * (i % (halfBusCount)) : delay * (i % (halfBusCount)));
                     schedules.AddRange(MakeBusSchedule(buses[i], routeByBusStation, busStartTime));
                     busStartTime = startDate.AddMinutes(routeTime * j + chillTime);
                 }
@@ -40,7 +43,7 @@ namespace Sitronics
             List<Schedule> schedules = new List<Schedule>();
 
             RouteByBusStation startBusStop, endBusStop;
-            int busTimeBetweenStations = 0;
+            int busTimeBetweenStations;
             for (int i = 0; i < busStops.Count; i++)
             {
                 if (i != 0)
@@ -62,7 +65,7 @@ namespace Sitronics
             return schedules;
         }
 
-        private static bool IsRushTime(DateTime currentDateTime)
+        private bool IsRushTime(DateTime currentDateTime)
         {
             var start = new TimeSpan(8, 0, 0);
             var end = new TimeSpan(10, 0, 0);
@@ -92,7 +95,7 @@ namespace Sitronics
             // Внедрить логику, чтобы проверить, подходят ли дорожные условия для поездок на автобусе
             return true;
         }
-        private static int GetIntervalInMinutesBetweenBusStations(int idRoute, int idStartBusStation, int idEndBusStation)
+        private int GetIntervalInMinutesBetweenBusStations(int idRoute, int idStartBusStation, int idEndBusStation)
         {
             using (var context = new SitrouteDataContext())
             {
@@ -107,8 +110,13 @@ namespace Sitronics
                     GetArrivalTime(routeByBusStations, idStartBusStation)).TotalMinutes));
             }
         }
+        
+        public int GetRouteWayTime()
+        {
+            return 1;
+        }
 
-        private static DateTime GetArrivalTime(List<RouteByBusStation> routeByBusStations, int idBusStation)
+        private DateTime GetArrivalTime(List<RouteByBusStation> routeByBusStations, int idBusStation)
         {
             return routeByBusStations.Where(s => s.IdBusStation == idBusStation).First().IdBusStationNavigation.Schedules
                                         .OrderBy(s => s.Time)
