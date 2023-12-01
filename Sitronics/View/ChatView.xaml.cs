@@ -1,5 +1,6 @@
 ﻿using Sitronics.Data;
 using Sitronics.Models;
+using Sitronics.Pages;
 using Sitronics.Repositories;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,64 +17,24 @@ namespace Sitronics.View
         {
             IdDriver = 1
         };
-
         public ChatView()
         {
             InitializeComponent();
 
-            scrollViewer.ScrollToBottom();
-
-            List<Message> messages;
-            using (var context = new SitrouteDataContext())
-            {
-                messages = context.Messages.ToList();
-            }
-            foreach (var message in messages)
-            {
-                if (message.IdSender == Connection.CurrentUser.IdUser)
-                    AddMessage(message.Value, HorizontalAlignment.Right, Color.FromRgb(140, 30, 255));
-                else if (message.IdRecipient == Connection.CurrentUser.IdUser
-                    && message.IdSender == currentDriver.IdDriver)
-                    AddMessage(message.Value, HorizontalAlignment.Left, Color.FromRgb(255, 255, 255));
-            }
+            Manager.MainFrame = contentFrame;
+            Manager.MainFrame.Navigate(new ChatsPage());
+        }
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            Manager.MainFrame.GoBack();
         }
 
-        private void AddMessage(string message, HorizontalAlignment horizontalAlignment, Color color)
+        private void ContentFrame_ContentRendered(object sender, System.EventArgs e)
         {
-            chatStackPanel.Children.Add(new Border()
-            {
-                BorderBrush = new SolidColorBrush(color),
-                BorderThickness = new Thickness(1),
-                CornerRadius = new CornerRadius(5),
-                Margin = new Thickness(5), 
-                HorizontalAlignment = horizontalAlignment,
-                Child = new TextBlock()
-                {
-                    Text = message,
-                    FontSize = 20,
-                    Foreground = new SolidColorBrush(color),
-                    TextWrapping = TextWrapping.Wrap
-                }
-            });
-        }
-
-        private void SendMessageButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (newMessageTextBox.Text != null && newMessageTextBox.Text != "")
-            {
-                using (var context = new SitrouteDataContext())
-                {
-                    context.Messages.Add(new Message()
-                    {
-                        Value = newMessageTextBox.Text,
-                        IdSender = Connection.CurrentUser.IdUser,
-                        IdRecipient = currentDriver.IdDriver
-                    });
-                    context.SaveChanges();
-                    AddMessage(newMessageTextBox.Text, HorizontalAlignment.Right, Color.FromRgb(140, 30, 255));
-                    newMessageTextBox.Text = null;
-                }
-            }
+            if (Manager.MainFrame.CanGoBack)
+                backButton.Visibility = Visibility.Visible;
+            else
+                backButton.Visibility = Visibility.Collapsed;
         }
     }
 }
