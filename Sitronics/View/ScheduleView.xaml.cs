@@ -85,7 +85,14 @@ namespace Sitronics.View
 
         private async void LoadScheduleButton_Click(object sender, RoutedEventArgs e)
         {
-            await LoadSchedule((Route)routeComboBox.SelectedItem, ((RouteByBusStation)stopComboBox.SelectedItem).IdBusStationNavigation);
+            try
+            {
+                await LoadSchedule((Route)routeComboBox.SelectedItem, ((RouteByBusStation)stopComboBox.SelectedItem).IdBusStationNavigation);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
