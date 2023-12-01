@@ -32,7 +32,7 @@
             <ComboBox x:Name="stopComboBox"/>
         </StackPanel>
 
-        <ScrollViewer Grid.Column="2">
+        <StackPanel Grid.Column="2" Loaded="StackPanel_Loaded">
             <DataGrid x:Name="scheduleDataGrid" />
                 
         </ScrollViewer>
