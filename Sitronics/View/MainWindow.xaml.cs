@@ -103,6 +103,22 @@ namespace Sitronics.View
                 }
             }
         }
+
+        private void MessagesButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Connection.CurrentUser?.Admin?.Role != "Руководитель")
+            {
+                if (FindName("ChatRadioButton") is RadioButton radioButton)
+                {
+                    var command = radioButton.Command;
+                    if (command != null && command.CanExecute(null))
+                    {
+                        command.Execute(null);
+                        ChatRadioButton.IsChecked = true;
+                    }
+                }
+            }            
+        }
     }
 }
 
