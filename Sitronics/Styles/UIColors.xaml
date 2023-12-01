@@ -95,6 +95,7 @@
     <SolidColorBrush x:Key="B_background">#1C1B1F</SolidColorBrush>
     <SolidColorBrush x:Key="B_onBackground">#E5E1E6</SolidColorBrush>
     <SolidColorBrush x:Key="B_surface">#25242a</SolidColorBrush>
+    <SolidColorBrush x:Key="B_surface1">#36343d</SolidColorBrush>
     <SolidColorBrush x:Key="B_onSurface">#E5E1E6</SolidColorBrush>
     <SolidColorBrush x:Key="B_surfaceVariant">#47464F</SolidColorBrush>
     <SolidColorBrush x:Key="B_onSurfaceVariant">#C8C5D0</SolidColorBrush>
