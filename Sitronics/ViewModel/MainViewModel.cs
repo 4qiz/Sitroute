@@ -152,8 +152,8 @@ namespace Sitronics.ViewModel
         private void ExecuteShowSettingsViewCommand(object obj)
         {
             CurrentChildView = new SettingsViewModel();
-            Caption = "Настройки";
-            Icon = IconChar.Tools;
+            Caption = "Справка";
+            Icon = IconChar.QuestionCircle;
         }
 
         private void LoadCurrentUserData()

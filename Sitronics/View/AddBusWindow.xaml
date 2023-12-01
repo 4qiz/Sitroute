@@ -107,9 +107,9 @@
                                       SelectedIndex="0" 
                                       Margin="5"/>
 
-                            <TextBlock Text="Вместимость автобуса" Foreground="White"
-                               HorizontalAlignment="Center"
-                               Margin="10"/>
+                            <TextBlock Text="Вместимость автобуса" 
+                                       Foreground="{StaticResource B_onSurface}"
+                               />
                             <Border CornerRadius="5"
                                     BorderBrush="{StaticResource B_outline}"
                                     BorderThickness="1"

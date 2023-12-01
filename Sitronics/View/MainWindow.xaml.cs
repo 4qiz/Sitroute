@@ -1,4 +1,7 @@
-﻿using Sitronics.Repositories;
+﻿using FontAwesome.Sharp;
+using Microsoft.Identity.Client;
+using Sitronics.Repositories;
+using Sitronics.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +17,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Sitronics.View
 {
@@ -56,6 +60,64 @@ namespace Sitronics.View
         {
             if (WindowState == WindowState.Normal) WindowState = WindowState.Maximized;
             else WindowState = WindowState.Normal;
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.F1)
+            {
+                if (FindName("InfoRadioButton") is RadioButton radioButton)
+                {
+                    var command = radioButton.Command;
+                    if (command != null && command.CanExecute(null))
+                    {
+                        command.Execute(null);
+                        InfoRadioButton.IsChecked = true;
+                    }
+                }
+            }
+
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.M)
+            {
+                if (FindName("MapRadioButton") is RadioButton radioButton)
+                {
+                    var command = radioButton.Command;
+                    if (command != null && command.CanExecute(null))
+                    {
+                        command.Execute(null);
+                        MapRadioButton.IsChecked = true;
+                    }
+                }
+            }
+
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.T)
+            {
+                if (FindName("ScheduleRadioButton") is RadioButton radioButton)
+                {
+                    var command = radioButton.Command;
+                    if (command != null && command.CanExecute(null))
+                    {
+                        command.Execute(null);
+                        ScheduleRadioButton.IsChecked = true;
+                    }
+                }
+            }
+        }
+
+        private void MessagesButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Connection.CurrentUser?.Admin?.Role != "Руководитель")
+            {
+                if (FindName("ChatRadioButton") is RadioButton radioButton)
+                {
+                    var command = radioButton.Command;
+                    if (command != null && command.CanExecute(null))
+                    {
+                        command.Execute(null);
+                        ChatRadioButton.IsChecked = true;
+                    }
+                }
+            }            
         }
     }
 }
