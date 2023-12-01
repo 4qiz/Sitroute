@@ -17,21 +17,24 @@
 
         
         <StackPanel Grid.Column="0"
-                    Width="200">
+                    Width="200"
+                    Margin="10">
             <TextBlock Text="Выберите маршрут"
                        Foreground="{StaticResource B_onSurface}"/>
             <ComboBox x:Name="routeComboBox"/>
         </StackPanel>
         
         <StackPanel Grid.Column="1"
-                    Width="200">
+                    Width="200"
+                    Margin="10">
             <TextBlock Text="Выберите остановку"
                        Foreground="{StaticResource B_onSurface}"/>
             <ComboBox x:Name="stopComboBox"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="2">
+        <ScrollViewer Grid.Column="2">
             <DataGrid x:Name="scheduleDataGrid" />
-        </StackPanel>
+                
+        </ScrollViewer>
     </Grid>
 </UserControl>

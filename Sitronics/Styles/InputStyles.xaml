@@ -48,7 +48,7 @@
         <!--  Focus by parent element  -->
         <!--  Universal WPF UI ContextMenu  -->
         <!--  Universal WPF UI ContextMenu  -->
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Foreground" Value="{StaticResource B_onBackground}" />
         <Setter Property="CaretBrush" Value="{StaticResource B_onBackground}" />
         <Setter Property="Background" Value="Gray" />
         <Setter Property="Visibility" Value="Hidden" />
@@ -62,10 +62,10 @@
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <Decorator
                         x:Name="PART_ContentHost"
-                        Margin="{TemplateBinding Padding}"
+                        Margin="0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        TextElement.Foreground="White" />
+                        TextElement.Foreground="{StaticResource B_onBackground}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -136,7 +136,7 @@
                                     Margin="0"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
-                                    Fill="{StaticResource    B_error}"
+                                    Fill="{StaticResource B_primary}"
                                     RadiusX="2"
                                     RadiusY="2"
                                     Visibility="Collapsed" />
@@ -145,7 +145,7 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsHighlighted" Value="True">
-                            <Setter TargetName="ContentBorder" Property="Background" Value="{StaticResource B_background}" />
+                            <Setter TargetName="ContentBorder" Property="Background" Value="{StaticResource B_error}" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="ActiveRectangle" Property="Visibility" Value="Visible" />
@@ -165,7 +165,7 @@
         <!--  Universal WPF UI focus  -->
         <!--  Universal WPF UI ContextMenu  -->
         <!--  TEXT COLOR -->
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Foreground" Value="{StaticResource B_onBackground}" />
         <Setter Property="Background" Value="{StaticResource B_background}" />
         <Setter Property="BorderBrush" Value="{StaticResource B_outline}" />
         <Setter Property="BorderThickness" Value="{StaticResource ComboBoxBorderThemeThickness}" />
@@ -204,11 +204,7 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding Border.CornerRadius}">
                             <Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                                <!--
-                                    Funky grid - because:
-                                    Chevron is over Presenter, ToggleButton is over Chevron, TextBox is over ToggleButton.
-                                    But, TextBox is not over Chevron, so ToggleButton still works.
-                                -->
+                               
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -265,9 +261,9 @@
                                         x:Name="DropDownBorder"
                                         Margin="0"
                                         Padding="0,4,0,6"
-                                        Background="Black"
+                                        Background="{StaticResource B_surface}"
                                         BorderBrush="Black"
-                                        BorderThickness="1"
+                                        BorderThickness="0"
                                         CornerRadius="5"
                                         SnapsToDevicePixels="True">
                                         <Border.RenderTransform>
@@ -300,7 +296,7 @@
                             x:Name="AccentBorder"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            BorderBrush="Black"
+                            BorderBrush="White"
                             BorderThickness="{StaticResource ComboBoxAccentBorderThemeThickness}"
                             CornerRadius="{TemplateBinding Border.CornerRadius}"
                             Visibility="Collapsed" />
