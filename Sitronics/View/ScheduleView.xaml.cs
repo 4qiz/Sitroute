@@ -42,7 +42,7 @@ namespace Sitronics.View
                     ""
                     );
                 scheduleDataGrid.ItemsSource = schedule.OrderBy(s => s.IdBusStation).ThenBy(s => s.Time);
-                schedule2DataGrid.ItemsSource = schedule2.OrderByDescending(s => s.IdBusStation).ThenBy(s => s.Time);
+                //schedule2DataGrid.ItemsSource = schedule2.OrderByDescending(s => s.IdBusStation).ThenBy(s => s.Time);
             }
         }
     }
