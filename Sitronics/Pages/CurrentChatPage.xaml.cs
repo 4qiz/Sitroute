@@ -2,20 +2,9 @@
 using Sitronics.Data;
 using Sitronics.Models;
 using Sitronics.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Sitronics.Pages
 {
@@ -57,32 +46,62 @@ namespace Sitronics.Pages
             foreach (var message in messages)
             {
                 if (message.IdSender == Connection.CurrentUser.IdUser && message.IdRecipient == currentDriver.IdDriver)
-                    AddMessage(message, HorizontalAlignment.Right, Color.FromRgb(140, 30, 255));
+                    AddMessage(message, HorizontalAlignment.Right, Color.FromRgb(70, 69, 89)); // secondaryContainer
                 else if (message.IdRecipient == Connection.CurrentUser.IdUser
                     && message.IdSender == currentDriver.IdDriver)
-                    AddMessage(message, HorizontalAlignment.Left, Color.FromRgb(255, 255, 255));
+                    AddMessage(message, HorizontalAlignment.Left, Color.FromRgb(54, 52, 61)); //surface1
                 else if (message.IdRecipient == null && message.IdSender == currentDriver.IdDriver)
-                    AddMessage(message, HorizontalAlignment.Left, Color.FromRgb(255, 255, 255), false);
+                    AddMessage(message, HorizontalAlignment.Left, Color.FromRgb(54, 52, 61), false);
             }
         }
 
-        private void AddMessage(Message message, HorizontalAlignment horizontalAlignment, Color color, bool isReplied = true)
+        private void AddMessage(Message message, HorizontalAlignment horizontalAlignment, Color bgColor, bool isReplied = true)
         {
-            chatStackPanel.Children.Add(new Border()
+            Color textColor;
+            CornerRadius cornerRadius;
+            if (horizontalAlignment == HorizontalAlignment.Left)
             {
-                BorderBrush = new SolidColorBrush(color),
-                BorderThickness = new Thickness(5),
-                Margin = new Thickness(5),
-                HorizontalAlignment = horizontalAlignment,
-                Child = new TextBlock()
+                cornerRadius = new CornerRadius(25, 25, 25, 5);
+                textColor = Color.FromRgb(229, 225, 230); //onSurface
+            }
+            else
+            {
+                cornerRadius = new CornerRadius(25, 25, 5, 25);
+                textColor = Color.FromRgb(227, 224, 249); // onSecondaryContainer
+            }
+
+            var messageText = new StackPanel();
+            messageText.Children.Add(
+                new TextBlock()
                 {
-                    Text = $"{message.Value}\n{message.Time}",
-                    FontSize = 20,
-                    Foreground = new SolidColorBrush(color),
+                    Text = $"{message.Value}",
+                    FontSize = 18,
+                    Foreground = new SolidColorBrush(textColor),
                     TextWrapping = TextWrapping.Wrap
-                }
+                });
+            messageText.Children.Add(new TextBlock()
+            {
+                Text = $"{message.Time}",
+                FontSize = 14,
+                Foreground = new SolidColorBrush(Color.FromRgb(200, 197, 208)),
+                HorizontalAlignment = HorizontalAlignment.Left,
+                TextWrapping = TextWrapping.NoWrap
             });
-            if(!isReplied)
+
+            chatStackPanel.Children.Add(
+                new Border()
+                {
+                    BorderBrush = new SolidColorBrush(bgColor),
+                    BorderThickness = new Thickness(1),
+                    Margin = new Thickness(7),
+                    CornerRadius = cornerRadius,
+                    Background = new SolidColorBrush(bgColor),
+                    HorizontalAlignment = horizontalAlignment,
+                    Padding = new Thickness(11),
+                    Child = messageText
+
+                });
+            if (!isReplied)
             {
                 replyButton.Visibility = Visibility.Visible;
                 newMessageTextBox.Visibility = Visibility.Collapsed;
@@ -114,9 +133,9 @@ namespace Sitronics.Pages
             replyButton.Visibility = Visibility.Collapsed;
             newMessageTextBox.Visibility = Visibility.Visible;
             sendMessageButton.Visibility = Visibility.Visible;
-            using(var context = new SitrouteDataContext())
+            using (var context = new SitrouteDataContext())
             {
-                context.Messages.Where(m=>m.IdRecipient == null && m.IdSender == currentDriver.IdDriver).ExecuteUpdate(setters => setters.SetProperty(m => m.IdRecipient, Connection.CurrentUser.IdUser));
+                context.Messages.Where(m => m.IdRecipient == null && m.IdSender == currentDriver.IdDriver).ExecuteUpdate(setters => setters.SetProperty(m => m.IdRecipient, Connection.CurrentUser.IdUser));
             }
         }
     }
