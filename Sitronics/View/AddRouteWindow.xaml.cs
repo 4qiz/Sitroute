@@ -83,10 +83,14 @@ namespace Sitronics.View
             try
             {
                 Models.Route dbroute = AddBusPointToMap();
-                using (var context = new SitrouteDataContext())
+                var response = await Connection.Client.PostAsJsonAsync("/route", dbroute);
+                if (response.IsSuccessStatusCode)
                 {
-                    context.Routes.Add(dbroute);
-                    context.SaveChanges();
+                    MessageBox.Show("Маршрут успешно добавлен");
+                }
+                else
+                {
+                    MessageBox.Show("Кажется такой маршрут уже есть");
                 }
             }
             catch (Exception ex)
@@ -126,18 +130,9 @@ namespace Sitronics.View
                 mapRoute = new GMapRoute(route.Points);
                 mapView.Markers.Add(mapRoute);
             }
+            dbroute.IsBacked = isBackedCheckBox.IsChecked ?? false;
 
             return dbroute;
-            dbroute.IsBacked = isBackedCheckBox.IsChecked ?? false;
-            var response = await Connection.Client.PostAsJsonAsync("/route", dbroute);
-            if (response.IsSuccessStatusCode)
-            {
-                MessageBox.Show("Маршрут успешно добавлен");
-            }
-            else
-            {
-                MessageBox.Show("Кажется такой маршрут уже есть");
-            }
         }
 
         [DllImport("user32.dll")]
