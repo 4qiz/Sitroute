@@ -14,9 +14,9 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Button Content="Добавить Остановку" Click="AddStopButton_Click"/>
-            <Button Content="Добавить Маршрут" Click="AddRouteButton_Click"/>
-            <Button Content="Добавить Автобус" Click="AddBusButton_Click"/>
+            <Button Content="Добавить остановку" Click="AddStopButton_Click"/>
+            <Button Content="Добавить маршрут" Click="AddRouteButton_Click"/>
+            <Button Content="Добавить автобус" Click="AddBusButton_Click"/>
         </StackPanel>
         <Border ClipToBounds="False"
             CornerRadius="10"

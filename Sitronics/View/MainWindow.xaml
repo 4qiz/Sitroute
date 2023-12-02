@@ -111,6 +111,9 @@
                                  IsChecked="True"
                                  Command="{Binding ShowMapViewCommand}"
                                          GroupName="Menu">
+                                <RadioButton.ToolTip>
+                                    <ToolTip Content="CTRL+M"/>
+                                </RadioButton.ToolTip>
                                 <StackPanel Orientation="Horizontal">
                                     <fa:IconImage Icon="Map" Style="{StaticResource menuButtonIcon}"/>
                                     <TextBlock Text="Карта" Style="{StaticResource menuButtonText}"/>
@@ -151,6 +154,11 @@
                                 Tag="{StaticResource B_onBackground}"
                                 Command="{Binding ShowScheduleViewCommand}"
                                          GroupName="Menu">
+                                
+                                <RadioButton.ToolTip>
+                                    <ToolTip Content="CTRL+T"/>
+                                </RadioButton.ToolTip>
+                                
                                 <StackPanel Orientation="Horizontal">
                                     <fa:IconImage Icon="CalendarDays" Style="{StaticResource menuButtonIcon}"/>
                                     <TextBlock Text="Расписание" Style="{StaticResource menuButtonText}"/>
