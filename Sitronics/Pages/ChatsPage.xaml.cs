@@ -33,6 +33,8 @@ namespace Sitronics.Pages
             chatsStackPanel.Children.Clear();
             Messages = await Connection.Client.GetFromJsonAsync<List<Message>>($"/chat/{Connection.CurrentUser.IdUser}");
 
+            Messages.Reverse();
+
             Drivers = await Connection.Client.GetFromJsonAsync<List<Driver>>($"/drivers");
 
             foreach (var message in Messages)

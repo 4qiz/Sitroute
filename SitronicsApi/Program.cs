@@ -71,7 +71,7 @@ app.MapGet("/chat/{idDispatcher}", (int idDispatcher, SitrouteDataContext contex
                     .Where(m => idDispatcher == m.IdSender
                     || idDispatcher == m.IdRecipient
                     || null == m.IdRecipient)
-                    .OrderByDescending(m => m.Time)
+                    .OrderBy(m => m.Time)
                     .ToList());
 
 app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) =>
