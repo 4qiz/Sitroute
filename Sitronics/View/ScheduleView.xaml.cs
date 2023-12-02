@@ -67,7 +67,7 @@ namespace Sitronics.View
                     ""
                     ));
                 //context.Schedules.AddRangeAsync(schedule);
-                scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { s.Time, s.IdBus });//.OrderBy(s => s.IdBusStation).ThenBy(s => s.Time);
+                scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });//.OrderBy(s => s.IdBusStation).ThenBy(s => s.Time);
                 //schedule2DataGrid.ItemsSource = schedule2.OrderByDescending(s => s.IdBusStation).ThenBy(s => s.Time); */
                 context.SaveChanges();
             }
