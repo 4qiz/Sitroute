@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Sitronics.Models;
+namespace SitronicsApi.Models;
 
 public partial class User
 {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NetTopologySuite.Geometries;
 
-namespace Sitronics.Models;
+namespace SitronicsApi.Models;
 
 public partial class Factor
 {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sitronics.Data;
 using Sitronics.Models;
+using Sitronics.Repositories;
 using System.Windows;
 using System.Windows.Controls;
 

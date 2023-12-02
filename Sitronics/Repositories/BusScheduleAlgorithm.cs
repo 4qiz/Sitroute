@@ -3,7 +3,7 @@ using Sitronics.Data;
 using Sitronics.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Sitronics
+namespace Sitronics.Repositories
 {
     public class BusScheduleAlgorithm
     {
@@ -74,7 +74,7 @@ namespace Sitronics
             var start2 = new TimeSpan(17, 0, 0);
             var end2 = new TimeSpan(21, 0, 0);
             TimeSpan now = currentDateTime.TimeOfDay;
-            return (now >= start) && (now < end) || (now >= start2) && (now < end2);
+            return now >= start && now < end || now >= start2 && now < end2;
         }
 
         public int CalculateBusCount(int minutesToSolveRoute, int delay)

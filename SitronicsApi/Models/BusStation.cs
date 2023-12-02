@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace Sitronics.Models;
+namespace SitronicsApi.Models;
 
 public partial class BusStation
 {
@@ -14,6 +14,19 @@ public partial class BusStation
 
     [JsonIgnore]
     public Geometry Location { get; set; } = null!;
+
+    [NotMapped]
+    public string LocationForDeserialization
+    {
+        get
+        {
+            return LocationForSerialization;
+        }
+        set
+        {
+            Location = ConverterGeometry.GetPointByString(value);
+        }
+    }
 
     [NotMapped]
     public string LocationForSerialization

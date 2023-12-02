@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Sitronics.Models;
+namespace SitronicsApi.Models;
 
 public partial class Schedule
 {
