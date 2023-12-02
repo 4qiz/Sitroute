@@ -149,6 +149,7 @@
                                         </TextBox>
 
                                     </Border>
+                                    <CheckBox Content="Это обратный маршрут?"/>
 
                                     <Button 
                                         x:Name="saveRouteButton"
