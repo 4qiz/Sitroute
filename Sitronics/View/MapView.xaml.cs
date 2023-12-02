@@ -44,7 +44,7 @@ namespace Sitronics.View
         private void AddStopButton_Click(object sender, RoutedEventArgs e)
         {
             var fm = new AddStopWindow();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         private async void MapView_Loaded(object sender, RoutedEventArgs e)
@@ -115,7 +115,7 @@ namespace Sitronics.View
         private void AddRouteButton_Click(object sender, RoutedEventArgs e)
         {
             var fm = new AddRouteWindow();
-            fm.Show();
+            fm.ShowDialog();
         }
     }
 }
