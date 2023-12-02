@@ -2,6 +2,7 @@
 using Sitronics.Data;
 using Sitronics.Models;
 using Sitronics.Repositories;
+using System.Net.Http.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -23,23 +24,19 @@ namespace Sitronics.Pages
             scrollViewer.ScrollToBottom();
 
             Manager.MainTimer.Tick += new EventHandler(UpdateTimer_Tick);
-
-            LoadData();
         }
 
-        private void UpdateTimer_Tick(object sender, EventArgs e)
+        private async void UpdateTimer_Tick(object sender, EventArgs e)
         {
-            LoadData();
+            await LoadData();
         }
 
-        private void LoadData()
+        private async Task LoadData()
         {
             chatStackPanel.Children.Clear();
             List<Message> messages;
-            using (var context = new SitrouteDataContext())
-            {
-                messages = context.Messages.AsNoTracking().ToList();
-            }
+            messages = await Connection.Client.GetFromJsonAsync<List<Message>>(
+                $"/chat/{currentDriver.IdDriver}/{Connection.CurrentUser.IdUser}");
             foreach (var message in messages)
             {
                 if (message.IdSender == Connection.CurrentUser.IdUser && message.IdRecipient == currentDriver.IdDriver)
@@ -106,22 +103,19 @@ namespace Sitronics.Pages
             }
         }
 
-        private void SendMessageButton_Click(object sender, RoutedEventArgs e)
+        private async void SendMessageButton_Click(object sender, RoutedEventArgs e)
         {
             if (newMessageTextBox.Text != null && newMessageTextBox.Text != "")
             {
-                using (var context = new SitrouteDataContext())
+                var message = new Message()
                 {
-                    context.Messages.Add(new Message()
-                    {
-                        Value = newMessageTextBox.Text,
-                        IdSender = Connection.CurrentUser.IdUser,
-                        IdRecipient = currentDriver.IdDriver
-                    });
-                    context.SaveChanges();
-                    LoadData();
-                    newMessageTextBox.Text = null;
-                }
+                    Value = newMessageTextBox.Text,
+                    IdSender = Connection.CurrentUser.IdUser,
+                    IdRecipient = currentDriver.IdDriver
+                };
+                await Connection.Client.PostAsJsonAsync("/message", message);
+                await LoadData();
+                newMessageTextBox.Text = null;
             }
         }
 
@@ -130,10 +124,13 @@ namespace Sitronics.Pages
             replyButton.Visibility = Visibility.Collapsed;
             newMessageBorder.Visibility = Visibility.Visible;
             sendMessageButton.Visibility = Visibility.Visible;
-            using (var context = new SitrouteDataContext())
-            {
-                context.Messages.Where(m => m.IdRecipient == null && m.IdSender == currentDriver.IdDriver).ExecuteUpdate(setters => setters.SetProperty(m => m.IdRecipient, Connection.CurrentUser.IdUser));
-            }
+            Connection.Client.PatchAsJsonAsync($"/message/reply", new Message 
+            { IdSender = currentDriver.IdDriver, IdRecipient = Connection.CurrentUser.IdUser});
+        }
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            await LoadData();
         }
     }
 }

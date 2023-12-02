@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
-      Title="CurrentChatPage">
+      Title="CurrentChatPage" Loaded="Page_Loaded">
 
     <Grid>
         <Grid.RowDefinitions>

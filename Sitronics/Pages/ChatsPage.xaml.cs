@@ -42,10 +42,9 @@ namespace Sitronics.Pages
                     || Connection.CurrentUser.IdUser == m.IdRecipient
                     || null == m.IdRecipient)
                     .OrderByDescending(m => m.Time)
-                    .AsNoTracking()
                     .ToList();
 
-                Drivers = context.Drivers.Include(d => d.IdDriverNavigation).AsNoTracking().ToList();
+                Drivers = context.Drivers.Include(d => d.IdDriverNavigation).ToList();
             }
             foreach (var message in Messages)
             {

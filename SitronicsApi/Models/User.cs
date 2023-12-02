@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SitronicsApi.Models;
 
@@ -20,8 +21,10 @@ public partial class User
     public virtual Admin? Admin { get; set; }
 
     public virtual Driver? Driver { get; set; }
-
+    
+    [JsonIgnore]
     public virtual ICollection<Message> MessageIdRecipientNavigations { get; set; } = new List<Message>();
 
+    [JsonIgnore]
     public virtual ICollection<Message> MessageIdSenderNavigations { get; set; } = new List<Message>();
 }

@@ -40,7 +40,7 @@ app.MapGet("/users/{login}/{password}", (string login, string password, Sitroute
 
 app.MapGet("/busStations", (SitrouteDataContext context) => context.BusStations.ToList());
 
-app.MapGet("/buses", (SitrouteDataContext context) => context.Buses.Where(b => b.Location != null).ToList());
+app.MapGet("/buses", (SitrouteDataContext context) => context.Buses.Where(b => b.Location != null).Include(b=>b.Schedules).ToList());
 
 app.MapGet("/routesByBusStations", (SitrouteDataContext context) => context.Routes
                                             .Include(r => r.RouteByBusStations)
@@ -53,7 +53,16 @@ app.MapGet("/routesStats", (SitrouteDataContext context) => context.Routes
                     .ThenInclude(s => s.IdBusStationNavigation)
                     .ToList());
 
-app.MapGet("/routes", (SitrouteDataContext context) => context.Routes.AsNoTracking().ToList());
+app.MapGet("/routes", (SitrouteDataContext context) => context.Routes.ToList());
+
+app.MapGet("/chat/{idDriver}/{idDispatcher}", (int idDriver, int idDispatcher, SitrouteDataContext context) => context.Messages
+                    .Include(m => m.IdRecipientNavigation)
+                    .Include(m => m.IdSenderNavigation)
+                    .ThenInclude(u => u.Driver)
+                    .Where(m => m.IdSender == idDriver && m.IdRecipient == idDispatcher
+                        || m.IdRecipient == idDriver && m.IdSender == idDispatcher
+                        || m.IdRecipient == null && m.IdSender == idDriver)
+                    .ToList());
 
 app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) =>
 {
@@ -72,7 +81,7 @@ app.MapPost("/route", (SitronicsApi.Models.Route route, SitrouteDataContext cont
     else
     {
         return Results.BadRequest();
-    }   
+    }
 });
 
 app.MapPost("/bus", (Bus bus, SitrouteDataContext context) =>
@@ -87,6 +96,20 @@ app.MapPost("/bus", (Bus bus, SitrouteDataContext context) =>
     {
         return Results.BadRequest();
     }
+});
+
+app.MapPost("/message", (Message message, SitrouteDataContext context) =>
+{
+    context.Messages.Add(message);
+    context.SaveChanges();
+});
+
+app.MapPatch("/message/reply", (Message message, SitrouteDataContext context) =>
+{
+
+    context.Messages.Where(m => m.IdRecipient == null && m.IdSender == message.IdSender)
+                    .ExecuteUpdate(setters => setters.SetProperty(m => m.IdRecipient, message.IdRecipient));
+    context.SaveChanges();
 });
 
 static byte[] ComputeSha256Hash(string rawData)
