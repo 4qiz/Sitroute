@@ -43,6 +43,7 @@ namespace Sitronics.View
             MessageBox.Show(algorithm.GetAmountPeopleOnBusStations(selectedRoute.IdRoute).ToString());
             MessageBox.Show(algorithm.GetPeopleOnRouteByDay(DateTime.Parse("2023-11-30"), selectedRoute.IdRoute).ToString());
             MessageBox.Show(algorithm.GetAveragePeopleOnBusStationByRoute(selectedRoute.IdRoute, busStation.IdBusStation).ToString());
+            MessageBox.Show(algorithm.GetRouteProfitModifier(selectedRoute.IdRoute).ToString());
             DateTime startTime = DateTime.Parse($"{DateTime.Now.ToShortDateString()} 08:00:00");
             DateTime endTime = DateTime.Parse($"{DateTime.Now.ToShortDateString()} 22:00:00");
             using (var context = new SitrouteDataContext())

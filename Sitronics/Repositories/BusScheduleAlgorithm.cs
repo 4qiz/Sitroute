@@ -28,16 +28,37 @@ namespace Sitronics.Repositories
                 {
                     busStartTime = busStartTime.AddMinutes(halfRouteTime * j);
                     if (i >= halfBusCount)
-                       busStartTime = busStartTime.AddMinutes(halfRouteTime);
+                        busStartTime = busStartTime.AddMinutes(halfRouteTime);
                     busStartTime = busStartTime.AddMinutes(IsRushTime(busStartTime) ? rushTimeDelay * i : delay * i);
                     schedules.AddRange(MakeBusSchedule(buses[i], routeByBusStation, busStartTime, weatherInfo));
-                    busStartTime = startDate.AddMinutes(routeTime * (j+1) + chillTime * (j+1));
+                    busStartTime = startDate.AddMinutes(routeTime * (j + 1) + chillTime * (j + 1));
                 }
             }
 
             return schedules;
         }
 
+        public double GetRouteProfitModifier(int idRoute)
+        {
+            using (var context = new SitrouteDataContext())
+            {
+                var peopleSum = 0.0;
+                var route = context.Routes
+                    .Include(r => r.RouteByBusStations)
+                    .ThenInclude(r => r.IdBusStationNavigation)
+                    .FirstOrDefault(r => r.IdRoute == idRoute);
+                var routeByBusStations = route.RouteByBusStations;
+                int routeTime = GetIntervalInMinutesBetweenBusStations(idRoute, routeByBusStations.First().IdBusStation,
+                    routeByBusStations.Last().IdBusStation);
+                foreach (RouteByBusStation item in routeByBusStations)
+                {
+                    var IdBusStation = item.IdBusStation;
+                    peopleSum += GetAveragePeopleOnBusStationByRoute(idRoute, IdBusStation);
+                }
+
+                return peopleSum / routeTime;
+            }
+        }
 
         public List<Schedule> MakeBusSchedule(Bus bus, List<RouteByBusStation> busStops, DateTime busStartTime, string weatherCondition)
         {
