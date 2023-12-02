@@ -35,8 +35,15 @@ namespace Sitronics.View
                 comboBox.SelectedIndex = 0;
                 comboBox.DisplayMemberPath = "Name";
                 comboBox.Margin = new Thickness(0, 5, 0, 0);
+                comboBox.SelectionChanged += ComboBox_SelectionChanged;
                 comboBoxesStackPanel.Children.Add(comboBox);
             }
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            mapView.Markers.Clear();
+            Models.Route dbroute = AddBusPointToMap();
         }
 
         private void MapView_Loaded(object sender, RoutedEventArgs e)
@@ -64,10 +71,29 @@ namespace Sitronics.View
         {
             CreateNewBusStopComboBox();
             CheckEnabled();
+            mapView.Markers.Clear();
+            Models.Route dbroute = AddBusPointToMap();
             countBusStation++;
         }
 
         private void SaveRouteButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Models.Route dbroute = AddBusPointToMap();
+                using (var context = new SitrouteDataContext())
+                {
+                    context.Routes.Add(dbroute);
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private Models.Route AddBusPointToMap()
         {
             MapRoute route;
             GMapRoute mapRoute;
@@ -98,13 +124,9 @@ namespace Sitronics.View
                 mapRoute = new GMapRoute(route.Points);
                 mapView.Markers.Add(mapRoute);
             }
-            using (var context = new SitrouteDataContext())
-            {
-                context.Routes.Add(dbroute);
-                context.SaveChanges();
-            }
-        }
 
+            return dbroute;
+        }
 
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, int wMsg, int wParam, int lParam);
