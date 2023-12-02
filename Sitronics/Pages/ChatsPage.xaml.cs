@@ -64,33 +64,64 @@ namespace Sitronics.Pages
 
         private static Button GetChat(Driver? driver, Message? message = null)
         {
-            //var nameTextBlock = new TextBlock() 
-            //{
-            //    Text = $"{driver.IdDriverNavigation.SecondName} {driver.IdDriverNavigation.FirstName}" +
-            //    $" {driver.IdDriverNavigation.Patronymic}"
-            //};
             var chatTextBlock = new TextBlock
             {
                 Text = $"{driver.IdDriverNavigation.SecondName} {driver.IdDriverNavigation.FirstName}" +
-                $" {driver.IdDriverNavigation.Patronymic}"
+                $" {driver.IdDriverNavigation.Patronymic}",
+                HorizontalAlignment = HorizontalAlignment.Left,
             };
-            if (message != null)
+
+            var nameTextBlock = new TextBlock()
             {
-                var today = DateTime.Now;
-                chatTextBlock.Text += $"\t{(message.Time.Date == today.Date ? message.Time.ToString("HH:mm") :
-                    message.Time.Year == today.Year ? message.Time.ToString("dd MMM") : message.Time.ToString("dd MMM yyyy"))}" +
-                    $"\n{(message.IdRecipient == driver.IdDriver ? "Вы:" : "")} {message.Value}";
-            }
-            var chatItemStackPanel = new StackPanel() 
+                Text = $"{driver.IdDriverNavigation.SecondName} {driver.IdDriverNavigation.FirstName}" +
+                $" {driver.IdDriverNavigation.Patronymic}",
+                HorizontalAlignment = HorizontalAlignment.Left,
+                FontWeight = FontWeights.DemiBold,
+            };
+            var chatItemStackPanel = new StackPanel()
             {
                 MaxHeight = 70,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                Margin =new Thickness(5),
+                Margin = new Thickness(5),
+                Width = 380,
             };
-            chatItemStackPanel.Children.Add(chatTextBlock);
-            var chatButton = new Button {
+            chatItemStackPanel.Children.Add(nameTextBlock);
+
+            if (message != null)
+            {
+                var today = DateTime.Now;
+
+                var timeTextBlock = new TextBlock
+                {
+                    Text = $"{(message.Time.Date == today.Date
+                    ? message.Time.ToString("HH:mm") :
+                    message.Time.Year == today.Year
+                    ? message.Time.ToString("dd MMM")
+                    : message.Time.ToString("dd MMM yyyy"))}",
+                    Foreground = new SolidColorBrush(Color.FromRgb(200, 197, 208)),
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                };
+
+                var messageTextTextBlock = new TextBlock
+                {
+                    Text = $"{(message.IdRecipient == driver.IdDriver ? "Вы: " : "")}{message.Value}",
+                    Foreground = new SolidColorBrush(Color.FromRgb(229, 225, 230)),
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                };
+
+                chatItemStackPanel.Children.Add(timeTextBlock);
+                chatItemStackPanel.Children.Add(messageTextTextBlock);
+                //chatTextBlock.Text += $"\n{(message.Time.Date == today.Date
+                //    ? message.Time.ToString("HH:mm") :
+                //    message.Time.Year == today.Year
+                //    ? message.Time.ToString("dd MMM")
+                //    : message.Time.ToString("dd MMM yyyy"))}" +
+                //    $"\n{(message.IdRecipient == driver.IdDriver ? "Вы: " : "")}{message.Value}";
+            }
+
+            var chatButton = new Button
+            {
                 Content = chatItemStackPanel,
-                
                 Tag = driver.IdDriver,
                 //Width = 400,
                 //HorizontalAlignment = HorizontalAlignment.Left,
@@ -99,7 +130,7 @@ namespace Sitronics.Pages
                 //Foreground = new SolidColorBrush(Color.FromRgb(227, 224, 249)),
             };
             chatButton.Style = Application.Current.Resources["chatItemButton"] as Style;
-            chatButton.Click += (object sender, RoutedEventArgs e) => { Manager.MainFrame.Navigate(new CurrentChatPage(driver));};
+            chatButton.Click += (object sender, RoutedEventArgs e) => { Manager.MainFrame.Navigate(new CurrentChatPage(driver)); };
             return chatButton;
         }
     }

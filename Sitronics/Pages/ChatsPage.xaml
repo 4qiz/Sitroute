@@ -28,7 +28,8 @@
                                HorizontalAlignment="Left"
                                FontWeight="DemiBold"
                                />
-                    <TextBlock Text="11:01" HorizontalAlignment="Right"
+                    <TextBlock Text="11:01" 
+                               HorizontalAlignment="Right"
                                Foreground="{StaticResource B_onSurfaceVariant}"/>
                     <TextBlock Text="спасиьбо за помощь asdfasdfasdfasdfasdfasdfa sdfasdfasdffasdasdfasdf"
                                Foreground="{StaticResource B_onSurface}"/>

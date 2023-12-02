@@ -101,7 +101,7 @@ namespace Sitronics.Pages
             if (!isReplied)
             {
                 replyButton.Visibility = Visibility.Visible;
-                newMessageTextBox.Visibility = Visibility.Collapsed;
+                newMessageBorder.Visibility = Visibility.Collapsed;
                 sendMessageButton.Visibility = Visibility.Collapsed;
             }
         }
@@ -128,7 +128,7 @@ namespace Sitronics.Pages
         private void ReplyButton_Click(object sender, RoutedEventArgs e)
         {
             replyButton.Visibility = Visibility.Collapsed;
-            newMessageTextBox.Visibility = Visibility.Visible;
+            newMessageBorder.Visibility = Visibility.Visible;
             sendMessageButton.Visibility = Visibility.Visible;
             using (var context = new SitrouteDataContext())
             {

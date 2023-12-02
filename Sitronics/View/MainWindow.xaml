@@ -7,7 +7,7 @@
         xmlns:viewModel="clr-namespace:Sitronics.ViewModel" 
         xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
         mc:Ignorable="d"
-        Title="SPO RKOT" Height="720" Width="1280"
+        Title="Sitroute" Height="720" Width="1280"
         WindowStartupLocation="CenterScreen" 
         WindowStyle="None"
         Background="Transparent"
@@ -283,10 +283,10 @@
                                 </Ellipse.Fill>--><!--
                             </Ellipse>-->
 
-                            <Button x:Name="ClockButton" Style="{StaticResource iconButton}"
+                            <!--<Button x:Name="ClockButton" Style="{StaticResource iconButton}"
                                     Tag="{StaticResource color3}" Click="ClockButton_Click">
                                 <fa:IconImage Icon="Clock" Style="{StaticResource iconButtonIcon}"/>
-                            </Button>
+                            </Button>-->
 
                             <Button x:Name="MessagesButton" Style="{StaticResource iconButton}"
                                     Tag="{StaticResource color4}" Click="MessagesButton_Click">
