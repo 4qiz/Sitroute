@@ -5,13 +5,35 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Sitronics.View"
              mc:Ignorable="d" 
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <Button x:Name="backButton" Content="&lt;-" VerticalAlignment="Top" Width="40" Visibility="Collapsed" Click="BackButton_Click"/>
+        <!--<Button x:Name="backButton" 
+                Content="&lt;-" 
+                VerticalAlignment="Top" 
+                Width="40" 
+                Visibility="Collapsed" 
+                Click="BackButton_Click"/>-->
+        <Button 
+        x:Name="backButton" 
+        IsCancel="True"
+        VerticalAlignment="Top" 
+            HorizontalAlignment="Left"
+        Visibility="Collapsed" 
+        Click="BackButton_Click"
+        Style="{StaticResource circleIconButton}"
+        Tag="white"
+        Width="50"
+        Height="50"
+        Margin="0,0,15,0"
+        >
+            <fa:IconImage Icon="ArrowLeft" 
+                  Style="{StaticResource iconButtonIcon}"/>
+        </Button>
         <Frame x:Name="contentFrame" 
                NavigationUIVisibility="Hidden" 
                ContentRendered="ContentFrame_ContentRendered" 

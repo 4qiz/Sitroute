@@ -8,7 +8,32 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ChatsPage">
 
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
-        <StackPanel x:Name="chatsStackPanel"/>
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" 
+                  VerticalScrollBarVisibility="Hidden">
+        <StackPanel x:Name="chatsStackPanel">
+
+            <Button
+                Style="{x:Null}"
+                HorizontalAlignment="Left"
+                Background="{StaticResource B_secondaryContainer}"
+                Foreground="{StaticResource B_onSecondaryContainer}"    
+                Width="400"
+                HorizontalContentAlignment="Left"
+                >
+                <StackPanel x:Name="chatItemStackPanel"
+                            MaxHeight="70"
+                            HorizontalAlignment="Left"
+                            Margin="5">
+                    <TextBlock Text="Крушилдов Антон Иванович "
+                               HorizontalAlignment="Left"
+                               FontWeight="DemiBold"
+                               />
+                    <TextBlock Text="11:01" HorizontalAlignment="Right"
+                               Foreground="{StaticResource B_onSurfaceVariant}"/>
+                    <TextBlock Text="спасиьбо за помощь asdfasdfasdfasdfasdfasdfa sdfasdfasdffasdasdfasdf"
+                               Foreground="{StaticResource B_onSurface}"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
     </ScrollViewer>
 </Page>

@@ -82,7 +82,8 @@
     <SolidColorBrush x:Key="B_onPrimaryContainer">#E2DFFF</SolidColorBrush>
     <SolidColorBrush x:Key="B_secondary">#C7C4DD</SolidColorBrush>
     <SolidColorBrush x:Key="B_onSecondary">#2F2E42</SolidColorBrush>
-    <SolidColorBrush x:Key="B_secondaryContainer">#464559</SolidColorBrush>
+    <SolidColorBrush x:Key="B_secondaryContainer">#373647</SolidColorBrush>
+    <SolidColorBrush x:Key="B_secondaryContainerHover">#464559</SolidColorBrush>
     <SolidColorBrush x:Key="B_onSecondaryContainer">#E3E0F9</SolidColorBrush>
     <SolidColorBrush x:Key="B_tertiary">#EAB9D2</SolidColorBrush>
     <SolidColorBrush x:Key="B_onTertiary">#472639</SolidColorBrush>

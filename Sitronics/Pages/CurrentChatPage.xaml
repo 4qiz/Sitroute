@@ -45,11 +45,12 @@
                     BorderBrush="{StaticResource B_primary}"
                     BorderThickness="1"
                     Padding="5"
-                        Margin="0,0,15,0">
+                    Margin="0,0,15,0">
 
                     <TextBox x:Name="newMessageTextBox" 
                  TextWrapping="Wrap" 
                  MaxLength="500"
+                 MaxHeight="30"
                  Background="{StaticResource B_surface}"
                  Style="{StaticResource DefTB}"/>
 
