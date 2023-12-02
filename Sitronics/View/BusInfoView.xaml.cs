@@ -19,8 +19,6 @@ namespace Sitronics.View
         {
             InitializeComponent();
 
-            Manager.MainTimer.Tick += new EventHandler(UpdateTimer_Tick);
-
             //Bus currentBus = new();
 
             //currentBus = context.Buses.Include(b => b.Schedules).ThenInclude(s => s.IdBusStationNavigation)
@@ -48,11 +46,6 @@ namespace Sitronics.View
             //peopleCountGettingOffBusLineSeries.Values = peopleCountGettingOffBus;
             //xAxis.Labels = labels;
             //yAxis.Separator = new LiveCharts.Wpf.Separator() { Step = step };
-        }
-
-        private async void UpdateTimer_Tick(object sender, EventArgs e)
-        {
-            await LoadData();
         }
 
         public StackPanel GetBusInfoStackPanel(Bus bus)
@@ -160,6 +153,11 @@ namespace Sitronics.View
                 };
                 routesStackPanel.Children.Add(routeExpander);
             }
+        }
+
+        private async void UpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+            await LoadData();
         }
     }
 }

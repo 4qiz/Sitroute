@@ -7,9 +7,12 @@
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded">
-    <ScrollViewer VerticalScrollBarVisibility="Hidden">
-    <StackPanel x:Name="routesStackPanel"/>
-    </ScrollViewer>
+    <StackPanel>
+        <Button Content="Обновить" Click="UpdateButton_Click"/>
+        <ScrollViewer VerticalScrollBarVisibility="Hidden">
+            <StackPanel x:Name="routesStackPanel"/>
+        </ScrollViewer>
+    </StackPanel>
     <!--<TextBlock x:Name="numberBusTextBlock" FontSize="30" Foreground="White"/>
         <TextBlock x:Name="countPeopleTextBlock" FontSize="20" Foreground="White"/>
         <lvc:CartesianChart Height="300">

@@ -48,6 +48,8 @@ app.MapGet("/routesStats", (SitrouteDataContext context) => context.Routes
                     .ThenInclude(s => s.IdBusStationNavigation)
                     .ToList());
 
+//app.MapPost("/busStation", (SitrouteDataContext context) => );
+
 static byte[] ComputeSha256Hash(string rawData)
 {
     using (SHA256 sha256Hash = SHA256.Create())
