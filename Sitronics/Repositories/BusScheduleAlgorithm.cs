@@ -16,20 +16,22 @@ namespace Sitronics.Repositories
             int delay = routeTime / (busCount / 2);
 
             int rushTimeDelay = 3;
-            int chillTime = 10;
+            int chillTime = 5;
 
-            int round = workMinutes / routeTime;
+            int round = 540 / routeTime;
             int halfRouteTime = routeTime / 2;
             int halfBusCount = busCount / 2;
             for (int i = 0; i < busCount; i++)
             {
                 busStartTime = startDate;
-                for (int j = 0; j < 480 / routeTime; j++)
+                for (int j = 0; j < round; j++)
                 {
                     busStartTime = busStartTime.AddMinutes(halfRouteTime * j);
                     if (i >= halfBusCount)
                         busStartTime = busStartTime.AddMinutes(halfRouteTime);
                     busStartTime = busStartTime.AddMinutes(IsRushTime(busStartTime) ? rushTimeDelay * i : delay * i);
+                    if (busStartTime > endDate)
+                        break;
                     schedules.AddRange(MakeBusSchedule(buses[i], routeByBusStation, busStartTime, weatherInfo));
                     busStartTime = startDate.AddMinutes(routeTime * (j + 1) + chillTime * (j + 1));
                 }

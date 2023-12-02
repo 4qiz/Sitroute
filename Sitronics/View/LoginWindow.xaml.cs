@@ -60,5 +60,13 @@ namespace Sitronics.View
                 Environment.Exit(0);
             }
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if ((Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt && Keyboard.IsKeyDown(Key.F4))
+            {
+                Environment.Exit(0);
+            }
+        }
     }
 }
