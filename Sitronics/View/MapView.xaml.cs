@@ -88,7 +88,11 @@ namespace Sitronics.View
                 }
                 AddRouteOnMap(points, routeColor, routingProvider);
             }
-            
+            foreach (var busStation in BusStations)
+            {
+                var point = new PointLatLng(busStation.Location.Coordinate.Y, busStation.Location.Coordinate.X);
+                MapManager.MapManager.CreateBusStationMarker(point, ref mapView, busStation);
+            }
             foreach (var bus in Buses)
             {
                 var point = new PointLatLng(bus.Location.Coordinate.Y, bus.Location.Coordinate.X);

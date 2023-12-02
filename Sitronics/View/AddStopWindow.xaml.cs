@@ -37,7 +37,7 @@ namespace Sitronics.View
             InitializeComponent();
         }
 
-        private void MapView_Loaded(object sender, RoutedEventArgs e)
+        private async void MapView_Loaded(object sender, RoutedEventArgs e)
         {
             GMaps.Instance.Mode = AccessMode.ServerAndCache;
             // choose your provider here
@@ -56,6 +56,13 @@ namespace Sitronics.View
             RoutingProvider routingProvider =
             mapView.MapProvider as RoutingProvider ?? GMapProviders.OpenStreetMap;
             mapView.SetPositionByKeywords("Архангельский Колледж Телекоммуникаций");
+
+            List<BusStation> BusStations = await Connection.Client.GetFromJsonAsync<List<BusStation>>("/busStations");
+            foreach (var busStation in BusStations)
+            {
+                var point = new PointLatLng(busStation.Location.Coordinate.Y, busStation.Location.Coordinate.X);
+                MapManager.MapManager.CreateBusStationMarker(point, ref mapView, busStation);
+            }
         }
 
         private async void SaveBusStopButton_Click(object sender, RoutedEventArgs e)
@@ -67,6 +74,7 @@ namespace Sitronics.View
             };
             await Connection.Client.PostAsJsonAsync("/busStation", busStation);
             MessageBox.Show("Автобусная остановка успешно добавлена");
+            MapManager.MapManager.CreateBusStationMarker(point, ref mapView, busStation);
         }
 
         private void MapView_MouseRightButtonDown(object sender, MouseButtonEventArgs e)

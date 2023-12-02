@@ -187,7 +187,6 @@
                                    MouseRightButtonDown="MapView_MouseRightButtonDown" 
                                    Loaded="MapView_Loaded">
                                 </gmaps:GMapControl>
-
                             </Border>
                         </Grid>
                     </Grid>
