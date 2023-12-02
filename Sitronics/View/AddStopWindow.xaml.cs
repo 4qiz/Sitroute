@@ -75,7 +75,7 @@ namespace Sitronics.View
             int y = Convert.ToInt32(e.GetPosition(mapView).Y);
             point = mapView.FromLocalToLatLng(x, y);
             Debug.WriteLine(point.Lat + " " + point.Lng);
-            lastMarker = MapManager.MapManager.CreateMarker(point, ref mapView, lastMarker);
+            lastMarker = MapManager.MapManager.CreateMarker(point, ref mapView, lastMarker: lastMarker);
         }
 
         private void SearchPlaceButton_Click(object sender, RoutedEventArgs e)

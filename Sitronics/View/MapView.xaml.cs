@@ -3,7 +3,6 @@ using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
 using Sitronics.Models;
 using Sitronics.Repositories;
-using System;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Windows;
@@ -65,7 +64,7 @@ namespace Sitronics.View
             mapView.DragButton = MouseButton.Left;
             mapView.SetPositionByKeywords("Архангельский Колледж Телекоммуникаций");
             await LoadData();
-            
+
         }
 
         private async Task LoadData()
@@ -75,6 +74,7 @@ namespace Sitronics.View
             RoutingProvider routingProvider =
             mapView.MapProvider as RoutingProvider ?? GMapProviders.OpenStreetMap;
             Random random = new();
+
             BusStations = await Connection.Client.GetFromJsonAsync<List<BusStation>>("/busStations");
             Buses = await Connection.Client.GetFromJsonAsync<List<Bus>>("/buses");
             Routes = await Connection.Client.GetFromJsonAsync<List<Models.Route>>("/routesByBusStations");
@@ -88,10 +88,11 @@ namespace Sitronics.View
                 }
                 AddRouteOnMap(points, routeColor, routingProvider);
             }
+            
             foreach (var bus in Buses)
             {
                 var point = new PointLatLng(bus.Location.Coordinate.Y, bus.Location.Coordinate.X);
-                MapManager.MapManager.CreateMarker(point, ref mapView);
+                MapManager.MapManager.CreateBusMarker(point, ref mapView, bus);
             }
         }
 
