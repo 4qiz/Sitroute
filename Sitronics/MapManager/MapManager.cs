@@ -45,9 +45,9 @@ namespace Sitronics.MapManager
             var peopleInBus = bus.Schedules.Sum(s => s.PeopleCountBoardingBus) -
                         bus.Schedules.Sum(s => s.PeopleCountGettingOffBus);
             SolidColorBrush fillColor;
-            if (peopleInBus / bus.Сapacity > 0.75)
+            if (((double)peopleInBus / (double)bus.Сapacity) >= 0.8)
                 fillColor = Brushes.Red;
-            else if (peopleInBus / bus.Сapacity > 0.45)
+            else if (((double)peopleInBus / (double)bus.Сapacity) >= 0.50)
                 fillColor = Brushes.Yellow;
             else
                 fillColor = Brushes.Green;
