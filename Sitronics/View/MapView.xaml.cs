@@ -1,9 +1,11 @@
 ﻿using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
-using Microsoft.EntityFrameworkCore;
-using Sitronics.Data;
+using Sitronics.Models;
+using Sitronics.Repositories;
+using System;
 using System.Diagnostics;
+using System.Net.Http.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -17,9 +19,20 @@ namespace Sitronics.View
     /// </summary>
     public partial class MapView : UserControl
     {
+        List<BusStation> BusStations { get; set; }
+        List<Bus> Buses { get; set; }
+        List<Models.Route> Routes { get; set; }
+
         public MapView()
         {
             InitializeComponent();
+
+            Manager.MainTimer.Tick += new EventHandler(UpdateTimer_Tick);
+        }
+
+        private async void UpdateTimer_Tick(object sender, EventArgs e)
+        {
+            await LoadData();
         }
 
         private void AddBusButton_Click(object sender, RoutedEventArgs e)
@@ -34,12 +47,8 @@ namespace Sitronics.View
             fm.Show();
         }
 
-        private void MapView_Loaded(object sender, RoutedEventArgs e)
+        private async void MapView_Loaded(object sender, RoutedEventArgs e)
         {
-
-            List<PointLatLng> points = new List<PointLatLng>();
-            Random random = new();
-
             GMaps.Instance.Mode = AccessMode.ServerAndCache;
             // choose your provider here
             mapView.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
@@ -54,29 +63,35 @@ namespace Sitronics.View
             mapView.CanDragMap = true;
             // lets the user drag the map with the left mouse button
             mapView.DragButton = MouseButton.Left;
+            mapView.SetPositionByKeywords("Архангельский Колледж Телекоммуникаций");
+            await LoadData();
+            
+        }
+
+        private async Task LoadData()
+        {
+            mapView.Markers.Clear();
+            List<PointLatLng> points = new List<PointLatLng>();
             RoutingProvider routingProvider =
             mapView.MapProvider as RoutingProvider ?? GMapProviders.OpenStreetMap;
-            mapView.SetPositionByKeywords("Архангельский Колледж Телекоммуникаций");
-            using (var context = new SitrouteDataContext())
+            Random random = new();
+            BusStations = await Connection.Client.GetFromJsonAsync<List<BusStation>>("/busStations");
+            Buses = await Connection.Client.GetFromJsonAsync<List<Bus>>("/buses");
+            Routes = await Connection.Client.GetFromJsonAsync<List<Models.Route>>("/Routes");
+            foreach (var dbroute in Routes)
             {
-                var busStations = context.BusStations.ToList();
-                var buses = context.Buses.Where(b => b.Location != null).ToList();
-                var routes = context.Routes.Include(r => r.RouteByBusStations).ThenInclude(rp => rp.IdBusStationNavigation);
-                foreach (var dbroute in routes)
+                var routeColor = new SolidColorBrush(Color.FromArgb(255, (byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255)));
+                points.Clear();
+                foreach (var routePoint in dbroute.RouteByBusStations)
                 {
-                    var routeColor = new SolidColorBrush(Color.FromArgb(255, (byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255)));
-                    points.Clear();
-                    foreach (var routePoint in dbroute.RouteByBusStations)
-                    {
-                        points.Add(new PointLatLng(routePoint.IdBusStationNavigation.Location.Coordinate.Y, routePoint.IdBusStationNavigation.Location.Coordinate.X));
-                    }
-                    AddRouteOnMap(points, routeColor, routingProvider);
+                    points.Add(new PointLatLng(routePoint.IdBusStationNavigation.Location.Coordinate.Y, routePoint.IdBusStationNavigation.Location.Coordinate.X));
                 }
-                foreach (var bus in buses)
-                {
-                    var point = new PointLatLng(bus.Location.Coordinate.Y, bus.Location.Coordinate.X);
-                    MapManager.MapManager.CreateMarker(point, ref mapView);
-                }
+                AddRouteOnMap(points, routeColor, routingProvider);
+            }
+            foreach (var bus in Buses)
+            {
+                var point = new PointLatLng(bus.Location.Coordinate.Y, bus.Location.Coordinate.X);
+                MapManager.MapManager.CreateMarker(point, ref mapView);
             }
         }
 

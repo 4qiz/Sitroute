@@ -1,8 +1,8 @@
 ﻿using LiveCharts;
 using LiveCharts.Wpf;
-using Microsoft.EntityFrameworkCore;
-using Sitronics.Data;
 using Sitronics.Models;
+using Sitronics.Repositories;
+using System.Net.Http.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -14,48 +14,16 @@ namespace Sitronics.View
     /// </summary>
     public partial class BusInfoView : UserControl
     {
+        List<Route> Routes = new();
         public BusInfoView()
         {
             InitializeComponent();
 
             //Bus currentBus = new();
-            List<Route> routes = new();
 
-            using (var context = new SitrouteDataContext())
-            {
-                routes = context.Routes
-                    .Include(r => r.Buses)
-                    .ThenInclude(b => b.Schedules)
-                    .ThenInclude(s => s.IdBusStationNavigation)
-                    .ToList();
-                //currentBus = context.Buses.Include(b => b.Schedules).ThenInclude(s => s.IdBusStationNavigation)
-                //    .Where(b => b.IdBus == 1).First();
-            }
-            foreach (var route in routes)
-            {
-                var busesStackPanel = new StackPanel();
-                foreach (var bus in route.Buses)
-                {
-                    var busExpander = new Expander()
-                    {
-                        Header = bus.Number,
-                        FontSize = 20,
-                        Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255)),
-                        Margin = new Thickness() { Left = 20 },
-                        Content = GetBusInfoStackPanel(bus)
-                    };
-                    busesStackPanel.Children.Add(busExpander);
-                }
+            //currentBus = context.Buses.Include(b => b.Schedules).ThenInclude(s => s.IdBusStationNavigation)
+            //    .Where(b => b.IdBus == 1).First();
 
-                var routeExpander = new Expander()
-                {
-                    Header = route.Name,
-                    FontSize = 30,
-                    Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255)),
-                    Content = busesStackPanel
-                };
-                routesStackPanel.Children.Add(routeExpander);
-            }
 
             //numberBusTextBlock.Text = "Номер:" + currentBus.Number.ToUpper();
             //countPeopleTextBlock.Text = "Людей в автобусе:" + (currentBus.Schedules.Sum(s => s.PeopleCountBoardingBus) -
@@ -149,6 +117,47 @@ namespace Sitronics.View
                     Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255))
                 });
             return busInfoStackPanel;
+        }
+
+        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            await LoadData();
+        }
+
+        private async Task LoadData()
+        {
+            Routes = await Connection.Client.GetFromJsonAsync<List<Route>>("/routesStats");
+            routesStackPanel.Children.Clear();
+            foreach (var route in Routes)
+            {
+                var busesStackPanel = new StackPanel();
+                foreach (var bus in route.Buses)
+                {
+                    var busExpander = new Expander()
+                    {
+                        Header = bus.Number,
+                        FontSize = 20,
+                        Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255)),
+                        Margin = new Thickness() { Left = 20 },
+                        Content = GetBusInfoStackPanel(bus)
+                    };
+                    busesStackPanel.Children.Add(busExpander);
+                }
+
+                var routeExpander = new Expander()
+                {
+                    Header = route.Name,
+                    FontSize = 30,
+                    Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255)),
+                    Content = busesStackPanel
+                };
+                routesStackPanel.Children.Add(routeExpander);
+            }
+        }
+
+        private async void UpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+            await LoadData();
         }
     }
 }

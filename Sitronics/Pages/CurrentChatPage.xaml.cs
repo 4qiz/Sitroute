@@ -22,10 +22,7 @@ namespace Sitronics.Pages
 
             scrollViewer.ScrollToBottom();
 
-            System.Windows.Threading.DispatcherTimer updateTimer = new System.Windows.Threading.DispatcherTimer();
-            updateTimer.Tick += new EventHandler(UpdateTimer_Tick);
-            updateTimer.Interval = new TimeSpan(0, 0, 30);
-            updateTimer.Start();
+            Manager.MainTimer.Tick += new EventHandler(UpdateTimer_Tick);
 
             LoadData();
         }

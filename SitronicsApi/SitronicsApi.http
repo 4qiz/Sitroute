@@ -1,0 +1,6 @@
+@SitronicsApi_HostAddress = http://localhost:5038
+
+GET {{SitronicsApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
