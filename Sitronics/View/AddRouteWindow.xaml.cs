@@ -3,6 +3,8 @@ using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
 using Sitronics.Data;
 using Sitronics.Models;
+using Sitronics.Repositories;
+using System.Net.Http.Json;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -67,7 +69,7 @@ namespace Sitronics.View
             countBusStation++;
         }
 
-        private void SaveRouteButton_Click(object sender, RoutedEventArgs e)
+        private async void SaveRouteButton_Click(object sender, RoutedEventArgs e)
         {
             MapRoute route;
             GMapRoute mapRoute;
@@ -98,10 +100,15 @@ namespace Sitronics.View
                 mapRoute = new GMapRoute(route.Points);
                 mapView.Markers.Add(mapRoute);
             }
-            using (var context = new SitrouteDataContext())
+            dbroute.IsBacked = isBackedCheckBox.IsChecked ?? false;
+            var response = await Connection.Client.PostAsJsonAsync("/route", dbroute);
+            if (response.IsSuccessStatusCode)
             {
-                context.Routes.Add(dbroute);
-                context.SaveChanges();
+                MessageBox.Show("Маршрут успешно добавлен");
+            }
+            else
+            {
+                MessageBox.Show("Кажется такой маршрут уже есть");
             }
         }
 

@@ -131,7 +131,7 @@ namespace Sitronics.ViewModel
 
             var user = await Connection.Client.GetFromJsonAsync<User>($"/users/{Username}/{Password}");
 
-            if (user == null)
+            if (user.IdUser == 0)
             {
                 ErrorMessage = "* Неправильный логин или пароль";
             }

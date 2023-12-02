@@ -149,7 +149,7 @@
                                         </TextBox>
 
                                     </Border>
-                                    <CheckBox Content="Обратный маршрут"/>
+                                    <CheckBox x:Name="isBackedCheckBox" Content="Обратный маршрут"/>
 
                                     <Button 
                                         x:Name="saveRouteButton"

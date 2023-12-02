@@ -54,6 +54,20 @@ app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) 
     context.SaveChanges();
 });
 
+app.MapPost("/route", (SitronicsApi.Models.Route route, SitrouteDataContext context) =>
+{
+    if (!context.Routes.Any(r => r.Name == route.Name && r.IsBacked == route.IsBacked))
+    {
+        context.Routes.Add(route);
+        context.SaveChanges();
+        return Results.Ok();
+    }
+    else
+    {
+        return Results.BadRequest();
+    }   
+});
+
 static byte[] ComputeSha256Hash(string rawData)
 {
     using (SHA256 sha256Hash = SHA256.Create())
