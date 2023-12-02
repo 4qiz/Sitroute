@@ -289,7 +289,8 @@
                             </Button>-->
 
                             <Button x:Name="MessagesButton" Style="{StaticResource iconButton}"
-                                    Tag="{StaticResource color4}" Click="MessagesButton_Click">
+                                    Tag="{StaticResource color4}" 
+                                    Click="MessagesButton_Click">
                                 <fa:IconImage Icon="Envelope" Style="{StaticResource iconButtonIcon}"/>
                             </Button>
 
