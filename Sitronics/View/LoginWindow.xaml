@@ -15,7 +15,8 @@
         AllowsTransparency="True"
         xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
         MouseDown="Window_MouseDown"
-        KeyDown="Window_KeyDown">
+        KeyDown="Window_KeyDown"
+        Closing="Window_Closing">
 
     
     <Window.DataContext>
