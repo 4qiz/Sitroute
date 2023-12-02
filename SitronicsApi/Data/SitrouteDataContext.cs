@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Sitronics.Models;
+using SitronicsApi.Models;
 
-namespace Sitronics.Data;
+namespace SitronicsApi.Data;
 
 public partial class SitrouteDataContext : DbContext
 {

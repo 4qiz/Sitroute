@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using NetTopologySuite.Geometries;
 
-namespace Sitronics.Models;
+namespace SitronicsApi.Models;
 
 public partial class Bus
 {
@@ -16,6 +16,19 @@ public partial class Bus
 
     [JsonIgnore]
     public Geometry? Location { get; set; }
+
+    [NotMapped]
+    public string LocationForDeserialization
+    {
+        get
+        {
+            return LocationForSerialization;
+        }
+        set
+        {
+            Location = ConverterGeometry.GetPointByString(value);
+        }
+    }
 
     [NotMapped]
     public string LocationForSerialization

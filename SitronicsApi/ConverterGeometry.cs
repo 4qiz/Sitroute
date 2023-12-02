@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sitronics.Repositories
+namespace SitronicsApi
 {
     internal static class ConverterGeometry
     {
@@ -17,8 +17,8 @@ namespace Sitronics.Repositories
             }
             var startCoordinate = value.IndexOf("(") + 1;
             var startSecondCoordinate = value.IndexOf(" ", startCoordinate) + 1;
-            var x = Double.Parse((value.Substring(startCoordinate, startSecondCoordinate - startCoordinate - 1)).Replace('.', ','));
-            var y = Double.Parse((value.Substring(startSecondCoordinate, value.IndexOf(")") - startSecondCoordinate)).Replace('.', ','));
+            var x = double.Parse(value.Substring(startCoordinate, startSecondCoordinate - startCoordinate - 1).Replace('.', ','));
+            var y = double.Parse(value.Substring(startSecondCoordinate, value.IndexOf(")") - startSecondCoordinate).Replace('.', ','));
             return new Point(x, y) { SRID = 4326 };
         }
     }

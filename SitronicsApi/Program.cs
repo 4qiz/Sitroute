@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Sitronics.Data;
-using Sitronics.Models;
+using SitronicsApi.Data;
+using SitronicsApi.Models;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -48,7 +48,11 @@ app.MapGet("/routesStats", (SitrouteDataContext context) => context.Routes
                     .ThenInclude(s => s.IdBusStationNavigation)
                     .ToList());
 
-//app.MapPost("/busStation", (SitrouteDataContext context) => );
+app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) =>
+{
+    context.BusStations.Add(busStation);
+    context.SaveChanges();
+});
 
 static byte[] ComputeSha256Hash(string rawData)
 {

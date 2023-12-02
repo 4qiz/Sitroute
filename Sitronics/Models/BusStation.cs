@@ -1,6 +1,7 @@
 ﻿using NetTopologySuite.Geometries;
 using Sitronics.Repositories;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Sitronics.Models;
 
@@ -12,22 +13,26 @@ public partial class BusStation
 
     public string Name { get; set; } = null!;
 
+    [JsonIgnore]
     public Geometry Location { get; set; } = null!;
 
     [NotMapped]
-    string locationForSerialization;
-
-    [NotMapped]
-    public string LocationForSerialization
+    public string LocationForDeserialization
     {
         get
         {
-            return locationForSerialization;
+            return LocationForSerialization;
         }
         set
         {
             Location = ConverterGeometry.GetPointByString(value);
         }
+    }
+
+    [NotMapped]
+    public string LocationForSerialization
+    {
+        get { return Location?.ToString(); }
     }
 
     public virtual ICollection<RouteByBusStation> RouteByBusStations { get; set; } = new List<RouteByBusStation>();

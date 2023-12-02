@@ -19,6 +19,8 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using Sitronics.Data;
+using Sitronics.Repositories;
+using System.Net.Http.Json;
 
 namespace Sitronics.View
 {
@@ -56,20 +58,15 @@ namespace Sitronics.View
             mapView.SetPositionByKeywords("Архангельский Колледж Телекоммуникаций");
         }
 
-        private void SaveBusStopButton_Click(object sender, RoutedEventArgs e)
+        private async void SaveBusStopButton_Click(object sender, RoutedEventArgs e)
         {
-            using (var context = new SitrouteDataContext())
+            var busStation = new BusStation
             {
-                var busStations = context.BusStations;
-                var busStation = new BusStation
-                {
-                    Location = new NetTopologySuite.Geometries.Point(point.Lng, point.Lat) { SRID = 4326 },
-                    Name = busStopNameTextBox.Text,
-                };
-                busStations.Add(busStation);
-                context.SaveChanges();
-            }
-            System.Windows.MessageBox.Show("Автобусная остановка успешно добавлена");
+                Location = new NetTopologySuite.Geometries.Point(point.Lng, point.Lat) { SRID = 4326 },
+                Name = busStopNameTextBox.Text,
+            };
+            await Connection.Client.PostAsJsonAsync("/busStation", busStation);
+            MessageBox.Show("Автобусная остановка успешно добавлена");
         }
 
         private void MapView_MouseRightButtonDown(object sender, MouseButtonEventArgs e)

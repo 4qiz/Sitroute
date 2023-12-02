@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sitronics.Data;
 using Sitronics.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Sitronics
+namespace Sitronics.Repositories
 {
     public class BusScheduleAlgorithm
     {
-        public List<Schedule> GenerateBusSchedule(DateTime startDate, DateTime endDate, int idRoute, List<RouteByBusStation> routeByBusStation, List<Bus> buses, string weatherInfo, string roadConditions)
+        public List<Schedule> GenerateRouteSchedule(DateTime startDate, DateTime endDate, int idRoute, List<RouteByBusStation> routeByBusStation, List<Bus> buses, string weatherInfo, string roadConditions)
         {
             List<Schedule> schedules = new List<Schedule>();
             DateTime busStartTime;
@@ -17,7 +16,7 @@ namespace Sitronics
             int delay = routeTime / (busCount / 2);
 
             int rushTimeDelay = 3;
-            int chillTime = 0;
+            int chillTime = 10;
 
             int round = workMinutes / routeTime;
             int halfRouteTime = routeTime / 2;
@@ -25,13 +24,14 @@ namespace Sitronics
             for (int i = 0; i < busCount; i++)
             {
                 busStartTime = startDate;
-                for (int j = 1; j <= round; j++)
+                for (int j = 0; j < 480 / routeTime; j++)
                 {
+                    busStartTime = busStartTime.AddMinutes(halfRouteTime * j);
                     if (i >= halfBusCount)
-                        busStartTime = busStartTime.AddMinutes(halfRouteTime);
+                       busStartTime = busStartTime.AddMinutes(halfRouteTime);
                     busStartTime = busStartTime.AddMinutes(IsRushTime(busStartTime) ? rushTimeDelay * i : delay * i);
                     schedules.AddRange(MakeBusSchedule(buses[i], routeByBusStation, busStartTime, weatherInfo));
-                    busStartTime = startDate.AddMinutes(routeTime * j + chillTime);
+                    busStartTime = startDate.AddMinutes(routeTime * (j+1) + chillTime * (j+1));
                 }
             }
 
@@ -74,7 +74,7 @@ namespace Sitronics
             var start2 = new TimeSpan(17, 0, 0);
             var end2 = new TimeSpan(21, 0, 0);
             TimeSpan now = currentDateTime.TimeOfDay;
-            return (now >= start) && (now < end) || (now >= start2) && (now < end2);
+            return now >= start && now < end || now >= start2 && now < end2;
         }
 
         public int CalculateBusCount(int minutesToSolveRoute, int delay)
