@@ -29,6 +29,7 @@ namespace Sitronics.View
                     stopComboBox.ItemsSource = ((Route)routeComboBox.SelectedItem).RouteByBusStations.ToList();
                     stopComboBox.SelectedIndex = 0;
                     stopComboBox.DisplayMemberPath = "IdBusStationNavigation.Name";
+                    
                 }
             }
             catch (Exception ex)
@@ -68,6 +69,15 @@ namespace Sitronics.View
                     ));
                 context.Schedules.AddRangeAsync(schedule);
                 scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
+                scheduleDataGrid.Columns[0].Header = "Время";
+
+                // мб добавим на замену DataGrid
+                /*var sch = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
+                foreach (var i in sch)
+                {
+                    ComboBoss.Text += $"{i.Time}   ";
+                }*/
+
                 context.SaveChanges();
             }
         }
