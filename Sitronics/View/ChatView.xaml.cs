@@ -13,6 +13,10 @@ namespace Sitronics.View
     /// </summary>
     public partial class ChatView : UserControl
     {
+        Driver currentDriver = new Driver()
+        {
+            IdDriver = 1
+        };
         public ChatView()
         {
             InitializeComponent();

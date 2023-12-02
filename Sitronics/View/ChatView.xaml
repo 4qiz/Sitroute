@@ -12,6 +12,9 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Button x:Name="backButton" Content="&lt;-" VerticalAlignment="Top" Width="40" Visibility="Collapsed" Click="BackButton_Click"/>
-        <Frame x:Name="contentFrame" NavigationUIVisibility="Hidden" ContentRendered="ContentFrame_ContentRendered" Grid.Row="1"/>
+        <Frame x:Name="contentFrame" 
+               NavigationUIVisibility="Hidden" 
+               ContentRendered="ContentFrame_ContentRendered" 
+               Grid.Row="1"/>
     </Grid>
 </UserControl>

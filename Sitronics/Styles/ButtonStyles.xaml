@@ -191,4 +191,29 @@
         <Setter Property="Height" Value="16"/>
     </Style>
 
+    <!--Icon button-->
+    <Style x:Key="circleIconButton" TargetType="Button">
+        <!--Normal button style-->
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Width" Value="25"/>
+        <Setter Property="Background" Value="{StaticResource B_primaryContainer}"/>
+        <Setter Property="Foreground" Value="{StaticResource B_onPrimaryContainer}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="5">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <!--Button Style on hover-->
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{Binding Path=Tag, RelativeSource={RelativeSource Self}}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
 </ResourceDictionary>

@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:Sitronics.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
+      xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
       Title="CurrentChatPage">
 
     <Grid>
@@ -13,7 +14,9 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+        <ScrollViewer x:Name="scrollViewer" 
+                      VerticalScrollBarVisibility="Visible" 
+                      HorizontalScrollBarVisibility="Disabled">
             <StackPanel x:Name="chatStackPanel"/>
         </ScrollViewer>
         <Grid Grid.Row="2">
@@ -25,11 +28,49 @@
                 <RowDefinition Height ="Auto"/>
                 <RowDefinition Height ="Auto"/>
             </Grid.RowDefinitions>
-            <Button x:Name="replyButton" Content="Ответить водителю" Grid.ColumnSpan="2" Visibility="Collapsed"
-                    HorizontalAlignment="Center" Click="ReplyButton_Click"/>
-            <TextBox x:Name="newMessageTextBox" TextWrapping="Wrap" MaxLength="500" Grid.Row="1"/>
-            <Button x:Name="sendMessageButton" IsDefault="True" Width="40" Content="->" Grid.Column="1" Grid.Row="1"
-                Click="SendMessageButton_Click"/>
+            <Button x:Name="replyButton" 
+                    Content="Ответить водителю" 
+                    Grid.ColumnSpan="2" 
+                    Visibility="Collapsed"
+                    HorizontalAlignment="Center" 
+                    Click="ReplyButton_Click"/>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border CornerRadius="5"
+                    BorderBrush="{StaticResource B_primary}"
+                    BorderThickness="1"
+                    Padding="5"
+                        Margin="0,0,15,0">
+
+                    <TextBox x:Name="newMessageTextBox" 
+                 TextWrapping="Wrap" 
+                 MaxLength="500"
+                 Background="{StaticResource B_surface}"
+                 Style="{StaticResource DefTB}"/>
+
+                </Border>
+
+
+                <Button x:Name="sendMessageButton" 
+                        Style="{StaticResource circleIconButton}"
+                        Tag="white"
+                        Grid.Column="1"
+                        IsDefault="True" 
+                        Click="SendMessageButton_Click"
+                        Width="40"
+                        Height="40"
+                        Margin="0,0,15,0"
+                        >
+                    <fa:IconImage Icon="PaperPlane" 
+                                  Style="{StaticResource iconButtonIcon}"/>
+                </Button>
+            </Grid>
+            
         </Grid>
     </Grid>
 </Page>

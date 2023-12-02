@@ -63,6 +63,7 @@ namespace Sitronics.View
         private void AddBusStopButton_Click(object sender, RoutedEventArgs e)
         {
             CreateNewBusStopComboBox();
+            CheckEnabled();
             countBusStation++;
         }
 
@@ -136,10 +137,12 @@ namespace Sitronics.View
 
         private void RouteNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (routeNameTextBox.Text.Length > 0 && countBusStation > 1)
-                saveRouteButton.IsEnabled = true;
-            else
-                saveRouteButton.IsEnabled = false;
+            CheckEnabled();
+        }
+
+        private void CheckEnabled()
+        {
+            saveRouteButton.IsEnabled = routeNameTextBox.Text.Length > 0 && countBusStation > 1;
         }
     }
 }

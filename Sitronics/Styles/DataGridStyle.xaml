@@ -84,7 +84,7 @@
 
 
 
-    <Style x:Key="DefaultDataGridCheckBoxColumnCellStyle" TargetType="{x:Type DataGridColumn}" />
+    <!--<Style x:Key="DefaultDataGridCheckBoxColumnCellStyle" TargetType="{x:Type DataGridColumn}" />-->
 
     <Style x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -501,9 +501,9 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style TargetType="{x:Type DataGridTextColumn}">
+    <!--<Style TargetType="{x:Type DataGridTextColumn}">
         <Setter Property="EditingElementStyle" Value="{StaticResource DefTB}" />
-    </Style>
+    </Style>-->
 
     <Style x:Key="DefaultDataGridStyle" TargetType="{x:Type DataGrid}">
         <Setter Property="CanUserAddRows" Value="False" />
