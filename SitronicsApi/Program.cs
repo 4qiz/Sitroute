@@ -42,6 +42,8 @@ app.MapGet("/busStations", (SitrouteDataContext context) => context.BusStations.
 
 app.MapGet("/buses", (SitrouteDataContext context) => context.Buses.Where(b => b.Location != null).Include(b=>b.Schedules).ToList());
 
+app.MapGet("/drivers", (SitrouteDataContext context) => context.Drivers.Include(d => d.IdDriverNavigation).ToList());
+
 app.MapGet("/routesByBusStations", (SitrouteDataContext context) => context.Routes
                                             .Include(r => r.RouteByBusStations)
                                             .ThenInclude(rp => rp.IdBusStationNavigation)
@@ -58,10 +60,18 @@ app.MapGet("/routes", (SitrouteDataContext context) => context.Routes.ToList());
 app.MapGet("/chat/{idDriver}/{idDispatcher}", (int idDriver, int idDispatcher, SitrouteDataContext context) => context.Messages
                     .Include(m => m.IdRecipientNavigation)
                     .Include(m => m.IdSenderNavigation)
-                    .ThenInclude(u => u.Driver)
                     .Where(m => m.IdSender == idDriver && m.IdRecipient == idDispatcher
                         || m.IdRecipient == idDriver && m.IdSender == idDispatcher
                         || m.IdRecipient == null && m.IdSender == idDriver)
+                    .ToList());
+
+app.MapGet("/chat/{idDispatcher}", (int idDispatcher, SitrouteDataContext context) => context.Messages
+                    .Include(m => m.IdRecipientNavigation)
+                    .Include(m => m.IdSenderNavigation)
+                    .Where(m => idDispatcher == m.IdSender
+                    || idDispatcher == m.IdRecipient
+                    || null == m.IdRecipient)
+                    .OrderByDescending(m => m.Time)
                     .ToList());
 
 app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) =>

@@ -12,7 +12,6 @@ public partial class Driver
 
     public DateTime? EndTime { get; set; }
 
-    [JsonIgnore]
     public virtual User IdDriverNavigation { get; set; } = null!;
 
     [JsonIgnore]

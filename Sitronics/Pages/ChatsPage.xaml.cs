@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Sitronics.Data;
-using Sitronics.Models;
+﻿using Sitronics.Models;
 using Sitronics.Repositories;
+using System.Net.Http.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -24,28 +23,18 @@ namespace Sitronics.Pages
 
             Manager.MainTimer.Tick += new EventHandler(UpdateTimer_Tick);
         }
-        private void UpdateTimer_Tick(object sender, EventArgs e)
+        private async void UpdateTimer_Tick(object sender, EventArgs e)
         {
-            LoadData();
+            await LoadData();
         }
 
-        private void LoadData()
+        private async Task LoadData()
         {
             chatsStackPanel.Children.Clear();
-            using (var context = new SitrouteDataContext())
-            {
-                Messages = context.Messages
-                    .Include(m => m.IdRecipientNavigation)
-                    .Include(m => m.IdSenderNavigation)
-                    .ThenInclude(u => u.Driver)
-                    .Where(m => Connection.CurrentUser.IdUser == m.IdSender
-                    || Connection.CurrentUser.IdUser == m.IdRecipient
-                    || null == m.IdRecipient)
-                    .OrderByDescending(m => m.Time)
-                    .ToList();
+            Messages = await Connection.Client.GetFromJsonAsync<List<Message>>($"/chat/{Connection.CurrentUser.IdUser}");
 
-                Drivers = context.Drivers.Include(d => d.IdDriverNavigation).ToList();
-            }
+            Drivers = await Connection.Client.GetFromJsonAsync<List<Driver>>($"/drivers");
+
             foreach (var message in Messages)
             {
                 var driver = Drivers.FirstOrDefault(d => d.IdDriver == message.IdSender || d.IdDriver == message.IdRecipient);
