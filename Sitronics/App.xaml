@@ -12,6 +12,7 @@
                 <ResourceDictionary Source="/Styles/DataGridStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/ScrollViewer.xaml"/>
                 <ResourceDictionary Source="/Styles/ScrollBar.xaml"/>
+                <ResourceDictionary Source="/Styles/CheckBoxStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
