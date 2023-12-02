@@ -76,8 +76,16 @@ app.MapGet("/chat/{idDispatcher}", (int idDispatcher, SitrouteDataContext contex
 
 app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) =>
 {
-    context.BusStations.Add(busStation);
-    context.SaveChanges();
+    try
+    {
+        context.BusStations.Add(busStation);
+        context.SaveChanges();
+        return Results.Ok(busStation);
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(ex);
+    }
 });
 
 app.MapPost("/route", (SitronicsApi.Models.Route route, SitrouteDataContext context) =>
