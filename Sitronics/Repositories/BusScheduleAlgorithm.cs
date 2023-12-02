@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sitronics.Data;
 using Sitronics.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sitronics
 {
@@ -17,7 +16,7 @@ namespace Sitronics
             int delay = routeTime / (busCount / 2);
 
             int rushTimeDelay = 3;
-            int chillTime = 0;
+            int chillTime = 10;
 
             int round = workMinutes / routeTime;
             int halfRouteTime = routeTime / 2;
@@ -25,13 +24,14 @@ namespace Sitronics
             for (int i = 0; i < busCount; i++)
             {
                 busStartTime = startDate;
-                for (int j = 1; j <= round; j++)
+                for (int j = 0; j < 480 / routeTime; j++)
                 {
+                    busStartTime = busStartTime.AddMinutes(halfRouteTime * j);
                     if (i >= halfBusCount)
-                        busStartTime = busStartTime.AddMinutes(halfRouteTime);
+                       busStartTime = busStartTime.AddMinutes(halfRouteTime);
                     busStartTime = busStartTime.AddMinutes(IsRushTime(busStartTime) ? rushTimeDelay * i : delay * i);
                     schedules.AddRange(MakeBusSchedule(buses[i], routeByBusStation, busStartTime, weatherInfo));
-                    busStartTime = startDate.AddMinutes(routeTime * j + chillTime);
+                    busStartTime = startDate.AddMinutes(routeTime * (j+1) + chillTime * (j+1));
                 }
             }
 
