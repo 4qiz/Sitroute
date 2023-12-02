@@ -53,7 +53,7 @@
                             CornerRadius="{TemplateBinding Border.CornerRadius}">
                                 <Border
                                 x:Name="StrokeBorder"
-                                BorderBrush="white"
+                                BorderBrush="{StaticResource B_outline}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="{TemplateBinding Border.CornerRadius}">
                                     <Grid>
