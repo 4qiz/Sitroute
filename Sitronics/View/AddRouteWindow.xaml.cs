@@ -4,6 +4,7 @@ using GMap.NET.WindowsPresentation;
 using Sitronics.Data;
 using Sitronics.Models;
 using Sitronics.Repositories;
+using System.Collections.ObjectModel;
 using System.Net.Http.Json;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -21,24 +22,39 @@ namespace Sitronics.View
         RoutingProvider routingProvider;
         int countBusStation = 0;
 
+        ObservableCollection<BusStation> BusStations = new ObservableCollection<BusStation>();
+
         public AddRouteWindow()
         {
             InitializeComponent();
             //CreateNewBusStopComboBox();
+            Manager.MainTimer.Tick += new EventHandler(UpdateTimer_Tick);
         }
 
-        private void CreateNewBusStopComboBox()
+        private async void UpdateTimer_Tick(object sender, EventArgs e)
         {
-            using (var context = new SitrouteDataContext())
+            await LoadData();
+        }
+
+        private async void CreateNewBusStopComboBox()
+        {
+            await LoadData();
+            ComboBox comboBox = new ComboBox();
+            comboBox.ItemsSource = BusStations;
+            comboBox.SelectedIndex = 0;
+            comboBox.DisplayMemberPath = "Name";
+            comboBox.Margin = new Thickness(0, 5, 0, 0);
+            comboBox.SelectionChanged += ComboBox_SelectionChanged;
+            comboBoxesStackPanel.Children.Add(comboBox);
+        }
+
+        private async Task LoadData()
+        {
+            foreach (var busStation in await Connection.Client.GetFromJsonAsync<List<BusStation>>("/busStations"))
             {
-                var busStations = context.BusStations.ToList();
-                ComboBox comboBox = new ComboBox();
-                comboBox.ItemsSource = busStations;
-                comboBox.SelectedIndex = 0;
-                comboBox.DisplayMemberPath = "Name";
-                comboBox.Margin = new Thickness(0, 5, 0, 0);
-                comboBox.SelectionChanged += ComboBox_SelectionChanged;
-                comboBoxesStackPanel.Children.Add(comboBox);
+                if (BusStations.Any(r => r.Name == busStation.Name))
+                    continue;
+                BusStations.Add(busStation);
             }
         }
 

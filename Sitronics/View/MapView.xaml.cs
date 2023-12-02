@@ -77,7 +77,7 @@ namespace Sitronics.View
             Random random = new();
             BusStations = await Connection.Client.GetFromJsonAsync<List<BusStation>>("/busStations");
             Buses = await Connection.Client.GetFromJsonAsync<List<Bus>>("/buses");
-            Routes = await Connection.Client.GetFromJsonAsync<List<Models.Route>>("/Routes");
+            Routes = await Connection.Client.GetFromJsonAsync<List<Models.Route>>("/routesByBusStations");
             foreach (var dbroute in Routes)
             {
                 var routeColor = new SolidColorBrush(Color.FromArgb(255, (byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255)));

@@ -14,7 +14,7 @@
         Background="Transparent"
         AllowsTransparency="True"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        >
+        Loaded="Window_Loaded">
 
     <Border CornerRadius="12">
         <!--<Border.Background>

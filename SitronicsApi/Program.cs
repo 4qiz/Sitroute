@@ -39,14 +39,21 @@ app.MapGet("/users/{login}/{password}", (string login, string password, Sitroute
 });
 
 app.MapGet("/busStations", (SitrouteDataContext context) => context.BusStations.ToList());
+
 app.MapGet("/buses", (SitrouteDataContext context) => context.Buses.Where(b => b.Location != null).ToList());
-app.MapGet("/routes", (SitrouteDataContext context) => context.Routes
-                                            .Include(r => r.RouteByBusStations).ThenInclude(rp => rp.IdBusStationNavigation));
+
+app.MapGet("/routesByBusStations", (SitrouteDataContext context) => context.Routes
+                                            .Include(r => r.RouteByBusStations)
+                                            .ThenInclude(rp => rp.IdBusStationNavigation)
+                                            .ToList());
+
 app.MapGet("/routesStats", (SitrouteDataContext context) => context.Routes
                     .Include(r => r.Buses)
                     .ThenInclude(b => b.Schedules)
                     .ThenInclude(s => s.IdBusStationNavigation)
                     .ToList());
+
+app.MapGet("/routes", (SitrouteDataContext context) => context.Routes.AsNoTracking().ToList());
 
 app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) =>
 {
@@ -66,6 +73,20 @@ app.MapPost("/route", (SitronicsApi.Models.Route route, SitrouteDataContext cont
     {
         return Results.BadRequest();
     }   
+});
+
+app.MapPost("/bus", (Bus bus, SitrouteDataContext context) =>
+{
+    if (!context.Buses.Any(b => b.Number == bus.Number))
+    {
+        context.Buses.Add(bus);
+        context.SaveChanges();
+        return Results.Ok();
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
 });
 
 static byte[] ComputeSha256Hash(string rawData)

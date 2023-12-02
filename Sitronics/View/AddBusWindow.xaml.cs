@@ -1,12 +1,13 @@
-﻿using Sitronics.Data;
-using Sitronics.Models;
+﻿using Sitronics.Models;
+using Sitronics.Repositories;
+using System.Collections.ObjectModel;
+using System.Net.Http.Json;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sitronics.View
 {
@@ -15,16 +16,22 @@ namespace Sitronics.View
     /// </summary>
     public partial class AddBusWindow : Window
     {
+        ObservableCollection<Route> Routes { get; set; } = new ObservableCollection<Route>();
+
         public AddBusWindow()
         {
             InitializeComponent();
 
             capacityTextBox.Text = "60";
 
-            using (var context = new SitrouteDataContext())
-            {
-                routeComboBox.ItemsSource = context.Routes.ToList();
-            }
+            routeComboBox.ItemsSource = Routes;
+
+            Manager.MainTimer.Tick += new EventHandler(UpdateTimer_Tick);
+        }
+
+        private async void UpdateTimer_Tick(object sender, EventArgs e)
+        {
+            await LoadData();
         }
 
         [DllImport("user32.dll")]
@@ -50,17 +57,21 @@ namespace Sitronics.View
             WindowState = WindowState.Minimized;
         }
 
-        private void AddBusButton_Click(object sender, RoutedEventArgs e)
+        private async void AddBusButton_Click(object sender, RoutedEventArgs e)
         {
-            using(var context = new SitrouteDataContext())
+            var bus = new Bus()
             {
-                context.Buses.Add(new Bus()
-                {
-                    Number = numberBusTextBox.Text,
-                    IdRoute = (routeComboBox.SelectedItem as Route).IdRoute
-                });
-                context.SaveChanges();
-                MessageBox.Show("Автобус добавлен");
+                Number = numberBusTextBox.Text,
+                IdRoute = (routeComboBox.SelectedItem as Route).IdRoute
+            };
+            var response = await Connection.Client.PostAsJsonAsync("/bus", bus);
+            if (response.IsSuccessStatusCode)
+            {
+                MessageBox.Show("Автобус успешно добавлен");
+            }
+            else
+            {
+                MessageBox.Show("Кажется такой автобус уже есть");
             }
         }
 
@@ -89,6 +100,21 @@ namespace Sitronics.View
             if (!Char.IsDigit(e.Text, 0))
             {
                 e.Handled = true;
+            }
+        }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            await LoadData();
+        }
+
+        private async Task LoadData()
+        {
+            foreach (var route in await Connection.Client.GetFromJsonAsync<List<Models.Route>>("/routes"))
+            {
+                if (Routes.Any(r => r.Name == route.Name))
+                    continue;
+                Routes.Add(route);
             }
         }
     }
