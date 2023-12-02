@@ -40,7 +40,7 @@ app.MapGet("/users/{login}/{password}", (string login, string password, Sitroute
 
 app.MapGet("/busStations", (SitrouteDataContext context) => context.BusStations.ToList());
 
-app.MapGet("/buses", (SitrouteDataContext context) => context.Buses.Where(b => b.Location != null).Include(b=>b.Schedules).ToList());
+app.MapGet("/buses", (SitrouteDataContext context) => context.Buses.Where(b => b.Location != null).Include(b => b.Schedules).ToList());
 
 app.MapGet("/routesByBusStations", (SitrouteDataContext context) => context.Routes
                                             .Include(r => r.RouteByBusStations)
@@ -118,31 +118,4 @@ static byte[] ComputeSha256Hash(string rawData)
         return sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
 }
 
-
-
-//var summaries = new[]
-//{
-//    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-//};
-
-//app.MapGet("/weatherforecast", () =>
-//{
-//    var forecast = Enumerable.Range(1, 5).Select(index =>
-//        new WeatherForecast
-//        (
-//            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-//            Random.Shared.Next(-20, 55),
-//            summaries[Random.Shared.Next(summaries.Length)]
-//        ))
-//        .ToArray();
-//    return forecast;
-//})
-//.WithName("GetWeatherForecast")
-//.WithOpenApi();
-
 app.Run();
-
-//internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-//{
-//    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-//}
