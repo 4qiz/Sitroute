@@ -1,12 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Sitronics.Data;
+﻿using Sitronics.Models;
 using Sitronics.Repositories;
-using System.Net;
-using System.Security;
+using System.Net.Http.Json;
 using System.Security.Cryptography;
-using System.Security.Principal;
 using System.Text;
-using System.Windows;
 using System.Windows.Input;
 
 namespace Sitronics.ViewModel
@@ -104,41 +100,57 @@ namespace Sitronics.ViewModel
             return validData;
         }
 
-        private void ExecuteLoginCommand(object obj)
+        private async void ExecuteLoginCommand(object obj)
         {
-            using (var context = new SitrouteDataContext())
+            //using (var context = new SitrouteDataContext())
+            //{
+            //    var user = context.Users.Include(u => u.Admin)
+            //        .Include(u => u.MessageIdRecipientNavigations)
+            //        .Include(u => u.MessageIdSenderNavigations)
+            //        .Where(u => u.Login == Username.Trim())
+            //    .FirstOrDefault();
+
+            //    var hashInput = ComputeSha256Hash(Password);
+
+            //    if (user != null &&
+            //        Convert.ToHexString(user.Password) == Convert.ToHexString(hashInput))
+            //    {
+            //        if (user.Admin != null)
+            //        {
+            //            Connection.CurrentUser = user;
+            //            IsViewVisible = false;
+            //        }
+            //        else
+            //        {
+            //            ErrorMessage = "У вас нет прав для этого приложения";
+            //        }
+            //    }
+            //    else
+            //        ErrorMessage = "* Неправильный логин или пароль";
+            //}
+
+            var user = await Connection.Client.GetFromJsonAsync<User>($"/users/{Username}/{Password}");
+
+            if (user == null)
             {
-                var user = context.Users.Include(u => u.Admin)
-                    .Include(u => u.MessageIdRecipientNavigations)
-                    .Include(u => u.MessageIdSenderNavigations)
-                    .Where(u => u.Login == Username.Trim())
-                .FirstOrDefault();
-
-                var hashInput = ComputeSha256Hash(Password);
-
-                if (user != null &&
-                    Convert.ToHexString(user.Password) == Convert.ToHexString(hashInput))
-                {
-                    if (user.Admin != null)
-                    {
-                        Connection.CurrentUser = user;
-                        IsViewVisible = false;
-                    }
-                    else
-                    {
-                        ErrorMessage = "У вас нет прав для этого приложения";
-                    }
-                }
-                else
-                    ErrorMessage = "* Неправильный логин или пароль";
+                ErrorMessage = "* Неправильный логин или пароль";
+            }
+            else if (user.Admin != null)
+            {
+                Connection.CurrentUser = user;
+                IsViewVisible = false;
+            }
+            else
+            {
+                ErrorMessage = "У вас нет прав для этого приложения";
             }
         }
 
-        static byte[] ComputeSha256Hash(string rawData)
-        {
-            using (SHA256 sha256Hash = SHA256.Create())
-                return sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
-        }
+        //static byte[] ComputeSha256Hash(string rawData)
+        //{
+        //    using (SHA256 sha256Hash = SHA256.Create())
+        //        return sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+        //}
 
         private void ExecuteRecoverPassCommand(string username, string email)
         {
