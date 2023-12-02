@@ -7,7 +7,7 @@ namespace Sitronics
 {
     public class BusScheduleAlgorithm
     {
-        public List<Schedule> GenerateBusSchedule(DateTime startDate, DateTime endDate, int idRoute, List<RouteByBusStation> routeByBusStation, List<Bus> buses, string weatherInfo, string roadConditions)
+        public List<Schedule> GenerateRouteSchedule(DateTime startDate, DateTime endDate, int idRoute, List<RouteByBusStation> routeByBusStation, List<Bus> buses, string weatherInfo, string roadConditions)
         {
             List<Schedule> schedules = new List<Schedule>();
             DateTime busStartTime;

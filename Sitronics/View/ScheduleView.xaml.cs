@@ -54,7 +54,7 @@ namespace Sitronics.View
                     .FirstOrDefault();
                 var buses = route.RouteByBusStations;
 
-                List<Schedule> schedule = await Task.Run(() => algorithm.GenerateBusSchedule(
+                List<Schedule> schedule = await Task.Run(() => algorithm.GenerateRouteSchedule(
                     startTime,
                     endTime,
                     selectedRoute.IdRoute,
