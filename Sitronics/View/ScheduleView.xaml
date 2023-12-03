@@ -11,36 +11,50 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         
         <StackPanel Grid.Column="0"
-                    Width="200"
-                    Margin="10">
+                    Width="250"
+                    Margin="10,10,30,10">
+            
             <TextBlock Text="Выберите маршрут"
                        Foreground="{StaticResource B_onSurface}"/>
-            <ComboBox x:Name="routeComboBox" SelectionChanged="RouteComboBox_SelectionChanged"/>
-        </StackPanel>
-        
-        <StackPanel Grid.Column="1"
-                    Width="200"
-                    Margin="10">
+            <ComboBox x:Name="routeComboBox" SelectionChanged="RouteComboBox_SelectionChanged" Margin="0,3,0,20"/>
+
             <TextBlock Text="Выберите остановку"
                        Foreground="{StaticResource B_onSurface}"/>
             <ComboBox x:Name="stopComboBox"
-                      />
+                     Margin="0,3,0,10" />
             <Button x:Name="loadScheduleButton" 
                     Content="Загрузить расписание" 
                     Click="LoadScheduleButton_Click"
-                    Style="{StaticResource DefaultButtonStyle}"/>
+                    Style="{StaticResource DefaultButtonStyle}"
+                    HorizontalAlignment="Center"/>
+            
         </StackPanel>
-        <ScrollViewer Grid.Column="2"
-                      Margin="0,29,0,0"
-                      PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-            <StackPanel>
+        
+
+        <!--На замену DataGrid-->
+        <!--<TextBlock Grid.Column="2" Margin="0,29,0,0" x:Name="ComboBoss" Foreground="White" TextWrapping="Wrap" Height="300"/>-->
+        
+        <ScrollViewer Grid.Column="1"
+                      Margin="10"
+                      PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal">
+
+                <Border Width="5" CornerRadius="5" Margin="0,0,30,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="{StaticResource sitronicsLogo1}" Offset="0"/>
+                            <GradientStop Color="{StaticResource sitronicsLogo0}" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+
                 <DataGrid x:Name="scheduleDataGrid" 
+                          RowHeight="25"
                           ScrollViewer.CanContentScroll="True"
                           Width="400">
                 </DataGrid>

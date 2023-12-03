@@ -1,26 +1,16 @@
-﻿using GMap.NET.WindowsPresentation;
-using GMap.NET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using GMap.NET;
 using GMap.NET.MapProviders;
-using Sitronics.Models;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Windows.Interop;
+using GMap.NET.WindowsPresentation;
 using Sitronics.Data;
+using Sitronics.Models;
 using Sitronics.Repositories;
+using System.Diagnostics;
 using System.Net.Http.Json;
+using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace Sitronics.View
 {
@@ -72,9 +62,21 @@ namespace Sitronics.View
                 Location = new NetTopologySuite.Geometries.Point(point.Lng, point.Lat) { SRID = 4326 },
                 Name = busStopNameTextBox.Text,
             };
-            await Connection.Client.PostAsJsonAsync("/busStation", busStation);
-            MessageBox.Show("Автобусная остановка успешно добавлена");
-            MapManager.MapManager.CreateBusStationMarker(point, ref mapView, busStation);
+            try
+            {
+
+                using (var context = new SitrouteDataContext())
+                {
+                    await context.BusStations.AddAsync(busStation);
+                    await context.SaveChangesAsync();
+                    MessageBox.Show("Автобусная остановка успешно добавлена");
+                    MapManager.MapManager.CreateBusStationMarker(point, ref mapView, busStation);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Автобусная остановка не была добавлена");
+            }
         }
 
         private void MapView_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
