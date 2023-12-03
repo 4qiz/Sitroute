@@ -22,20 +22,22 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/users/{login}/{password}", (string login, string password, SitrouteDataContext context) =>
+app.MapGet("/admins/{login}/{password}", (string login, string password, SitrouteDataContext context) =>
 {
     var user = context.Users.Include(u => u.Admin)
                     .Where(u => u.Login == login.Trim())
                 .FirstOrDefault();
 
-    var hashInput = ComputeSha256Hash(password);
+    return Aunteficate(user, password);
+});
 
-    User currentUser = new User();
-    if (user != null && Convert.ToHexString(user.Password) == Convert.ToHexString(hashInput))
-    {
-        currentUser = user;
-    }
-    return Results.Ok(currentUser);
+app.MapGet("/drivers/{login}/{password}", (string login, string password, SitrouteDataContext context) =>
+{
+    var user = context.Users.Include(u => u.Driver)
+                    .Where(u => u.Login == login.Trim())
+                .FirstOrDefault();
+
+    return Aunteficate(user, password);
 });
 
 app.MapGet("/busStations", (SitrouteDataContext context) => context.BusStations.ToList());
@@ -129,3 +131,15 @@ static byte[] ComputeSha256Hash(string rawData)
 }
 
 app.Run();
+
+static IResult Aunteficate(User? user, string password)
+{
+    var hashInput = ComputeSha256Hash(password);
+
+    User currentUser = new User();
+    if (user != null && Convert.ToHexString(user.Password) == Convert.ToHexString(hashInput))
+    {
+        currentUser = user;
+    }
+    return Results.Ok(currentUser);
+}
