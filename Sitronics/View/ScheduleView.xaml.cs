@@ -67,9 +67,9 @@ namespace Sitronics.View
                     "",
                     ""
                     ));
-                context.Schedules.AddRangeAsync(schedule);
                 scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
                 scheduleDataGrid.Columns[0].Header = "Время";
+               // context.Schedules.AddRangeAsync(schedule);
 
                 // мб добавим на замену DataGrid
                 /*var sch = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });

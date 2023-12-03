@@ -110,7 +110,7 @@ namespace Sitronics.View
 
         private async Task LoadData()
         {
-            foreach (var route in await Connection.Client.GetFromJsonAsync<List<Models.Route>>("/routes"))
+            foreach (var route in await Connection.Client.GetFromJsonAsync<List<Route>>("/routes"))
             {
                 if (Routes.Any(r => r.Name == route.Name))
                     continue;
