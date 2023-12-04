@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Sitronics.View"
+             xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -16,7 +17,7 @@
 
         
         <StackPanel Grid.Column="0"
-                    Width="250"
+                    Width="280"
                     Margin="10,10,30,10">
             
             <TextBlock Text="Выберите маршрут"
@@ -27,11 +28,16 @@
                        Foreground="{StaticResource B_onSurface}"/>
             <ComboBox x:Name="stopComboBox"
                      Margin="0,3,0,10" />
-            <Button x:Name="loadScheduleButton" 
+            
+            <StackPanel Orientation="Horizontal" Width="280">
+                <Button x:Name="loadScheduleButton" 
                     Content="Загрузить расписание" 
                     Click="LoadScheduleButton_Click"
                     Style="{StaticResource DefaultButtonStyle}"
-                    HorizontalAlignment="Center"/>
+                    HorizontalAlignment="Center" Margin="0,0,10,0"/>
+
+                    <Image x:Name="LoadingGif" gif:ImageBehavior.AnimatedSource="pack://application:,,,/Images/loadingT.gif" Height="40" Width="50" Visibility="Collapsed"/>
+            </StackPanel>
             
         </StackPanel>
         

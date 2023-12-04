@@ -14,6 +14,8 @@
     <None Remove="Fonts\Orbitron-Medium.ttf" />
     <None Remove="Images\Hahatun.png" />
     <None Remove="Images\key-icon.png" />
+    <None Remove="Images\loading.gif" />
+    <None Remove="Images\loadingT.gif" />
     <None Remove="Images\user-icon.png" />
   </ItemGroup>
 
@@ -38,6 +40,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,6 +50,7 @@
     <Resource Include="Images\key-icon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Images\loadingT.gif" />
   </ItemGroup>
 
   <ItemGroup>

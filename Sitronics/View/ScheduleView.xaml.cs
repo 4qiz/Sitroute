@@ -36,6 +36,7 @@ namespace Sitronics.View
             {
                 MessageBox.Show(ex.Message);
             }
+
         }
         private async Task LoadSchedule(Route selectedRoute, BusStation busStation)
         {
@@ -105,7 +106,12 @@ namespace Sitronics.View
         {
             try
             {
+                scheduleDataGrid.ItemsSource = null;
+                LoadingGif.Visibility = Visibility.Visible;
+                loadScheduleButton.IsEnabled = false;
                 await LoadSchedule((Route)routeComboBox.SelectedItem, ((RouteByBusStation)stopComboBox.SelectedItem).IdBusStationNavigation);
+                LoadingGif.Visibility = Visibility.Collapsed;
+                loadScheduleButton.IsEnabled = true;
             }
             catch (Exception ex)
             {
