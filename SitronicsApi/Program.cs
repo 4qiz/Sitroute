@@ -25,26 +25,29 @@ if (app.Environment.IsDevelopment())
 app.MapGet("/admins/{login}/{password}", (string login, string password, SitrouteDataContext context) =>
 {
     var user = context.Users.Include(u => u.Admin)
-                    .Where(u => u.Login == login.Trim())
-                .FirstOrDefault();
+                            .FirstOrDefault(u => u.Login == login.Trim());
 
-    return Aunteficate(user, password);
+    return Authenticate(user, password);
 });
 
 app.MapGet("/drivers/{login}/{password}", (string login, string password, SitrouteDataContext context) =>
 {
-    var user = context.Users.Include(u => u.Driver)
-                    .Where(u => u.Login == login.Trim())
-                .FirstOrDefault();
+    var user = context.Users.Include(u => u.Driver).FirstOrDefault(u => u.Login == login.Trim());
+    user.Driver.IdDriverNavigation = null;
 
-    return Aunteficate(user, password);
+    return Authenticate(user, password);
 });
 
 app.MapGet("/busStations", (SitrouteDataContext context) => context.BusStations.ToList());
 
 app.MapGet("/buses", (SitrouteDataContext context) => context.Buses.Where(b => b.Location != null).Include(b => b.Schedules).ToList());
 
-app.MapGet("/drivers", (SitrouteDataContext context) => context.Drivers.Include(d => d.IdDriverNavigation).ToList());
+app.MapGet("/drivers", (SitrouteDataContext context) =>
+{
+    var drivers = context.Drivers.Include(d => d.IdDriverNavigation).ToList();
+    drivers.ForEach(d => d.IdDriverNavigation.Driver = null);
+    return drivers;
+});
 
 app.MapGet("/routesByBusStations", (SitrouteDataContext context) => context.Routes
                                             .Include(r => r.RouteByBusStations)
@@ -140,7 +143,7 @@ static byte[] ComputeSha256Hash(string rawData)
 
 app.Run();
 
-static IResult Aunteficate(User? user, string password)
+static IResult Authenticate(User? user, string password)
 {
     var hashInput = ComputeSha256Hash(password);
 

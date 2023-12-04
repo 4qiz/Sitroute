@@ -20,7 +20,6 @@ public partial class User
 
     public virtual Admin? Admin { get; set; }
 
-    [JsonIgnore]
     public virtual Driver? Driver { get; set; }
     
     [JsonIgnore]
