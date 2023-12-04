@@ -29,29 +29,36 @@ namespace Sitronics.View
 
         private async void MapView_Loaded(object sender, RoutedEventArgs e)
         {
-            GMaps.Instance.Mode = AccessMode.ServerAndCache;
-            // choose your provider here
-            mapView.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
-            mapView.MinZoom = 10;
-            mapView.MaxZoom = 17;
-            // whole world zoom
-            mapView.Zoom = 14;
-            mapView.ShowCenter = false;
-            // lets the map use the mousewheel to zoom
-            mapView.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
-            // lets the user drag the map
-            mapView.CanDragMap = true;
-            // lets the user drag the map with the left mouse button
-            mapView.DragButton = MouseButton.Left;
-            RoutingProvider routingProvider =
-            mapView.MapProvider as RoutingProvider ?? GMapProviders.OpenStreetMap;
-            mapView.SetPositionByKeywords("Архангельский Колледж Телекоммуникаций");
-
-            List<BusStation> BusStations = await Connection.Client.GetFromJsonAsync<List<BusStation>>("/busStations");
-            foreach (var busStation in BusStations)
+            try
             {
-                var point = new PointLatLng(busStation.Location.Coordinate.Y, busStation.Location.Coordinate.X);
-                MapManager.MapManager.CreateBusStationMarker(point, ref mapView, busStation);
+                GMaps.Instance.Mode = AccessMode.ServerAndCache;
+                // choose your provider here
+                mapView.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
+                mapView.MinZoom = 10;
+                mapView.MaxZoom = 17;
+                // whole world zoom
+                mapView.Zoom = 14;
+                mapView.ShowCenter = false;
+                // lets the map use the mousewheel to zoom
+                mapView.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
+                // lets the user drag the map
+                mapView.CanDragMap = true;
+                // lets the user drag the map with the left mouse button
+                mapView.DragButton = MouseButton.Left;
+                RoutingProvider routingProvider =
+                mapView.MapProvider as RoutingProvider ?? GMapProviders.OpenStreetMap;
+                mapView.SetPositionByKeywords("Архангельский Колледж Телекоммуникаций");
+
+                List<BusStation> BusStations = await Connection.Client.GetFromJsonAsync<List<BusStation>>("/busStations");
+                foreach (var busStation in BusStations)
+                {
+                    var point = new PointLatLng(busStation.Location.Coordinate.Y, busStation.Location.Coordinate.X);
+                    MapManager.MapManager.CreateBusStationMarker(point, ref mapView, busStation);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -84,7 +91,6 @@ namespace Sitronics.View
             int x = Convert.ToInt32(e.GetPosition(mapView).X);
             int y = Convert.ToInt32(e.GetPosition(mapView).Y);
             point = mapView.FromLocalToLatLng(x, y);
-            Debug.WriteLine(point.Lat + " " + point.Lng);
             lastMarker = MapManager.MapManager.CreateMarker(point, ref mapView, lastMarker: lastMarker, fillColor: Brushes.Red);
         }
 
@@ -97,28 +103,28 @@ namespace Sitronics.View
 
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, int wMsg, int wParam, int lParam);
-        private void pnlControlBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void PnlControlBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             WindowInteropHelper helper = new WindowInteropHelper(this);
             SendMessage(helper.Handle, 161, 2, 0);
         }
 
-        private void pnlControlBar_MouseEnter(object sender, MouseEventArgs e)
+        private void PnlControlBar_MouseEnter(object sender, MouseEventArgs e)
         {
             MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
         }
 
-        private void btnClose_Click(object sender, RoutedEventArgs e)
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
 
-        private void btnMinimize_Click(object sender, RoutedEventArgs e)
+        private void BtnMinimize_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
         }
 
-        private void btnMaximize_Click(object sender, RoutedEventArgs e)
+        private void BtnMaximize_Click(object sender, RoutedEventArgs e)
         {
             if (WindowState == WindowState.Normal) WindowState = WindowState.Maximized;
             else WindowState = WindowState.Normal;

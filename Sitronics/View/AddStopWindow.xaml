@@ -73,13 +73,13 @@
                                 FlowDirection="RightToLeft"
                                 Background="Transparent"
                                 Margin="0,0,5,0"
-                                MouseLeftButtonDown="pnlControlBar_MouseLeftButtonDown"
-                                MouseEnter="pnlControlBar_MouseEnter">
+                                MouseLeftButtonDown="PnlControlBar_MouseLeftButtonDown"
+                                MouseEnter="PnlControlBar_MouseEnter">
 
                                 <Button x:Name="btnClose"
                                     Style="{StaticResource controlButton}"
                                     Tag="{StaticResource color4}"
-                                    Click="btnClose_Click"
+                                    Click="BtnClose_Click"
                                     IsCancel="True">
                                     <fa:IconImage Icon="Xmark" Style="{StaticResource controlButtonIcon}"/>
                                 </Button>
@@ -87,14 +87,14 @@
                                 <Button x:Name="btnMaximize"
                                     Style="{StaticResource controlButton}"
                                     Tag="{StaticResource color6}"
-                                    Click="btnMaximize_Click">
+                                    Click="BtnMaximize_Click">
                                     <fa:IconImage Icon="Square" Style="{StaticResource controlButtonIcon}"/>
                                 </Button>
 
                                 <Button x:Name="btnMinimize"
                                     Style="{StaticResource controlButton}"
                                     Tag="{StaticResource color8}"
-                                    Click="btnMinimize_Click">
+                                    Click="BtnMinimize_Click">
                                     <fa:IconImage Icon="WindowMinimize" Width="12" Style="{StaticResource controlButtonIcon}"/>
                                 </Button>
 

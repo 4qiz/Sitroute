@@ -15,29 +15,27 @@ namespace Sitronics.View
         public ScheduleView()
         {
             InitializeComponent();
-            try
-            {
-                using (var context = new SitrouteDataContext())
-                {
-                    var route = context.Routes
-                    .Include(r => r.RouteByBusStations)
-                    .ThenInclude(r => r.IdBusStationNavigation);
-                    routeComboBox.ItemsSource = route.ToList();
-                    routeComboBox.SelectedIndex = 0;
-                    routeComboBox.DisplayMemberPath = "Name";
+        }
 
-                    stopComboBox.ItemsSource = ((Route)routeComboBox.SelectedItem).RouteByBusStations.ToList();
-                    stopComboBox.SelectedIndex = 0;
-                    stopComboBox.DisplayMemberPath = "IdBusStationNavigation.Name";
-                    
-                }
-            }
-            catch (Exception ex)
+        private async Task LoadData()
+        {
+            using (var context = new SitrouteDataContext())
             {
-                MessageBox.Show(ex.Message);
+                var route = await context.Routes
+                .Include(r => r.RouteByBusStations)
+                .ThenInclude(r => r.IdBusStationNavigation).ToListAsync();
+                routeComboBox.ItemsSource = route;
+                routeComboBox.SelectedIndex = 0;
+                routeComboBox.DisplayMemberPath = "Name";
+
+                stopComboBox.ItemsSource = ((Route)routeComboBox.SelectedItem).RouteByBusStations.ToList();
+                stopComboBox.SelectedIndex = 0;
+                stopComboBox.DisplayMemberPath = "IdBusStationNavigation.Name";
+
             }
 
         }
+
         private async Task LoadSchedule(Route selectedRoute, BusStation busStation)
         {
             BusScheduleAlgorithm algorithm = new BusScheduleAlgorithm();
@@ -112,6 +110,18 @@ namespace Sitronics.View
                 await LoadSchedule((Route)routeComboBox.SelectedItem, ((RouteByBusStation)stopComboBox.SelectedItem).IdBusStationNavigation);
                 LoadingGif.Visibility = Visibility.Collapsed;
                 loadScheduleButton.IsEnabled = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await LoadData();
             }
             catch (Exception ex)
             {

@@ -174,9 +174,9 @@ namespace Sitronics.Repositories
 
         private DateTime GetArrivalTime(List<RouteByBusStation> routeByBusStations, int idBusStation)
         {
-            return routeByBusStations.Where(s => s.IdBusStation == idBusStation).First().IdBusStationNavigation.Schedules
+            return routeByBusStations.FirstOrDefault(s => s.IdBusStation == idBusStation).IdBusStationNavigation.Schedules
                                         .OrderBy(s => s.Time)
-                                        .First().Time;
+                                        .FirstOrDefault().Time;
         }
     }
 }

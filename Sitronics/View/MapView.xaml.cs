@@ -31,7 +31,14 @@ namespace Sitronics.View
 
         private async void UpdateTimer_Tick(object sender, EventArgs e)
         {
-            await LoadData();
+            try
+            {
+                await LoadData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void AddBusButton_Click(object sender, RoutedEventArgs e)
@@ -63,21 +70,29 @@ namespace Sitronics.View
             // lets the user drag the map with the left mouse button
             mapView.DragButton = MouseButton.Left;
             mapView.SetPositionByKeywords("Архангельский Колледж Телекоммуникаций");
-            await LoadData();
+            try
+            {
+                await LoadData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
         }
 
         private async Task LoadData()
         {
-            mapView.Markers.Clear();
+            BusStations = await Connection.Client.GetFromJsonAsync<List<BusStation>>("/busStations");
+            Buses = await Connection.Client.GetFromJsonAsync<List<Bus>>("/buses");
+            Routes = await Connection.Client.GetFromJsonAsync<List<Models.Route>>("/routesByBusStations");
+
             List<PointLatLng> points = new List<PointLatLng>();
             RoutingProvider routingProvider =
             mapView.MapProvider as RoutingProvider ?? GMapProviders.OpenStreetMap;
             Random random = new();
 
-            BusStations = await Connection.Client.GetFromJsonAsync<List<BusStation>>("/busStations");
-            Buses = await Connection.Client.GetFromJsonAsync<List<Bus>>("/buses");
-            Routes = await Connection.Client.GetFromJsonAsync<List<Models.Route>>("/routesByBusStations");
+            mapView.Markers.Clear();
             foreach (var dbroute in Routes)
             {
                 var routeColor = new SolidColorBrush(Color.FromArgb(255, (byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255)));
