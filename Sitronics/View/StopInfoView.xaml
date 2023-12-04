@@ -8,5 +8,11 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <TextBlock Text="stop Info"/>
+        <DataGrid x:Name="BusStopsDataGrid" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Названия"/>
+                <DataGridTextColumn Header="Кол-во пассажиров"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>
