@@ -14,12 +14,13 @@ namespace Sitronics.View
 
             using (var context = new SitrouteDataContext())
             {
-                var stops = BusStopsDataGrid.ItemsSource = context.BusStations.Select(s => new
+                var busStops = context.BusStations.Select(s => new
                 {
                     s.Name,
                     s.PeopleCount
                 }).ToList();
-               
+                BusStopsDataGrid.ItemsSource = busStops;
+
             }
         }
     }

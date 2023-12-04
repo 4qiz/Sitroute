@@ -10,8 +10,8 @@
         <TextBlock Text="stop Info"/>
         <DataGrid x:Name="BusStopsDataGrid" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Названия"/>
-                <DataGridTextColumn Header="Кол-во пассажиров"/>
+                <DataGridTextColumn Header="Названия" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Кол-во пассажиров" Binding="{Binding PeopleCount}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
