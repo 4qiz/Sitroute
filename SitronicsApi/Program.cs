@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SitronicsApi;
 using SitronicsApi.Data;
 using SitronicsApi.Models;
 using System.Security.Cryptography;
@@ -10,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHostedService<TimedHostedService>();
 
 builder.Services.AddDbContext<SitrouteDataContext>();
 
