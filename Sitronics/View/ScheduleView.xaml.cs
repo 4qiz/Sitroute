@@ -107,12 +107,18 @@ namespace Sitronics.View
                 scheduleDataGrid.ItemsSource = null;
                 LoadingGif.Visibility = Visibility.Visible;
                 loadScheduleButton.IsEnabled = false;
-                await LoadSchedule((Route)routeComboBox.SelectedItem, ((RouteByBusStation)stopComboBox.SelectedItem).IdBusStationNavigation);
+                RouteByBusStation routeByBusStation = (RouteByBusStation)stopComboBox.SelectedItem;
+                Route route = (Route)routeComboBox.SelectedItem;
+                if (routeByBusStation == null || route == null)
+                    return;
+                await LoadSchedule(route, routeByBusStation.IdBusStationNavigation);
                 LoadingGif.Visibility = Visibility.Collapsed;
                 loadScheduleButton.IsEnabled = true;
             }
             catch (Exception ex)
             {
+                LoadingGif.Visibility = Visibility.Collapsed;
+                loadScheduleButton.IsEnabled = true;
                 MessageBox.Show(ex.Message);
             }
         }
