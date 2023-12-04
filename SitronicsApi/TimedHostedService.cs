@@ -7,19 +7,32 @@ using System.Threading.Tasks;
 
 namespace SitronicsApi
 {
-    internal static class ConverterGeometry
+    public class TimedHostedService : IHostedService, IDisposable
     {
-        public static Geometry GetPointByString(string value)
+        private Timer? _timer = null;
+
+        public void Dispose()
         {
-            if (value == null)
-            {
-                return null;
-            }
-            var startCoordinate = value.IndexOf("(") + 1;
-            var startSecondCoordinate = value.IndexOf(" ", startCoordinate) + 1;
-            var x = double.Parse(value.Substring(startCoordinate, startSecondCoordinate - startCoordinate - 1).Replace('.', ','));
-            var y = double.Parse(value.Substring(startSecondCoordinate, value.IndexOf(")") - startSecondCoordinate).Replace('.', ','));
-            return new Point(x, y) { SRID = 4326 };
+            _timer?.Dispose();
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            _timer = new Timer(DoWork, null, TimeSpan.Zero,
+                TimeSpan.FromDays(1));
+            return Task.CompletedTask;
+        }
+
+        private void DoWork(object? state)
+        {
+            //По таймеру что-то делать
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            _timer?.Change(Timeout.Infinite, 0);
+
+            return Task.CompletedTask;
         }
     }
 }
