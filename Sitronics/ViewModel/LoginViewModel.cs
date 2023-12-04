@@ -3,6 +3,7 @@ using Sitronics.Repositories;
 using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Sitronics.ViewModel
@@ -102,32 +103,8 @@ namespace Sitronics.ViewModel
 
         private async void ExecuteLoginCommand(object obj)
         {
-            //using (var context = new SitrouteDataContext())
-            //{
-            //    var user = context.Users.Include(u => u.Admin)
-            //        .Include(u => u.MessageIdRecipientNavigations)
-            //        .Include(u => u.MessageIdSenderNavigations)
-            //        .Where(u => u.Login == Username.Trim())
-            //    .FirstOrDefault();
-
-            //    var hashInput = ComputeSha256Hash(Password);
-
-            //    if (user != null &&
-            //        Convert.ToHexString(user.Password) == Convert.ToHexString(hashInput))
-            //    {
-            //        if (user.Admin != null)
-            //        {
-            //            Connection.CurrentUser = user;
-            //            IsViewVisible = false;
-            //        }
-            //        else
-            //        {
-            //            ErrorMessage = "У вас нет прав для этого приложения";
-            //        }
-            //    }
-            //    else
-            //        ErrorMessage = "* Неправильный логин или пароль";
-            //}
+            try
+            {
 
             var user = await Connection.Client.GetFromJsonAsync<User>($"/admins/{Username}/{Password}");
 
@@ -143,6 +120,12 @@ namespace Sitronics.ViewModel
             else
             {
                 ErrorMessage = "У вас нет прав для этого приложения";
+            }
+
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 

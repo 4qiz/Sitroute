@@ -121,7 +121,14 @@ namespace Sitronics.View
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            await LoadData();
+            try
+            {
+                await LoadData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private async Task LoadData()
@@ -157,7 +164,14 @@ namespace Sitronics.View
 
         private async void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            await LoadData();
+            try
+            {
+                await LoadData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
-using Sitronics.Data;
 using Sitronics.Models;
 using Sitronics.Repositories;
 using System.Collections.ObjectModel;
@@ -33,19 +32,34 @@ namespace Sitronics.View
 
         private async void UpdateTimer_Tick(object sender, EventArgs e)
         {
-            await LoadData();
+            try
+            {
+                await LoadData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private async void CreateNewBusStopComboBox()
         {
-            await LoadData();
-            ComboBox comboBox = new ComboBox();
-            comboBox.ItemsSource = BusStations;
-            comboBox.SelectedIndex = 0;
-            comboBox.DisplayMemberPath = "Name";
-            comboBox.Margin = new Thickness(0, 5, 0, 0);
-            comboBox.SelectionChanged += ComboBox_SelectionChanged;
-            comboBoxesStackPanel.Children.Add(comboBox);
+            try
+            {
+
+                await LoadData();
+                ComboBox comboBox = new ComboBox();
+                comboBox.ItemsSource = BusStations;
+                comboBox.SelectedIndex = 0;
+                comboBox.DisplayMemberPath = "Name";
+                comboBox.Margin = new Thickness(0, 5, 0, 0);
+                comboBox.SelectionChanged += ComboBox_SelectionChanged;
+                comboBoxesStackPanel.Children.Add(comboBox);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private async Task LoadData()
