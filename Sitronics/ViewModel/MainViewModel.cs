@@ -124,14 +124,14 @@ namespace Sitronics.ViewModel
         private void ExecuteShowRouteInfoViewCommand(object obj)
         {
             CurrentChildView = new RouteInfoViewModel();
-            Caption = "Маршрут";
+            Caption = "Маршруты";
             Icon = IconChar.LocationPin;
         }
 
         private void ExecuteShowStopInfoViewCommand(object obj)
         {
             CurrentChildView = new StopInfoViewModel();
-            Caption = "Остановка";
+            Caption = "Остановки";
             Icon = IconChar.Stop;
         }
 

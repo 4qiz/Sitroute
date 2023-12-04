@@ -14,7 +14,8 @@
         AllowsTransparency="True"
         MinHeight="720"
         MinWidth="1024"
-        KeyDown="Window_KeyDown">
+        KeyDown="Window_KeyDown"
+        Closing="Window_Closing">
     
     <Window.DataContext>
         <viewModel:MainViewModel/>

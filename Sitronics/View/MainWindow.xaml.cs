@@ -38,7 +38,7 @@ namespace Sitronics.View
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            Close();
         }
 
         private void btnMinimize_Click(object sender, RoutedEventArgs e)
@@ -69,6 +69,10 @@ namespace Sitronics.View
             {
 
                 ExecuteRadioButtonCommandAndCheckIsChecked("ScheduleRadioButton");
+            }
+            if (e.Key == Key.Escape)
+            {
+                Close();
             }
 
         }
@@ -103,9 +107,15 @@ namespace Sitronics.View
             }
         }
 
-        private void ClockButton_Click(object sender, RoutedEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Process.Start("control.exe", "timedate.cpl,,0");
+            MessageBoxResult result = MessageBox.Show("Вы уверены, что хотите закрыть приложение?", "Подтверждение закрытия", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.No)
+            {
+                e.Cancel = true;
+            }
+            else 
+                Environment.Exit(0);
         }
     }
 }

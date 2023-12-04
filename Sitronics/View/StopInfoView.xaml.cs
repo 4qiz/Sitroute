@@ -1,4 +1,5 @@
 ﻿using Sitronics.Data;
+using Sitronics.Repositories;
 using System.Windows.Controls;
 
 namespace Sitronics.View
@@ -12,6 +13,11 @@ namespace Sitronics.View
         {
             InitializeComponent();
 
+            LoadBusStops();
+        }
+
+        private void LoadBusStops()
+        {
             using (var context = new SitrouteDataContext())
             {
                 var busStops = context.BusStations.Select(s => new
@@ -20,7 +26,6 @@ namespace Sitronics.View
                     s.PeopleCount
                 }).ToList();
                 BusStopsDataGrid.ItemsSource = busStops;
-
             }
         }
     }
