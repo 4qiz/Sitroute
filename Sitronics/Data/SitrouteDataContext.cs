@@ -165,6 +165,12 @@ public partial class SitrouteDataContext : DbContext
             entity.ToTable("Route");
 
             entity.Property(e => e.Name).HasMaxLength(10);
+
+            entity.Property(e => e.StartTime)
+                .HasColumnType("datetime");
+
+            entity.Property(e => e.EndTime)
+                .HasColumnType("datetime");
         });
 
         modelBuilder.Entity<RouteByBusStation>(entity =>
