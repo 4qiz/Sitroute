@@ -73,14 +73,19 @@ app.MapGet("/chat/{idDriver}/{idDispatcher}", (int idDriver, int idDispatcher, S
                         || m.IdRecipient == null && m.IdSender == idDriver)
                     .ToList());
 
-app.MapGet("/chat/{idDispatcher}", (int idDispatcher, SitrouteDataContext context) => context.Messages
-                    .Include(m => m.IdRecipientNavigation)
-                    .Include(m => m.IdSenderNavigation)
-                    .Where(m => idDispatcher == m.IdSender
-                    || idDispatcher == m.IdRecipient
-                    || null == m.IdRecipient)
-                    .OrderBy(m => m.Time)
-                    .ToList());
+app.MapGet("/chat/{idUser}", (int idUser, SitrouteDataContext context) =>
+{
+    var isDriverNull = context.Drivers.Any(d => d.IdDriver == idUser);
+    return context.Messages
+               .Include(m => m.IdRecipientNavigation)
+               .Include(m => m.IdSenderNavigation)
+               .Where(m => idUser == m.IdSender
+               || idUser == m.IdRecipient
+               || (isDriverNull ? false : null == m.IdRecipient))
+               .OrderBy(m => m.Time)
+               .ToList();
+});
+
 
 app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) =>
 {
