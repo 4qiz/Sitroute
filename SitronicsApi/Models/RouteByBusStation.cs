@@ -13,6 +13,8 @@ public partial class RouteByBusStation
 
     public int SerialNumberBusStation { get; set; }
 
+    public DateTime StandardArrivalTime { get; set; }
+
     public virtual BusStation IdBusStationNavigation { get; set; } = null!;
 
     [JsonIgnore]

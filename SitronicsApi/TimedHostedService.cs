@@ -1,11 +1,4 @@
-﻿using NetTopologySuite.Geometries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SitronicsApi
+﻿namespace SitronicsApi
 {
     public class TimedHostedService : IHostedService, IDisposable
     {
@@ -25,7 +18,7 @@ namespace SitronicsApi
 
         private void DoWork(object? state)
         {
-            //По таймеру что-то делать
+
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
