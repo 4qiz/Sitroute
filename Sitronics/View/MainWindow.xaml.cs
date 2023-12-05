@@ -1,10 +1,13 @@
-﻿using Sitronics.Repositories;
+﻿using Sitronics.Data;
+using Sitronics.Repositories;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace Sitronics.View
 {
@@ -13,6 +16,8 @@ namespace Sitronics.View
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Popup popup;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -21,6 +26,22 @@ namespace Sitronics.View
                 ChatRadioButton.Visibility = Visibility.Collapsed;
                 MessagesButton.Visibility = Visibility.Collapsed;
             }
+
+            popUpView();
+
+        }
+
+        private void popUpView()
+        {
+            TextBlock textBlock = new TextBlock();
+            textBlock.Text = Connection.CurrentUser?.Admin?.Role?.ToString();
+            textBlock.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1C1B1F"));
+            textBlock.Padding = new Thickness(7);
+            textBlock.Foreground = new SolidColorBrush(Colors.LightGray);
+            popup = new Popup();
+            popup.Child = textBlock;
+            popup.Placement = PlacementMode.Mouse;
+            popup.StaysOpen = false;
         }
 
         [DllImport("user32.dll")]
@@ -116,6 +137,13 @@ namespace Sitronics.View
             }
             else 
                 Environment.Exit(0);
+        }
+
+        
+        private void MoreInfoUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+            popup.IsOpen = true;
         }
     }
 }
