@@ -12,21 +12,25 @@ namespace Sitronics.View
         public StopInfoView()
         {
             InitializeComponent();
-
-            LoadBusStops();
         }
 
-        private void LoadBusStops()
+        private async Task LoadData()
         {
-            using (var context = new SitrouteDataContext())
+            await using (var context = new SitrouteDataContext())
             {
-                var busStops = context.BusStations.Select(s => new
+                var busStops = await Task.Run(() => context.BusStations
+                    .Select(s => new
                 {
                     s.Name,
                     s.PeopleCount
-                }).ToList();
+                }).ToList());
                 BusStopsDataGrid.ItemsSource = busStops;
             }
+        }
+
+        private async void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await LoadData();
         }
     }
 }

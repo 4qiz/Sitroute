@@ -73,14 +73,22 @@ app.MapGet("/chat/{idDriver}/{idDispatcher}", (int idDriver, int idDispatcher, S
                         || m.IdRecipient == null && m.IdSender == idDriver)
                     .ToList());
 
-app.MapGet("/chat/{idDispatcher}", (int idDispatcher, SitrouteDataContext context) => context.Messages
-                    .Include(m => m.IdRecipientNavigation)
-                    .Include(m => m.IdSenderNavigation)
-                    .Where(m => idDispatcher == m.IdSender
-                    || idDispatcher == m.IdRecipient
-                    || null == m.IdRecipient)
-                    .OrderBy(m => m.Time)
-                    .ToList());
+app.MapGet("/chat/{idUser}", (int idUser, SitrouteDataContext context) =>
+{
+    var isDriverNull = context.Drivers.Any(d => d.IdDriver == idUser);
+    return context.Messages
+               .Include(m => m.IdRecipientNavigation)
+               .Include(m => m.IdSenderNavigation)
+               .Where(m => idUser == m.IdSender
+               || idUser == m.IdRecipient
+               || (isDriverNull ? false : null == m.IdRecipient))
+               .OrderBy(m => m.Time)
+               .ToList();
+});
+
+app.MapGet("/bus/{idDriver}", (int idDriver, SitrouteDataContext context) => context.Buses
+        .Include(b=>b.IdDrivers)
+        .FirstOrDefault(b=>b.IdDrivers.Any(d=>d.IdDriver == idDriver)));
 
 app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) =>
 {
@@ -132,9 +140,14 @@ app.MapPost("/message", (Message message, SitrouteDataContext context) =>
 
 app.MapPatch("/message/reply", (Message message, SitrouteDataContext context) =>
 {
-
     context.Messages.Where(m => m.IdRecipient == null && m.IdSender == message.IdSender)
                     .ExecuteUpdate(setters => setters.SetProperty(m => m.IdRecipient, message.IdRecipient));
+    context.SaveChanges();
+});
+
+app.MapPut("/bus", (Bus bus, SitrouteDataContext context)=>
+{
+    context.Update(bus);
     context.SaveChanges();
 });
 

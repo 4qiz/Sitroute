@@ -12,6 +12,10 @@ public partial class Route
 
     public bool IsBacked { get; set; }
 
+    public DateTime StartTime { get; set; }
+
+    public DateTime EndTime { get; set; }
+
     public virtual ICollection<Bus> Buses { get; set; } = new List<Bus>();
 
     [JsonIgnore]

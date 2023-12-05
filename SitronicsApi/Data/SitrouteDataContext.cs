@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SitronicsApi.Models;
 
 namespace SitronicsApi.Data;
@@ -165,6 +163,12 @@ public partial class SitrouteDataContext : DbContext
             entity.ToTable("Route");
 
             entity.Property(e => e.Name).HasMaxLength(10);
+
+            entity.Property(e => e.StartTime)
+                .HasColumnType("datetime");
+
+            entity.Property(e => e.EndTime)
+                .HasColumnType("datetime");
         });
 
         modelBuilder.Entity<RouteByBusStation>(entity =>
@@ -180,6 +184,9 @@ public partial class SitrouteDataContext : DbContext
                 .HasForeignKey(d => d.IdRoute)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_RouteByPoint_Route");
+
+            entity.Property(e => e.StandardArrivalTime)
+                .HasColumnType("datetime");
         });
 
         modelBuilder.Entity<Schedule>(entity =>

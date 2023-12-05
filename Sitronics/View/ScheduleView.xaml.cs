@@ -45,18 +45,24 @@ namespace Sitronics.View
             MessageBox.Show(algorithm.GetAveragePeopleOnBusStationByRoute(selectedRoute.IdRoute, busStation.IdBusStation).ToString());
             MessageBox.Show(algorithm.GetRouteProfitModifier(selectedRoute.IdRoute).ToString());
             */
-            DateTime startTime = DateTime.Parse($"{DateTime.Now.ToShortDateString()} 08:00:00");
-            DateTime endTime = DateTime.Parse($"{DateTime.Now.ToShortDateString()} 22:00:00");
             using (var context = new SitrouteDataContext())
             {
-                var route = context.Routes
+                var route = await context.Routes
                     .Where(r => r.IdRoute == selectedRoute.IdRoute)
                     .Include(r => r.RouteByBusStations)
                     .ThenInclude(r => r.IdBusStationNavigation)
                     .Include(r => r.Buses)
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync();
                 var buses = route.RouteByBusStations;
-
+                var schedules = context.Schedules;
+                var todaySchedules = schedules.Where(s => s.IdBusNavigation.IdRoute == selectedRoute.IdRoute && s.Time.Date == DateTime.Today.Date);
+                if (todaySchedules.Any())
+                {
+                    scheduleDataGrid.ItemsSource = todaySchedules.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus }).ToList();
+                    return;
+                }
+                DateTime startTime = route.StartTime;
+                DateTime endTime = route.EndTime;
                 List<Schedule> schedule = await Task.Run(() => algorithm.GenerateRouteSchedule(
                     startTime,
                     endTime,
@@ -66,9 +72,14 @@ namespace Sitronics.View
                     "",
                     ""
                     ));
-                scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
-                scheduleDataGrid.Columns[0].Header = "Время";
-               // context.Schedules.AddRangeAsync(schedule);
+                if (schedule.Any())
+                {
+                    scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
+                    scheduleDataGrid.Columns[0].Header = "Время";
+                    schedules.RemoveRange(schedules.Where(s => s.Time.Date == DateTime.Today.Date && s.IdBusNavigation.IdRoute == selectedRoute.IdRoute));
+                    await schedules.AddRangeAsync(schedule);
+                    await context.SaveChangesAsync();
+                }
 
                 // мб добавим на замену DataGrid
                 /*var sch = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
@@ -76,8 +87,6 @@ namespace Sitronics.View
                 {
                     ComboBoss.Text += $"{i.Time}   ";
                 }*/
-
-                context.SaveChanges();
             }
         }
 

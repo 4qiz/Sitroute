@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Sitronics.Data;
-using Sitronics.Models;
-using System.Windows;
+using SitronicsApi.Data;
+using SitronicsApi.Models;
 
-namespace Sitronics.Repositories
+namespace SitronicsApi.Algorithm
 {
     public class BusScheduleAlgorithm
     {
@@ -14,7 +13,6 @@ namespace Sitronics.Repositories
             int busCount = buses.Count;
             if (busCount <= 1)
             {
-                MessageBox.Show("На этом маршруте не хватает автобусов для генерации расписания");
                 return schedules;
             }
             int workMinutes = endDate.Hour * 60 + endDate.Minute - startDate.Hour * 60 + startDate.Minute;
@@ -43,7 +41,6 @@ namespace Sitronics.Repositories
                     busStartTime = startDate.AddMinutes(routeTime * (j + 1) + chillTime * (j + 1));
                 }
             }
-
             return schedules;
         }
 
@@ -63,12 +60,12 @@ namespace Sitronics.Repositories
                 {
                     var IdBusStation = item.IdBusStation;
                     var averagePeople = GetAveragePeopleOnBusStationByRoute(idRoute, IdBusStation);
-                    if (averagePeople != null){
+                    if (averagePeople != null)
+                    {
 
                         peopleSum += (double)averagePeople;
                     }
                 }
-
                 return peopleSum / routeTime;
             }
         }
