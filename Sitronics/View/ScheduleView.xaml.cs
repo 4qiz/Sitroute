@@ -76,7 +76,7 @@ namespace Sitronics.View
                 {
                     scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
                     scheduleDataGrid.Columns[0].Header = "Время";
-                    schedules.RemoveRange(schedules.Where(s => s.Time.Date == DateTime.Today.Date));
+                    schedules.RemoveRange(schedules.Where(s => s.Time.Date == DateTime.Today.Date && s.IdBusNavigation.IdRoute == selectedRoute.IdRoute));
                     await schedules.AddRangeAsync(schedule);
                     await context.SaveChangesAsync();
                 }

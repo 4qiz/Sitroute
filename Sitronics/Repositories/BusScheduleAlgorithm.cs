@@ -62,7 +62,11 @@ namespace Sitronics.Repositories
                 foreach (RouteByBusStation item in routeByBusStations)
                 {
                     var IdBusStation = item.IdBusStation;
-                    peopleSum += GetAveragePeopleOnBusStationByRoute(idRoute, IdBusStation);
+                    var averagePeople = GetAveragePeopleOnBusStationByRoute(idRoute, IdBusStation);
+                    if (averagePeople != null){
+
+                        peopleSum += (double)averagePeople;
+                    }
                 }
 
                 return peopleSum / routeTime;
@@ -151,7 +155,7 @@ namespace Sitronics.Repositories
             }
         }
 
-        public double GetAveragePeopleOnBusStationByRoute(int idRoute, int idBusStation)
+        public double? GetAveragePeopleOnBusStationByRoute(int idRoute, int idBusStation)
         {
             using (var context = new SitrouteDataContext())
             {
@@ -159,7 +163,9 @@ namespace Sitronics.Repositories
                     .Where(r => r.IdRoute == idRoute)
                     .Include(r => r.Buses)
                     .ThenInclude(b => b.Schedules).FirstOrDefault(r => r.IdRoute == idRoute);
-                double peopleOnBoard = (double)route.Buses.Average(b => b.Schedules.Where(s => s.IdBusStation == idBusStation).Average(s => s.PeopleCountBoardingBus));
+                double? peopleOnBoard = route.Buses
+                    .Average(b => b.Schedules
+                    .Where(s => s.IdBusStation == idBusStation).Average(s => s.PeopleCountBoardingBus));
                 return peopleOnBoard;
             }
         }
