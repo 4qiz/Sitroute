@@ -40,7 +40,7 @@ namespace Sitronics.View
         private async Task LoadSchedule(Route selectedRoute, BusStation busStation)
         {
             List<Schedule> schedule = await Connection.Client.GetFromJsonAsync<List<Schedule>>(
-                $"/schedule/{selectedRoute.IdRoute}/{busStation.IdBusStation}");
+                $"/schedules/{selectedRoute.IdRoute}/{busStation.IdBusStation}");
             if (schedule.Any())
             {
                 scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });

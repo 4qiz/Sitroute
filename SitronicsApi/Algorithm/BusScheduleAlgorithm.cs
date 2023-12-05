@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Index.KdTree;
 using SitronicsApi.Data;
 using SitronicsApi.Models;
-using System;
-using System.Diagnostics;
-using System.Security.Cryptography;
 
 namespace SitronicsApi.Algorithm
 {
@@ -66,7 +62,6 @@ namespace SitronicsApi.Algorithm
                     var averagePeople = GetAveragePeopleOnBusStationByRoute(idRoute, IdBusStation);
                     if (averagePeople != null)
                     {
-
                         peopleSum += (double)averagePeople;
                     }
                 }
