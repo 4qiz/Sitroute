@@ -84,13 +84,10 @@ namespace Sitronics.View
 
         private void TimeTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            
-                if (!(Char.IsDigit(e.Text[0]) || e.Text[0].Equals(':')))
-                {
-                    e.Handled = true;
-                    
-                }
-            
+            if (!(Char.IsDigit(e.Text[0]) || e.Text[0].Equals(':')))
+            {
+                e.Handled = true;
+            }
         }
 
         private async Task LoadData()
