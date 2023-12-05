@@ -45,8 +45,6 @@ namespace Sitronics.View
             MessageBox.Show(algorithm.GetAveragePeopleOnBusStationByRoute(selectedRoute.IdRoute, busStation.IdBusStation).ToString());
             MessageBox.Show(algorithm.GetRouteProfitModifier(selectedRoute.IdRoute).ToString());
             */
-            DateTime startTime = DateTime.Parse($"{DateTime.Now.ToShortDateString()} 08:00:00");
-            DateTime endTime = DateTime.Parse($"{DateTime.Now.ToShortDateString()} 22:00:00");
             using (var context = new SitrouteDataContext())
             {
                 var route = await context.Routes
@@ -63,6 +61,8 @@ namespace Sitronics.View
                     scheduleDataGrid.ItemsSource = todaySchedules.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus }).ToList();
                     return;
                 }
+                DateTime startTime = route.StartTime;
+                DateTime endTime = route.EndTime;
                 List<Schedule> schedule = await Task.Run(() => algorithm.GenerateRouteSchedule(
                     startTime,
                     endTime,
@@ -81,13 +81,13 @@ namespace Sitronics.View
                     await context.SaveChangesAsync();
                 }
 
-                    // мб добавим на замену DataGrid
-                    /*var sch = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
-                    foreach (var i in sch)
-                    {
-                        ComboBoss.Text += $"{i.Time}   ";
-                    }*/
-                }
+                // мб добавим на замену DataGrid
+                /*var sch = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
+                foreach (var i in sch)
+                {
+                    ComboBoss.Text += $"{i.Time}   ";
+                }*/
+            }
         }
 
         private void ScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)

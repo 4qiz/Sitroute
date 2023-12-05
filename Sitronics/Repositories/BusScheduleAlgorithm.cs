@@ -12,9 +12,9 @@ namespace Sitronics.Repositories
             List<Schedule> schedules = new List<Schedule>();
             DateTime busStartTime;
             int busCount = buses.Count;
-            if (busCount == 0)
+            if (busCount <= 1)
             {
-                MessageBox.Show("На этом маршруте нет автобусов");
+                MessageBox.Show("На этом маршруте не хватает автобусов для генерации расписания");
                 return schedules;
             }
             int workMinutes = endDate.Hour * 60 + endDate.Minute - startDate.Hour * 60 + startDate.Minute;
