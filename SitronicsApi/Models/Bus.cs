@@ -49,6 +49,5 @@ public partial class Bus
 
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
 
-    [JsonIgnore]
     public virtual ICollection<Driver> IdDrivers { get; set; } = new List<Driver>();
 }

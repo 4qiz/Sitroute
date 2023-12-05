@@ -11,14 +11,15 @@
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _timer = new Timer(DoWork, null, TimeSpan.Zero,
+            _timer = new Timer(GenerateShedule, null, TimeSpan.Zero,
                 TimeSpan.FromDays(1));
+
             return Task.CompletedTask;
         }
 
-        private void DoWork(object? state)
+        private void GenerateShedule(object? state)
         {
-
+            
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

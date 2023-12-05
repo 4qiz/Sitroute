@@ -86,6 +86,9 @@ app.MapGet("/chat/{idUser}", (int idUser, SitrouteDataContext context) =>
                .ToList();
 });
 
+app.MapGet("/bus/{idDriver}", (int idDriver, SitrouteDataContext context) => context.Buses
+        .Include(b=>b.IdDrivers)
+        .FirstOrDefault(b=>b.IdDrivers.Any(d=>d.IdDriver == idDriver)));
 
 app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) =>
 {
@@ -137,9 +140,14 @@ app.MapPost("/message", (Message message, SitrouteDataContext context) =>
 
 app.MapPatch("/message/reply", (Message message, SitrouteDataContext context) =>
 {
-
     context.Messages.Where(m => m.IdRecipient == null && m.IdSender == message.IdSender)
                     .ExecuteUpdate(setters => setters.SetProperty(m => m.IdRecipient, message.IdRecipient));
+    context.SaveChanges();
+});
+
+app.MapPut("/bus", (Bus bus, SitrouteDataContext context)=>
+{
+    context.Update(bus);
     context.SaveChanges();
 });
 
