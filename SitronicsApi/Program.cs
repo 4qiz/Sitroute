@@ -65,23 +65,25 @@ app.MapGet("/routesStats", (SitrouteDataContext context) => context.Routes
 
 app.MapGet("/routes", (SitrouteDataContext context) => context.Routes.ToList());
 
-app.MapGet("/chat/{idDriver}/{idDispatcher}", (int idDriver, int idDispatcher, SitrouteDataContext context) => context.Messages
-                    .Include(m => m.IdRecipientNavigation)
-                    .Include(m => m.IdSenderNavigation)
-                    .Where(m => m.IdSender == idDriver && m.IdRecipient == idDispatcher
-                        || m.IdRecipient == idDriver && m.IdSender == idDispatcher
-                        || m.IdRecipient == null && m.IdSender == idDriver)
-                    .ToList());
-
-app.MapGet("/chat/{idUser}", (int idUser, SitrouteDataContext context) =>
+app.MapGet("/chat/{idDriver}/{idDispatcher}", (int idDriver, int idDispatcher, SitrouteDataContext context) =>
 {
-    var isDriverNull = context.Drivers.Any(d => d.IdDriver == idUser);
+    return context.Messages
+           .Include(m => m.IdRecipientNavigation)
+           .Include(m => m.IdSenderNavigation)
+           .Where(m => m.IdSender == idDriver && m.IdRecipient == idDispatcher
+                || m.IdRecipient == idDriver && m.IdSender == idDispatcher
+                || m.IdRecipient == null && m.IdSender == idDriver)
+           .ToList();
+});
+app.MapGet("/chat/{idDriver}", (int idDriver, SitrouteDataContext context) =>
+{
+    var isDriverNull = context.Drivers.Any(d => d.IdDriver == idDriver);
     return context.Messages
                .Include(m => m.IdRecipientNavigation)
                .Include(m => m.IdSenderNavigation)
-               .Where(m => idUser == m.IdSender
-               || idUser == m.IdRecipient
-               || (isDriverNull ? false : null == m.IdRecipient))
+               .Where(m => idDriver == m.IdSender
+               || idDriver == m.IdRecipient
+               || null == m.IdRecipient)
                .OrderBy(m => m.Time)
                .ToList();
 });
@@ -151,6 +153,23 @@ app.MapPut("/bus", (Bus bus, SitrouteDataContext context)=>
     context.SaveChanges();
 });
 
+app.MapGet("/schedules/{IdRoute}/{IdBusStation}", (SitrouteDataContext context, int IdRoute, int IdBusStation) =>
+{
+    try
+    {
+        var todaySchedules = context.Schedules
+        .Where(s => s.IdBusNavigation.IdRoute == IdRoute && s.Time.Date == DateTime.Today.Date && s.IdBusStation == IdBusStation)
+        .OrderBy(s => s.Time)
+        .ToList();
+        Results.Ok(todaySchedules);
+        return todaySchedules;
+    }
+    catch
+    {
+        Results.BadRequest();
+        return new List<Schedule>();
+    }
+});
 static byte[] ComputeSha256Hash(string rawData)
 {
     using (SHA256 sha256Hash = SHA256.Create())
