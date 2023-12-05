@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace Sitronics.View
 {
@@ -28,6 +29,7 @@ namespace Sitronics.View
             InitializeComponent();
             //CreateNewBusStopComboBox();
             Manager.MainTimer.Tick += new EventHandler(UpdateTimer_Tick);
+
         }
 
         private async void UpdateTimer_Tick(object sender, EventArgs e)
@@ -46,6 +48,21 @@ namespace Sitronics.View
         {
             try
             {
+                TextBox timeTextBox = new TextBox();
+                timeTextBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1C1B1F"));
+                timeTextBox.BorderBrush = new SolidColorBrush(Colors.GhostWhite);
+                timeTextBox.Foreground = new SolidColorBrush(Colors.White);
+                timeTextBox.BorderThickness = new Thickness(1);
+                timeTextBox.Width = 60;
+                timeTextBox.Height = 28;
+                timeTextBox.FontSize = 16;
+                timeTextBox.Margin = new Thickness(5, 5, 0, 0);
+                timeTextBox.MaxLength = 5;
+                timeTextBox.PreviewTextInput += TimeTextBox_PreviewTextInput;
+
+
+                StackPanel BusNTimePanel = new StackPanel();
+                BusNTimePanel.Orientation = Orientation.Horizontal;
 
                 await LoadData();
                 ComboBox comboBox = new ComboBox();
@@ -54,12 +71,26 @@ namespace Sitronics.View
                 comboBox.DisplayMemberPath = "Name";
                 comboBox.Margin = new Thickness(0, 5, 0, 0);
                 comboBox.SelectionChanged += ComboBox_SelectionChanged;
-                comboBoxesStackPanel.Children.Add(comboBox);
+
+                BusNTimePanel.Children.Add(comboBox);
+                BusNTimePanel.Children.Add(timeTextBox);
+                BusStopsStackPanel.Children.Add(BusNTimePanel);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void TimeTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            
+                if (!(Char.IsDigit(e.Text[0]) || e.Text[0].Equals(':')))
+                {
+                    e.Handled = true;
+                    
+                }
+            
         }
 
         private async Task LoadData()
@@ -139,10 +170,10 @@ namespace Sitronics.View
             List<PointLatLng> points = new List<PointLatLng>();
 
             dbroute.Name = routeNameTextBox.Text;
-            var comboBoxes = comboBoxesStackPanel.Children;
             var serialNumberBusStation = 1;
-            foreach (ComboBox comboBox in comboBoxes)
+            foreach (StackPanel stackPanel in BusStopsStackPanel.Children)
             {
+                ComboBox comboBox = stackPanel.Children[0] as ComboBox;
                 busStation = (BusStation)comboBox.SelectedItem;
                 rbp = new() { IdBusStation = busStation.IdBusStation, SerialNumberBusStation = serialNumberBusStation };
                 dbroute.RouteByBusStations.Add(rbp);

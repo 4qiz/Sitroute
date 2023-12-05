@@ -112,7 +112,7 @@
                         <Grid Margin="20"
                               Grid.Row="2">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="270"/>
+                                <ColumnDefinition Width="300"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -176,10 +176,7 @@
                                       Visibility="Visible"
                                       HorizontalAlignment="Left">
 
-                                    <StackPanel x:Name="comboBoxesStackPanel"
-                                        Width="250"
-                                        Margin="0,10,0,0">
-                                    </StackPanel>
+                                    <StackPanel x:Name="BusStopsStackPanel" Width="280"/>
 
                                 </ScrollViewer>
 
