@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sitronics.Data;
 using Sitronics.Models;
+using System.Windows;
 
 namespace Sitronics.Repositories
 {
@@ -10,15 +11,21 @@ namespace Sitronics.Repositories
         {
             List<Schedule> schedules = new List<Schedule>();
             DateTime busStartTime;
+            int busCount = buses.Count;
+            if (busCount == 0)
+            {
+                MessageBox.Show("На этом маршруте нет автобусов");
+                return schedules;
+            }
             int workMinutes = endDate.Hour * 60 + endDate.Minute - startDate.Hour * 60 + startDate.Minute;
             int routeTime = GetIntervalInMinutesBetweenBusStations(idRoute, routeByBusStation.First().IdBusStation, routeByBusStation.Last().IdBusStation);//frequencyInMinutes * (routeByBusStation.Count - 1) * 2;
-            int busCount = buses.Count;
+
             int delay = routeTime / (busCount / 2);
 
             int rushTimeDelay = 3;
             int chillTime = 5;
 
-            int round = 540 / routeTime;
+            int round = workMinutes / routeTime;
             int halfRouteTime = routeTime / 2;
             int halfBusCount = busCount / 2;
             for (int i = 0; i < busCount; i++)

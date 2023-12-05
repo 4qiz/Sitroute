@@ -49,14 +49,21 @@ namespace Sitronics.View
             DateTime endTime = DateTime.Parse($"{DateTime.Now.ToShortDateString()} 22:00:00");
             using (var context = new SitrouteDataContext())
             {
-                var route = context.Routes
+                var route = await context.Routes
                     .Where(r => r.IdRoute == selectedRoute.IdRoute)
                     .Include(r => r.RouteByBusStations)
                     .ThenInclude(r => r.IdBusStationNavigation)
                     .Include(r => r.Buses)
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync();
                 var buses = route.RouteByBusStations;
+                var schedules = context.Schedules;
+                var todaySchedules = schedules.Where(s => s.IdBusNavigation.IdRoute == selectedRoute.IdRoute);
+                if (todaySchedules.Any())
+                {
 
+                    scheduleDataGrid.ItemsSource = todaySchedules.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus }).ToList();
+                    return;
+                }
                 List<Schedule> schedule = await Task.Run(() => algorithm.GenerateRouteSchedule(
                     startTime,
                     endTime,
@@ -66,19 +73,22 @@ namespace Sitronics.View
                     "",
                     ""
                     ));
-                scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
-                scheduleDataGrid.Columns[0].Header = "Время";
-               // context.Schedules.AddRangeAsync(schedule);
-
-                // мб добавим на замену DataGrid
-                /*var sch = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
-                foreach (var i in sch)
+                if (schedule.Any())
                 {
-                    ComboBoss.Text += $"{i.Time}   ";
-                }*/
+                    scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
+                    scheduleDataGrid.Columns[0].Header = "Время";
+                    schedules.RemoveRange(schedules.Where(s => s.Time.Date == DateTime.Today.Date));
+                    await schedules.AddRangeAsync(schedule);
+                    await context.SaveChangesAsync();
+                }
 
-                context.SaveChanges();
-            }
+                    // мб добавим на замену DataGrid
+                    /*var sch = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
+                    foreach (var i in sch)
+                    {
+                        ComboBoss.Text += $"{i.Time}   ";
+                    }*/
+                }
         }
 
         private void ScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
