@@ -57,10 +57,9 @@ namespace Sitronics.View
                     .FirstOrDefaultAsync();
                 var buses = route.RouteByBusStations;
                 var schedules = context.Schedules;
-                var todaySchedules = schedules.Where(s => s.IdBusNavigation.IdRoute == selectedRoute.IdRoute);
+                var todaySchedules = schedules.Where(s => s.IdBusNavigation.IdRoute == selectedRoute.IdRoute && s.Time.Date == DateTime.Today.Date);
                 if (todaySchedules.Any())
                 {
-
                     scheduleDataGrid.ItemsSource = todaySchedules.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus }).ToList();
                     return;
                 }
