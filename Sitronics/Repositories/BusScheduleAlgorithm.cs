@@ -168,8 +168,6 @@ namespace Sitronics.Repositories
             using (var context = new SitrouteDataContext())
             {
                 var routeByBusStations = context.RouteByBusStations
-                    .Include(s => s.IdBusStationNavigation)
-                    .ThenInclude(bs => bs.Schedules)
                     .Where(s => s.IdRoute == idRoute)
                     .ToList();
 
@@ -181,9 +179,7 @@ namespace Sitronics.Repositories
 
         private DateTime GetArrivalTime(List<RouteByBusStation> routeByBusStations, int idBusStation)
         {
-            return routeByBusStations.FirstOrDefault(s => s.IdBusStation == idBusStation).IdBusStationNavigation.Schedules
-                                        .OrderBy(s => s.Time)
-                                        .FirstOrDefault().Time;
+            return routeByBusStations.FirstOrDefault(s => s.IdBusStation == idBusStation).StandardArrivalTime;
         }
     }
 }
