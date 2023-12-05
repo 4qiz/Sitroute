@@ -3,6 +3,7 @@ using Sitronics.Models;
 using Sitronics.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
@@ -37,9 +38,19 @@ namespace Sitronics.View
         private async Task LoadDataAsync()
         {
             List<Route> routes = await Connection.Client.GetFromJsonAsync<List<Route>>("/routes");
-            BusScheduleAlgorithm busScheduleAlgorithm  = new BusScheduleAlgorithm();
-            routes = routes.OrderByDescending(r => busScheduleAlgorithm.GetRouteProfitModifier(r.IdRoute)).ToList();
-            routesDataGrid.ItemsSource = routes.Select(r => new {r.IdRoute, r.Name, profit = busScheduleAlgorithm.GetRouteProfitModifier(r.IdRoute)});
+            BusScheduleAlgorithm busScheduleAlgorithm = new BusScheduleAlgorithm();
+
+            var modifiedRoutes = routes.AsParallel()
+                .Select(r => new
+                {
+                    Route = r,
+                    Profit = busScheduleAlgorithm.GetRouteProfitModifier(r.IdRoute)
+                })
+                .OrderByDescending(r => r.Profit)
+                .ToList();
+
+            routesDataGrid.ItemsSource = modifiedRoutes.Select(mr => new { mr.Route.IdRoute, mr.Route.Name, profit = mr.Profit });
+
         }
     }
 }
