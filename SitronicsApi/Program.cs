@@ -151,6 +151,23 @@ app.MapPut("/bus", (Bus bus, SitrouteDataContext context)=>
     context.SaveChanges();
 });
 
+app.MapGet("/schedules/{IdRoute}/{IdBusStation}", (SitrouteDataContext context, int IdRoute, int IdBusStation) =>
+{
+    try
+    {
+        var todaySchedules = context.Schedules
+        .Where(s => s.IdBusNavigation.IdRoute == IdRoute && s.Time.Date == DateTime.Today.Date && s.IdBusStation == IdBusStation)
+        .OrderBy(s => s.Time)
+        .ToList();
+        Results.Ok(todaySchedules);
+        return todaySchedules;
+    }
+    catch
+    {
+        Results.BadRequest();
+        return new List<Schedule>();
+    }
+});
 static byte[] ComputeSha256Hash(string rawData)
 {
     using (SHA256 sha256Hash = SHA256.Create())
