@@ -22,6 +22,7 @@ namespace Sitronics.View
         List<BusStation> BusStations { get; set; }
         List<Bus> Buses { get; set; }
         List<Models.Route> Routes { get; set; }
+        List<Factor> Factors { get; set; }
 
         public MapView()
         {
@@ -132,7 +133,11 @@ namespace Sitronics.View
                 MapManager.MapManager.CreateBusMarker(point, ref mapView, bus);
             }
 
-            
+            /*foreach (var factor in Factors)
+            {
+                var point = new PointLatLng(factor.Location.Coordinate.Y, factor.Location.Coordinate.X);
+                MapManager.MapManager.CreateIncidentMarker(point, ref mapView, factor);
+            }*/
         }
 
         private void AddRouteOnMap(List<PointLatLng> points, SolidColorBrush routeColor, RoutingProvider routingProvider)

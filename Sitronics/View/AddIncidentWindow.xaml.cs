@@ -5,6 +5,10 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using GMap.NET.WindowsPresentation;
 using System.Runtime.InteropServices;
+using System.Windows.Media;
+using Sitronics.Data;
+using System.Collections.ObjectModel;
+using Sitronics.Models;
 
 namespace Sitronics.View
 {
@@ -16,7 +20,18 @@ namespace Sitronics.View
         public AddIncidentWindow()
         {
             InitializeComponent();
+            using (var context = new SitrouteDataContext())
+            {
+                var typeFactors = context.TypeFactors;
+                var routes = context.Routes;
+                incidentsComboBox.ItemsSource = typeFactors.ToList();
+                incidentsComboBox.DisplayMemberPath = "Name";
+                routeComboBox.ItemsSource = routes.ToList();
+                routeComboBox.DisplayMemberPath = "Name";
+            }
         }
+        PointLatLng point;
+        GMapMarker lastMarker;
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
@@ -53,7 +68,7 @@ namespace Sitronics.View
 
         }
 
-        private void mapView_Loaded(object sender, RoutedEventArgs e)
+        private void MapView_Loaded(object sender, RoutedEventArgs e)
         {
             GMaps.Instance.Mode = AccessMode.ServerAndCache;
             // choose your provider here
@@ -74,10 +89,12 @@ namespace Sitronics.View
             mapView.SetPositionByKeywords("Архангельский Колледж Телекоммуникаций");
         }
 
-        private void mapView_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void MapView_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             int x = Convert.ToInt32(e.GetPosition(mapView).X);
             int y = Convert.ToInt32(e.GetPosition(mapView).Y);
+            point = mapView.FromLocalToLatLng(x, y);
+            lastMarker = MapManager.MapManager.CreateMarker(point, ref mapView, lastMarker: lastMarker, fillColor: Brushes.Red);
         }
     }
 

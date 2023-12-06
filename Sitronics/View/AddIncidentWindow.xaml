@@ -120,7 +120,20 @@
                                     </TextBlock>
 
                                     <ComboBox  
-                                            x:Name="IncidentsTextBox"
+                                            x:Name="incidentsComboBox"
+                                            VerticalContentAlignment="Center"
+                                            Background="{StaticResource B_background}">
+                                    </ComboBox>
+                                    
+                                    <TextBlock 
+                                        Text="Маршрут"
+                                        Margin="1,10,0,0"
+                                        FontSize="14"
+                                        Foreground="White">
+                                    </TextBlock>
+                                    
+                                    <ComboBox  
+                                            x:Name="routeComboBox"
                                             VerticalContentAlignment="Center"
                                             Background="{StaticResource B_background}">
                                     </ComboBox>
@@ -143,8 +156,8 @@
                                     Margin="5,0,0,0">
 
                                 <gmaps:GMapControl x:Name="mapView" 
-                                   MouseRightButtonDown="mapView_MouseRightButtonDown"
-                                   Loaded="mapView_Loaded">
+                                   MouseRightButtonDown="MapView_MouseRightButtonDown"
+                                   Loaded="MapView_Loaded">
                                 </gmaps:GMapControl>
                             </Border>
                         </Grid>
