@@ -150,6 +150,7 @@ app.MapPost("/message", (Message message, SitrouteDataContext context) =>
 {
     context.Messages.Add(message);
     context.SaveChanges();
+    return Results.Ok();
 });
 
 app.MapPatch("/message/reply", (Message message, SitrouteDataContext context) =>
