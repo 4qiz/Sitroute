@@ -57,8 +57,8 @@ namespace Sitronics.Repositories
                     .ThenInclude(r => r.IdBusStationNavigation)
                     .FirstOrDefault(r => r.IdRoute == idRoute);
                 var routeByBusStations = route.RouteByBusStations;
-                int routeTime = GetIntervalInMinutesBetweenBusStations(idRoute, routeByBusStations.First().IdBusStation,
-                    routeByBusStations.Last().IdBusStation);
+                int routeTime = GetIntervalInMinutesBetweenBusStations(idRoute, routeByBusStations.OrderBy(r => r.SerialNumberBusStation).First().IdBusStation,
+                    routeByBusStations.OrderBy(r => r.SerialNumberBusStation).Last().IdBusStation);
                 foreach (RouteByBusStation item in routeByBusStations)
                 {
                     var IdBusStation = item.IdBusStation;
@@ -166,10 +166,10 @@ namespace Sitronics.Repositories
                 double? peopleOnBoard = route.Buses
                     .Average(b => b.Schedules
                     .Where(s => s.IdBusStation == idBusStation).Average(s => s.PeopleCountBoardingBus));
-                return peopleOnBoard;
+                return peopleOnBoard ?? 0;
             }
         }
-        private int GetIntervalInMinutesBetweenBusStations(int idRoute, int idStartBusStation, int idEndBusStation)
+        public int GetIntervalInMinutesBetweenBusStations(int idRoute, int idStartBusStation, int idEndBusStation)
         {
             using (var context = new SitrouteDataContext())
             {

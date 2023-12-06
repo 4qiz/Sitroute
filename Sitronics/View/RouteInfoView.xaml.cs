@@ -1,23 +1,9 @@
-﻿using Sitronics.Data;
-using Sitronics.Models;
+﻿using Sitronics.Models;
 using Sitronics.Repositories;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Sitronics.View
 {
@@ -49,12 +35,20 @@ namespace Sitronics.View
                 .Select(r => new
                 {
                     Route = r,
-                    Profit = busScheduleAlgorithm.GetRouteProfitModifier(r.IdRoute)
+                    Profit = Math.Round(busScheduleAlgorithm.GetRouteProfitModifier(r.IdRoute),2),
+                    AmountPeopleToday = busScheduleAlgorithm.GetPeopleOnRouteByDay(DateTime.Today, r.IdRoute),
+                    RouteTime = busScheduleAlgorithm.GetIntervalInMinutesBetweenBusStations(r.IdRoute, r.RouteByBusStations.OrderBy(r => r.SerialNumberBusStation).First().IdBusStation,
+                    r.RouteByBusStations.OrderBy(r => r.SerialNumberBusStation).Last().IdBusStation)
                 })
                 .OrderByDescending(r => r.Profit)
                 .ToList();
 
-            routesDataGrid.ItemsSource = modifiedRoutes.Select(mr => new { mr.Route.IdRoute, mr.Route.Name, profit = mr.Profit });
+            routesDataGrid.ItemsSource = modifiedRoutes.Select(mr => new { mr.Route.Name, mr.Profit, mr.AmountPeopleToday, mr.RouteTime });
+            routesDataGrid.Columns[0].Header = "Название маршрута";
+            routesDataGrid.Columns[1].Header = "Релевантность";
+            routesDataGrid.Columns[2].Header = "Пассажиропоток за сегодняшний день";
+            routesDataGrid.Columns[3].Header = "Время маршрута (минут)";
+
 
             foreach (var route in routes)
             {
