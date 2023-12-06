@@ -104,8 +104,7 @@ app.MapGet("/chat/{idDriver}", (int idDriver, SitrouteDataContext context) =>
                .Include(m => m.IdRecipientNavigation)
                .Include(m => m.IdSenderNavigation)
                .Where(m => idDriver == m.IdSender
-               || idDriver == m.IdRecipient
-               || null == m.IdRecipient)
+               || idDriver == m.IdRecipient)
                .OrderBy(m => m.Time)
                .ToList();
 });
