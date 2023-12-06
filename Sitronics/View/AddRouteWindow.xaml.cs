@@ -167,12 +167,16 @@ namespace Sitronics.View
             List<PointLatLng> points = new List<PointLatLng>();
 
             dbroute.Name = routeNameTextBox.Text;
+            dbroute.StartTime = DateTime.Parse("08:00");
+            dbroute.EndTime = DateTime.Parse("23:00");
             var serialNumberBusStation = 1;
             foreach (StackPanel stackPanel in BusStopsStackPanel.Children)
             {
                 ComboBox comboBox = stackPanel.Children[0] as ComboBox;
+                TextBox textBox = stackPanel.Children[1] as TextBox;
+
                 busStation = (BusStation)comboBox.SelectedItem;
-                rbp = new() { IdBusStation = busStation.IdBusStation, SerialNumberBusStation = serialNumberBusStation };
+                rbp = new() { IdBusStation = busStation.IdBusStation, SerialNumberBusStation = serialNumberBusStation, StandardArrivalTime = DateTime.Parse(textBox.Text) };
                 dbroute.RouteByBusStations.Add(rbp);
                 points.Add(new PointLatLng(busStation.Location.Coordinate.Y, busStation.Location.Coordinate.X));
                 serialNumberBusStation++;
