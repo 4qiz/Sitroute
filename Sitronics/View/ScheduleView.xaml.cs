@@ -123,14 +123,18 @@ namespace Sitronics.View
             Route route = (Route)routeComboBox.SelectedItem;
             if (route == null)
                 return;
+
+            LoadingGifReform.Visibility = Visibility.Visible;
+            GenerateScheduleButton.IsEnabled = false;
             await GenerateSchedule(route);
+            LoadingGifReform.Visibility = Visibility.Collapsed;
+            GenerateScheduleButton.IsEnabled = true;
         }
 
         private static async Task GenerateSchedule(Route route)
         {
             List<Schedule> schedule = await Connection.Client.GetFromJsonAsync<List<Schedule>>(
                 $"/schedules/{route.IdRoute}");
-            MessageBox.Show("Расписание сформировано");
         }
     }
 }
