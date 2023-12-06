@@ -36,7 +36,8 @@
             <RadioButton Content="Всё"
                          Foreground="{StaticResource B_onBackground}"
                          Checked="AllRoutesRadioButton_Checked"
-                         Margin="3"/>
+                         Margin="3"
+                         IsChecked="True"/>
             <RadioButton Content="Ничего" 
                          Checked="NothingRoutesRadioButton_Checked"
                          Foreground="{StaticResource B_onBackground}"
