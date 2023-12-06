@@ -1,14 +1,13 @@
-﻿using GMap.NET.MapProviders;
-using GMap.NET;
+﻿using GMap.NET;
+using GMap.NET.MapProviders;
+using GMap.NET.WindowsPresentation;
+using Sitronics.Data;
+using Sitronics.Models;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
-using GMap.NET.WindowsPresentation;
-using System.Runtime.InteropServices;
 using System.Windows.Media;
-using Sitronics.Data;
-using System.Collections.ObjectModel;
-using Sitronics.Models;
 
 namespace Sitronics.View
 {
@@ -63,9 +62,28 @@ namespace Sitronics.View
             MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
         }
 
-        private void AddIncident_Click(object sender, RoutedEventArgs e)
+        private async void AddIncident_Click(object sender, RoutedEventArgs e)
         {
-
+            var incident = new Factor();
+            incident.Location = new NetTopologySuite.Geometries.Point(point.Lng, point.Lat) { SRID = 4326 };
+            var type = (TypeFactor)incidentsComboBox.SelectedItem;
+            incident.IdType = type.IdType;
+            var route = (Models.Route)routeComboBox.SelectedItem;
+            incident.IdRoute = route.IdRoute;
+            try
+            {
+                using (var context = new SitrouteDataContext())
+                {
+                    await context.Factors.AddAsync(incident);
+                    await context.SaveChangesAsync();
+                    MessageBox.Show("Автобусная остановка успешно добавлена");
+                    MapManager.MapManager.CreateIncidentMarker(point, ref mapView, incident);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void MapView_Loaded(object sender, RoutedEventArgs e)

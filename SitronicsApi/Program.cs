@@ -85,7 +85,7 @@ app.MapGet("/routesStats", (SitrouteDataContext context) => context.Routes
                     .ToList());
 
 app.MapGet("/routes", (SitrouteDataContext context) => context.Routes.ToList());
-//app.MapGet("/factors", (SitrouteDataContext context) => context.Factors.ToList());
+app.MapGet("/factors", (SitrouteDataContext context) => context.Factors.ToList());
 
 app.MapGet("/chat/{idDriver}/{idDispatcher}", (int idDriver, int idDispatcher, SitrouteDataContext context) =>
 {

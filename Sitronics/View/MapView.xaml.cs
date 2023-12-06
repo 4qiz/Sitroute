@@ -1,8 +1,6 @@
 ﻿using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
-using Microsoft.EntityFrameworkCore;
-using Sitronics.Data;
 using Sitronics.Models;
 using Sitronics.Repositories;
 using System.Diagnostics;
@@ -132,6 +130,7 @@ namespace Sitronics.View
             BusStations = await Connection.Client.GetFromJsonAsync<List<BusStation>>("/busStations");
             Buses = await Connection.Client.GetFromJsonAsync<List<Bus>>("/buses");
             Routes = await Connection.Client.GetFromJsonAsync<List<Models.Route>>("/routesByBusStations");
+            Factors = await Connection.Client.GetFromJsonAsync<List<Factor>>("/factors");
 
             List<PointLatLng> points = new List<PointLatLng>();
             RoutingProvider routingProvider =
@@ -161,6 +160,14 @@ namespace Sitronics.View
                     var point = new PointLatLng(bus.Location.Coordinate.Y, bus.Location.Coordinate.X);
                     MapManager.MapManager.CreateBusMarker(point, ref mapView, bus);
                 }
+            }
+
+            foreach (var factor in Factors)
+            {
+                if (factor.Location == null)
+                    continue;
+                var point = new PointLatLng(factor.Location.Coordinate.Y, factor.Location.Coordinate.X);
+                MapManager.MapManager.CreateIncidentMarker(point, ref mapView, factor);
             }
         }
 
