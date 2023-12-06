@@ -41,8 +41,9 @@ namespace SitronicsApi
                     var todaySchedules = schedules.Where(s => s.IdBusNavigation.IdRoute == route.IdRoute && s.Time.Date == DateTime.Today.Date);
                     if (todaySchedules.Any())
                         continue;
-                    DateTime startTime = route.StartTime;
-                    DateTime endTime = route.EndTime;
+                    DateTime today = DateTime.Today;
+                    DateTime startTime = today.AddHours(route.StartTime.Hour).AddMinutes(route.StartTime.Minute);
+                    DateTime endTime = today.AddHours(route.EndTime.Hour).AddMinutes(route.EndTime.Minute);
                     List<Schedule> schedule = await Task.Run(() => algorithm.GenerateRouteSchedule(
                         startTime,
                         endTime,

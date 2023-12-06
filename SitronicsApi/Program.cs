@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SitronicsApi;
+using SitronicsApi.Algorithm;
 using SitronicsApi.Data;
 using SitronicsApi.Models;
 using System.Security.Cryptography;
@@ -89,8 +90,8 @@ app.MapGet("/chat/{idDriver}", (int idDriver, SitrouteDataContext context) =>
 });
 
 app.MapGet("/bus/{idDriver}", (int idDriver, SitrouteDataContext context) => context.Buses
-        .Include(b=>b.IdDrivers)
-        .FirstOrDefault(b=>b.IdDrivers.Any(d=>d.IdDriver == idDriver)));
+        .Include(b => b.IdDrivers)
+        .FirstOrDefault(b => b.IdDrivers.Any(d => d.IdDriver == idDriver)));
 
 app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) =>
 {
@@ -147,7 +148,7 @@ app.MapPatch("/message/reply", (Message message, SitrouteDataContext context) =>
     context.SaveChanges();
 });
 
-app.MapPut("/bus", (Bus bus, SitrouteDataContext context)=>
+app.MapPut("/bus", (Bus bus, SitrouteDataContext context) =>
 {
     context.Update(bus);
     context.SaveChanges();
@@ -167,6 +168,59 @@ app.MapGet("/schedules/{IdRoute}/{IdBusStation}", (SitrouteDataContext context, 
     catch
     {
         Results.BadRequest();
+        return new List<Schedule>();
+    }
+});
+
+app.MapGet("/schedules/{IdRoute}", async (SitrouteDataContext context, int IdRoute) =>
+{
+    try
+    {
+    BusScheduleAlgorithm algorithm = new BusScheduleAlgorithm();
+    var route = context.Routes
+    .Include(r => r.RouteByBusStations)
+    .ThenInclude(r => r.IdBusStationNavigation)
+    .Include(r => r.Buses)
+    .Where(r => r.IdRoute == IdRoute)
+    .FirstOrDefault();
+    if (route == null)
+    {
+        Results.NotFound(route);
+        return new List<Schedule>();
+    }
+    var buses = route.RouteByBusStations;
+    var schedules = context.Schedules;
+    var todaySchedules = await schedules.Where(s => s.IdBusNavigation.IdRoute == route.IdRoute && s.Time.Date == DateTime.Today.Date).ToListAsync();
+    if (todaySchedules.Any())
+    {
+        Results.Ok(todaySchedules);
+        return todaySchedules;
+    }
+    DateTime today = DateTime.Today;
+    DateTime startTime = today.AddHours(route.StartTime.Hour).AddMinutes(route.StartTime.Minute);
+    DateTime endTime = today.AddHours(route.EndTime.Hour).AddMinutes(route.EndTime.Minute);
+    List<Schedule> schedule = await Task.Run(() => algorithm.GenerateRouteSchedule(
+        startTime,
+        endTime,
+        route.IdRoute,
+        route.RouteByBusStations.ToList(),
+        route.Buses.ToList(),
+        "",
+        ""
+        ));
+    if (schedule.Any())
+    {
+        schedules.RemoveRange(schedules.Where(s => s.Time.Date == DateTime.Today.Date && s.IdBusNavigation.IdRoute == route.IdRoute));
+        await schedules.AddRangeAsync(schedule);
+        await context.SaveChangesAsync();
+        Results.Ok(schedule);
+        return schedule;
+    }
+    return new List<Schedule>();
+    }
+    catch (Exception ex)
+    {
+        Results.BadRequest(ex.Message);
         return new List<Schedule>();
     }
 });
