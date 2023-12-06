@@ -24,7 +24,7 @@
             
             <ComboBox Width="250" x:Name="RoutesComboBox" DisplayMemberPath="Name"/>
 
-            <Button Content="Удалить" Width="140" Margin="5,5,0,0"/>
+            <Button x:Name="DeleteButton" Content="Удалить" Width="140" Margin="5,5,0,0" Click="DeleteButton_Click"/>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -26,6 +26,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapDelete("/route/{idRoute}", (int idRoute, SitrouteDataContext context) =>
+{
+    
+    try
+    {
+        context.Routes.Where(r => r.IdRoute == idRoute).ExecuteDelete();
+        return Results.Ok();
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest();
+    }
+});
+
 app.MapGet("/admins/{login}/{password}", (string login, string password, SitrouteDataContext context) =>
 {
     var user = context.Users.Include(u => u.Admin)
@@ -240,6 +254,7 @@ app.MapGet("/schedules/{IdRoute}", async (SitrouteDataContext context, int IdRou
         return new List<Schedule>();
     }
 });
+
 static byte[] ComputeSha256Hash(string rawData)
 {
     using (SHA256 sha256Hash = SHA256.Create())

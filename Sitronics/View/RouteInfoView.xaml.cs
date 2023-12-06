@@ -62,7 +62,12 @@ namespace Sitronics.View
                     continue;
                 Routes.Add(route);
             }
+        }
 
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            int IdRoute = (RoutesComboBox.SelectedItem as Route).IdRoute;
+            await Connection.Client.DeleteAsync($"/route/{IdRoute}");
         }
     }
 }
