@@ -50,13 +50,13 @@ namespace Sitronics.View
             {
                 TextBox timeTextBox = new TextBox();
                 timeTextBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1C1B1F"));
-                timeTextBox.BorderBrush = new SolidColorBrush(Colors.GhostWhite);
-                timeTextBox.Foreground = new SolidColorBrush(Colors.White);
+                timeTextBox.BorderBrush = new SolidColorBrush(Colors.LightGray);
+                timeTextBox.Foreground = new SolidColorBrush(Colors.LightGray);
                 timeTextBox.BorderThickness = new Thickness(1);
-                timeTextBox.Width = 60;
-                timeTextBox.Height = 32;
+                timeTextBox.Width = 55;
+                timeTextBox.Height = 26;
                 timeTextBox.FontSize = 18;
-                timeTextBox.Margin = new Thickness(5, 5, 5, 5);
+                timeTextBox.Margin = new Thickness(0, 5, 15, 0);
                 timeTextBox.VerticalAlignment= VerticalAlignment.Center;
                 timeTextBox.MaxLength = 5;
                 timeTextBox.Text = "08:00";
@@ -66,6 +66,7 @@ namespace Sitronics.View
 
                 StackPanel BusNTimePanel = new StackPanel();
                 BusNTimePanel.Orientation = Orientation.Horizontal;
+                BusNTimePanel.Margin = new Thickness(0, 0, 0, 5);
 
                 await LoadData();
                 ComboBox comboBox = new ComboBox();
@@ -196,9 +197,11 @@ namespace Sitronics.View
             {
                 throw new Exception("Неверное время конца маршрута");
             }
+
             dbroute.StartTime = startTime;
             dbroute.EndTime = endTime;
             var serialNumberBusStation = 1;
+
             foreach (StackPanel stackPanel in BusStopsStackPanel.Children)
             {
                 TextBox stopTimeTextBox = stackPanel.Children[0] as TextBox;
@@ -218,6 +221,7 @@ namespace Sitronics.View
                 points.Add(new PointLatLng(busStation.Location.Coordinate.Y, busStation.Location.Coordinate.X));
                 serialNumberBusStation++;
             }
+
             for (int i = 0; i < points.Count - 1; i++)
             {
                 route = routingProvider.GetRoute(
