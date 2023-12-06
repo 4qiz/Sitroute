@@ -58,6 +58,12 @@ app.MapGet("/routesByBusStations", (SitrouteDataContext context) => context.Rout
                                             .ThenInclude(rp => rp.IdBusStationNavigation)
                                             .ToList());
 
+app.MapGet("/routesByBusStation/{idDriver}", (int idDriver, SitrouteDataContext context) => context.Routes
+                                            .Include(r => r.RouteByBusStations)
+                                            .ThenInclude(rp => rp.IdBusStationNavigation)
+                                            .FirstOrDefault(bs=>bs.Buses
+                                            .Any(d=>d.IdDrivers.Any(d=>d.IdDriver == idDriver))));
+
 app.MapGet("/routesStats", (SitrouteDataContext context) => context.Routes
                     .Include(r => r.Buses)
                     .ThenInclude(b => b.Schedules)
