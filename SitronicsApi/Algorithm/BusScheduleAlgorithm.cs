@@ -116,9 +116,11 @@ namespace SitronicsApi.Algorithm
         {
             var badWeatherFactors = new Dictionary<string, double>
             {
-                { "icy condition", 0.6 },
-                { "fog", 0.7 },
-                { "snowfall", 0.8 }
+                { "Thunderstorm", 0.6 },
+                { "Drizzle", 0.7 },
+                { "Rain", 0.8 },
+                { "Snow", 0.9 },
+                { "Tornado", 0.9 }
             };
             if (badWeatherFactors.ContainsKey(weatherInfo))
                 return badWeatherFactors[weatherInfo];
