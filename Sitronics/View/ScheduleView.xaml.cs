@@ -41,9 +41,14 @@ namespace Sitronics.View
         {
             List<Schedule> schedule = await Connection.Client.GetFromJsonAsync<List<Schedule>>(
                 $"/schedules/{selectedRoute.IdRoute}/{busStation.IdBusStation}");
+            List<Bus> buses = await Connection.Client.GetFromJsonAsync<List<Bus>>(
+                $"/buses");
             if (schedule.Any())
             {
-                scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBusNavigation.Number });
+                scheduleDataGrid.ItemsSource = schedule
+                    .Where(s => s.IdBusStation == busStation.IdBusStation)
+                    .OrderBy(s => s.Time)
+                    .Select(s => new { Time = s.Time.ToString("t"), buses.FirstOrDefault(b => b.IdBus == s.IdBus).Number });
                 scheduleDataGrid.Columns[0].Header = "Время";
             }
 

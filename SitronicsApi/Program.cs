@@ -99,6 +99,10 @@ app.MapGet("/bus/{idDriver}", (int idDriver, SitrouteDataContext context) => con
         .Include(b => b.IdDrivers)
         .FirstOrDefault(b => b.IdDrivers.Any(d => d.IdDriver == idDriver)));
 
+app.MapGet("/bus/{idBus}", (int idBus, SitrouteDataContext context) => context.Buses
+        .Include(b => b.IdDrivers)
+        .FirstOrDefault(b => b.IdBus == idBus));
+
 app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) =>
 {
     try
