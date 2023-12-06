@@ -72,8 +72,8 @@ namespace Sitronics.View
                 comboBox.Margin = new Thickness(0, 5, 0, 0);
                 comboBox.SelectionChanged += ComboBox_SelectionChanged;
 
-                BusNTimePanel.Children.Add(comboBox);
                 BusNTimePanel.Children.Add(timeTextBox);
+                BusNTimePanel.Children.Add(comboBox);
                 BusStopsStackPanel.Children.Add(BusNTimePanel);
             }
             catch (Exception ex)
