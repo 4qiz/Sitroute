@@ -109,9 +109,10 @@ app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) 
 
 app.MapPost("/route", (SitronicsApi.Models.Route route, SitrouteDataContext context) =>
 {
-    if (!context.Routes.Any(r => r.Name == route.Name && r.IsBacked == route.IsBacked))
+    var routes = context.Routes.ToList();
+    if (!routes.Any(r => r.Name == route.Name && r.IsBacked == route.IsBacked))
     {
-        context.Routes.Add(route);
+        context.Add(route);
         context.SaveChanges();
         return Results.Ok();
     }
