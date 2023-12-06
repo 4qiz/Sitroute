@@ -142,7 +142,7 @@ namespace Sitronics.View
                 {
                     var busExpander = new Expander()
                     {
-                        Header = bus.Number,
+                        Header = $"{bus.Number} - {bus.Charge}%",
                         FontSize = 20,
                         Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255)),
                         Margin = new Thickness() { Left = 20 },

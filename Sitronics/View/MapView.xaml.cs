@@ -3,7 +3,6 @@ using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
 using Sitronics.Models;
 using Sitronics.Repositories;
-using System.Data.Entity.Core.Metadata.Edm;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Windows;
@@ -23,6 +22,7 @@ namespace Sitronics.View
         List<Bus> Buses { get; set; }
         List<Models.Route> Routes { get; set; }
         List<Factor> Factors { get; set; }
+        List<Models.Route> ShowedRoutes { get; set; }
 
         public MapView()
         {
@@ -35,7 +35,7 @@ namespace Sitronics.View
                 AddIncidentButton.Visibility = Visibility.Collapsed;
             }
 
-            
+
         }
 
         private async void UpdateTimer_Tick(object sender, EventArgs e)
@@ -85,12 +85,37 @@ namespace Sitronics.View
                 if (Routes == null) return;
                 foreach (var route in Routes)
                 {
-                    checkBoxesStackPanel.Children.Add(
-                        new CheckBox()
+                    var routeCheckBox = new CheckBox()
+                    {
+                        Content = route.Name,
+                        IsChecked = true
+                    };
+                    routeCheckBox.Checked += async (object sender, RoutedEventArgs e) =>
+                    {
+                        ShowedRoutes.Add(route);
+                        try
                         {
-                            Content = route.Name,
-                            IsChecked = true,
-                        });
+                            await LoadData();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                    };
+                    routeCheckBox.Unchecked += async (object sender, RoutedEventArgs e) =>
+                    {
+                        ShowedRoutes.Remove(route);
+                        try
+                        {
+                            await LoadData();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+
+                    };
+                    checkBoxesStackPanel.Children.Add(routeCheckBox);
                 }
             }
             catch (Exception ex)
@@ -112,7 +137,15 @@ namespace Sitronics.View
             Random random = new();
 
             mapView.Markers.Clear();
-            foreach (var dbroute in Routes)
+            if (ShowedRoutes == null)
+                ShowedRoutes = Routes;
+            foreach (var busStation in BusStations)
+            {
+                var point = new PointLatLng(busStation.Location.Coordinate.Y, busStation.Location.Coordinate.X);
+                MapManager.MapManager.CreateBusStationMarker(point, ref mapView, busStation);
+            }
+
+            foreach (var dbroute in ShowedRoutes)
             {
                 var routeColor = new SolidColorBrush(Color.FromArgb(255, (byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255)));
                 points.Clear();
@@ -121,23 +154,18 @@ namespace Sitronics.View
                     points.Add(new PointLatLng(routePoint.IdBusStationNavigation.Location.Coordinate.Y, routePoint.IdBusStationNavigation.Location.Coordinate.X));
                 }
                 AddRouteOnMap(points, routeColor, routingProvider);
-            }
-            foreach (var busStation in BusStations)
-            {
-                var point = new PointLatLng(busStation.Location.Coordinate.Y, busStation.Location.Coordinate.X);
-                MapManager.MapManager.CreateBusStationMarker(point, ref mapView, busStation);
-            }
-            foreach (var bus in Buses)
-            {
-                var point = new PointLatLng(bus.Location.Coordinate.Y, bus.Location.Coordinate.X);
-                MapManager.MapManager.CreateBusMarker(point, ref mapView, bus);
+                foreach (var bus in Buses.Where(b => b.IdRoute == dbroute.IdRoute))
+                {
+                    var point = new PointLatLng(bus.Location.Coordinate.Y, bus.Location.Coordinate.X);
+                    MapManager.MapManager.CreateBusMarker(point, ref mapView, bus);
+                }
             }
 
-            /*foreach (var factor in Factors)
-            {
-                var point = new PointLatLng(factor.Location.Coordinate.Y, factor.Location.Coordinate.X);
-                MapManager.MapManager.CreateIncidentMarker(point, ref mapView, factor);
-            }*/
+            //foreach (var factor in Factors)
+            //{
+            //    var point = new PointLatLng(factor.Location.Coordinate.Y, factor.Location.Coordinate.X);
+            //    MapManager.MapManager.CreateIncidentMarker(point, ref mapView, factor);
+            //}
         }
 
         private void AddRouteOnMap(List<PointLatLng> points, SolidColorBrush routeColor, RoutingProvider routingProvider)
