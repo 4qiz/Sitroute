@@ -32,13 +32,13 @@ namespace SitronicsApi
                 var routes = context.Routes
                     .Include(r => r.RouteByBusStations)
                     .ThenInclude(r => r.IdBusStationNavigation)
-                    .Include(r => r.RouteHasBus).ToList();
+                    .Include(r => r.Buses).ToList();
                 foreach (var route in routes)
                 {
                     Debug.WriteLine($"{route.IdRoute} {route.Name}");
                     var buses = route.RouteByBusStations;
                     var schedules = context.Schedules;
-                    var todaySchedules = schedules.Where(s => s.IdRoute == route.IdRoute && s.Time.Date == DateTime.Today.Date);
+                    var todaySchedules = schedules.Where(s => s.IdBusNavigation.IdRoute == route.IdRoute && s.Time.Date == DateTime.Today.Date);
                     if (todaySchedules.Any())
                         continue;
                     DateTime startTime = route.StartTime;
@@ -48,13 +48,13 @@ namespace SitronicsApi
                         endTime,
                         route.IdRoute,
                         route.RouteByBusStations.ToList(),
-                        route.RouteHasBus.Select(rhb=>rhb.IdBusNavigation).ToList(),
+                        route.Buses.ToList(),
                         "",
                         ""
                         ));
                     if (schedule.Any())
                     {
-                        schedules.RemoveRange(schedules.Where(s => s.Time.Date == DateTime.Today.Date && s.IdRoute == route.IdRoute));
+                        schedules.RemoveRange(schedules.Where(s => s.Time.Date == DateTime.Today.Date && s.IdBusNavigation.IdRoute == route.IdRoute));
                         await schedules.AddRangeAsync(schedule);
                         await context.SaveChangesAsync();
                     }

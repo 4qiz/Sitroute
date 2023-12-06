@@ -32,8 +32,6 @@ public partial class SitrouteDataContext : DbContext
 
     public virtual DbSet<RouteByBusStation> RouteByBusStations { get; set; }
 
-    public virtual DbSet<RouteHasBu> RouteHasBus { get; set; }
-
     public virtual DbSet<Schedule> Schedules { get; set; }
 
     public virtual DbSet<TypeFactor> TypeFactors { get; set; }
@@ -70,6 +68,10 @@ public partial class SitrouteDataContext : DbContext
             entity.Property(e => e.Charge).HasDefaultValueSql("((100))");
             entity.Property(e => e.Number).HasMaxLength(6);
             entity.Property(e => e.Сapacity).HasDefaultValueSql("((60))");
+
+            entity.HasOne(d => d.IdRouteNavigation).WithMany(p => p.Buses)
+                .HasForeignKey(d => d.IdRoute)
+                .HasConstraintName("FK_Bus_Route");
 
             entity.HasMany(d => d.IdDrivers).WithMany(p => p.IdBus)
                 .UsingEntity<Dictionary<string, object>>(
@@ -142,7 +144,7 @@ public partial class SitrouteDataContext : DbContext
             entity.ToTable("Message");
 
             entity.Property(e => e.Time)
-                .HasDefaultValueSql("(dateadd(hour,(3),getutcdate()))")
+                .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.Value).HasMaxLength(500);
 
@@ -162,18 +164,18 @@ public partial class SitrouteDataContext : DbContext
 
             entity.ToTable("Route");
 
-            entity.Property(e => e.EndTime).HasColumnType("datetime");
             entity.Property(e => e.Name).HasMaxLength(10);
-            entity.Property(e => e.StartTime).HasColumnType("datetime");
+
+            entity.Property(e => e.StartTime)
+                .HasColumnType("datetime");
+
+            entity.Property(e => e.EndTime)
+                .HasColumnType("datetime");
         });
 
         modelBuilder.Entity<RouteByBusStation>(entity =>
         {
             entity.HasKey(e => new { e.IdRoute, e.IdBusStation }).HasName("PK_RouteByPoint");
-
-            entity.Property(e => e.StandardArrivalTime)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
 
             entity.HasOne(d => d.IdBusStationNavigation).WithMany(p => p.RouteByBusStations)
                 .HasForeignKey(d => d.IdBusStation)
@@ -184,21 +186,9 @@ public partial class SitrouteDataContext : DbContext
                 .HasForeignKey(d => d.IdRoute)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_RouteByPoint_Route");
-        });
 
-        modelBuilder.Entity<RouteHasBu>(entity =>
-        {
-            entity.HasKey(e => new { e.IdRoute, e.IdBus });
-
-            entity.HasOne(d => d.IdBusNavigation).WithMany(p => p.RouteHasBus)
-                .HasForeignKey(d => d.IdBus)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_RouteHasBus_Bus");
-
-            entity.HasOne(d => d.IdRouteNavigation).WithMany(p => p.RouteHasBus)
-                .HasForeignKey(d => d.IdRoute)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_RouteHasBus_Route");
+            entity.Property(e => e.StandardArrivalTime)
+                .HasColumnType("datetime");
         });
 
         modelBuilder.Entity<Schedule>(entity =>
@@ -209,15 +199,15 @@ public partial class SitrouteDataContext : DbContext
 
             entity.Property(e => e.Time).HasColumnType("datetime");
 
+            entity.HasOne(d => d.IdBusNavigation).WithMany(p => p.Schedules)
+                .HasForeignKey(d => d.IdBus)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Schedule_Bus");
+
             entity.HasOne(d => d.IdBusStationNavigation).WithMany(p => p.Schedules)
                 .HasForeignKey(d => d.IdBusStation)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Schedule_BusStation1");
-
-            entity.HasOne(d => d.Id).WithMany(p => p.Schedules)
-                .HasForeignKey(d => new { d.IdRoute, d.IdBus })
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Schedule_RouteHasBus");
         });
 
         modelBuilder.Entity<TypeFactor>(entity =>

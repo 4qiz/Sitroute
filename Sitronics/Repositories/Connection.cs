@@ -12,7 +12,7 @@ namespace Sitronics.Repositories
     {
         public static HttpClient Client { get; set; } = new HttpClient() 
         { 
-            BaseAddress = new Uri("https://localhost:5038/") 
+            BaseAddress = new Uri("https://Dimaso.bsite.net/") 
         };
 
         public static User CurrentUser { get; set; } = null;

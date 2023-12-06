@@ -148,10 +148,10 @@ namespace Sitronics.Repositories
             {
                 var route = context.Routes
                     .Where(r => r.IdRoute == idRoute)
-                    .Include(r => r.RouteHasBus)
+                    .Include(r => r.Buses)
                     .ThenInclude(b => b.Schedules).FirstOrDefault(r => r.IdRoute == idRoute);
 
-                return (int)route.RouteHasBus.Sum(b => b.Schedules.Where(s => s.Time.Date == date.Date).Sum(s => s.PeopleCountBoardingBus));
+                return (int)route.Buses.Sum(b => b.Schedules.Where(s => s.Time.Date == date.Date).Sum(s => s.PeopleCountBoardingBus));
             }
         }
 
@@ -161,9 +161,9 @@ namespace Sitronics.Repositories
             {
                 var route = context.Routes
                     .Where(r => r.IdRoute == idRoute)
-                    .Include(r => r.RouteHasBus)
+                    .Include(r => r.Buses)
                     .ThenInclude(b => b.Schedules).FirstOrDefault(r => r.IdRoute == idRoute);
-                double? peopleOnBoard = route.RouteHasBus
+                double? peopleOnBoard = route.Buses
                     .Average(b => b.Schedules
                     .Where(s => s.IdBusStation == idBusStation).Average(s => s.PeopleCountBoardingBus));
                 return peopleOnBoard;

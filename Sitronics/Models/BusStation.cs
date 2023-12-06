@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NetTopologySuite.Geometries;
+using Sitronics.Repositories;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using NetTopologySuite.Geometries;
-using Sitronics.Repositories;
 
 namespace Sitronics.Models;
 

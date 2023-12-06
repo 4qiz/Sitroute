@@ -15,9 +15,9 @@ public partial class Route
 
     public DateTime EndTime { get; set; }
 
+    public virtual ICollection<Bus> Buses { get; set; } = new List<Bus>();
+
     public virtual ICollection<Factor> Factors { get; set; } = new List<Factor>();
 
     public virtual ICollection<RouteByBusStation> RouteByBusStations { get; set; } = new List<RouteByBusStation>();
-
-    public virtual ICollection<RouteHasBu> RouteHasBus { get; set; } = new List<RouteHasBu>();
 }
