@@ -193,7 +193,7 @@ namespace Sitronics.View
             {
                 throw new Exception("Неверное время начала маршрута");
             }
-            if (!DateTime.TryParse(startTimeTextBox.Text, out DateTime endTime))
+            if (!DateTime.TryParse(endTimeTextBox.Text, out DateTime endTime))
             {
                 throw new Exception("Неверное время конца маршрута");
             }
