@@ -76,7 +76,7 @@ namespace Sitronics.View
                 {
                     await context.Factors.AddAsync(incident);
                     await context.SaveChangesAsync();
-                    MessageBox.Show("Автобусная остановка успешно добавлена");
+                    MessageBox.Show("Вы успешно сообщили о происшествии");
                     MapManager.MapManager.CreateIncidentMarker(point, ref mapView, incident);
                 }
             }
