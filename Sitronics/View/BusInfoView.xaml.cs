@@ -52,10 +52,10 @@ namespace Sitronics.View
         {
             var busInfoStackPanel = new StackPanel();
             var shedules = bus.Schedules
-                .Where(s => s.PeopleCountBoardingBus != null && s.PeopleCountGettingOffBus != null).ToList();
+                .Where(s => s.PeopleCountBoardingBus != null && s.PeopleCountGettingOffBus != null && s.Time.Date == DateTime.Today.Date).ToList();
             busInfoStackPanel.Children.Add(new TextBlock()
             {
-                Text = "Номер:" + bus.Number.ToUpper(),
+                Text = "Номер: " + bus.Number.ToUpper(),
                 FontSize = 30,
                 Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255))
             });

@@ -116,5 +116,21 @@ namespace Sitronics.View
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private async void GenerateScheduleButton_Click(object sender, RoutedEventArgs e)
+        {
+            scheduleDataGrid.ItemsSource = null;
+            Route route = (Route)routeComboBox.SelectedItem;
+            if (route == null)
+                return;
+            await GenerateSchedule(route);
+        }
+
+        private static async Task GenerateSchedule(Route route)
+        {
+            List<Schedule> schedule = await Connection.Client.GetFromJsonAsync<List<Schedule>>(
+                $"/schedules/{route.IdRoute}");
+            MessageBox.Show("Расписание сформировано");
+        }
     }
 }
