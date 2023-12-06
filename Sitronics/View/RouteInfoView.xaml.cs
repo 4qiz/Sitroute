@@ -56,7 +56,7 @@ namespace Sitronics.View
 
             routesDataGrid.ItemsSource = modifiedRoutes.Select(mr => new { mr.Route.IdRoute, mr.Route.Name, profit = mr.Profit });
 
-            foreach (var route in await Connection.Client.GetFromJsonAsync<List<Route>>("/routes"))
+            foreach (var route in routes)
             {
                 if (Routes.Any(r => r.Name == route.Name))
                     continue;
@@ -66,8 +66,14 @@ namespace Sitronics.View
 
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            int IdRoute = (RoutesComboBox.SelectedItem as Route).IdRoute;
-            await Connection.Client.DeleteAsync($"/route/{IdRoute}");
+            var selectedItem = RoutesComboBox.SelectedItem as Route;
+            if (selectedItem != null)
+            {
+                int idRoute = selectedItem.IdRoute;
+                await Connection.Client.DeleteAsync($"/route/{idRoute}");
+                System.Windows.Forms.MessageBox.Show("Успешное удаление");
+            }
+
         }
     }
 }
