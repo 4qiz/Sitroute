@@ -63,7 +63,7 @@ namespace Sitronics.View
             {
                 busInfoStackPanel.Children.Add(new TextBlock()
                 {
-                    Text = "Людей в автобусе:" + (bus.Schedules.Sum(s => s.PeopleCountBoardingBus) -
+                    Text = "Людей в автобусе: " + (bus.Schedules.Sum(s => s.PeopleCountBoardingBus) -
                         bus.Schedules.Sum(s => s.PeopleCountGettingOffBus)).ToString(),
                     FontSize = 20,
                     Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255))
