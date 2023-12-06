@@ -8,6 +8,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using NetTopologySuite.Geometries;
+using Point = NetTopologySuite.Geometries.Point;
 
 namespace Sitronics.View
 {
@@ -69,7 +71,8 @@ namespace Sitronics.View
             var bus = new Bus()
             {
                 Number = numberBusTextBox.Text,
-                IdRoute = (routeComboBox.SelectedItem as Route).IdRoute
+                IdRoute = (routeComboBox.SelectedItem as Route).IdRoute,
+                Location = new Point(1, 2) { SRID = 4326 },
             };
             var response = await Connection.Client.PostAsJsonAsync("/bus", bus);
             if (response.IsSuccessStatusCode)
