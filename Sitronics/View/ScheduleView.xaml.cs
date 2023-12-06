@@ -43,7 +43,7 @@ namespace Sitronics.View
                 $"/schedules/{selectedRoute.IdRoute}/{busStation.IdBusStation}");
             if (schedule.Any())
             {
-                scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
+                scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBusNavigation.Number });
                 scheduleDataGrid.Columns[0].Header = "Время";
             }
 

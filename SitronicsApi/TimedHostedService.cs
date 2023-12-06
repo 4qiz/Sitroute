@@ -39,18 +39,22 @@ namespace SitronicsApi
                     var buses = route.RouteByBusStations;
                     var schedules = context.Schedules;
                     var todaySchedules = schedules.Where(s => s.IdBusNavigation.IdRoute == route.IdRoute && s.Time.Date == DateTime.Today.Date);
+                    var routeByBusStations = route.RouteByBusStations.ToList();
                     if (todaySchedules.Any())
                         continue;
                     DateTime today = DateTime.Today;
                     DateTime startTime = today.AddHours(route.StartTime.Hour).AddMinutes(route.StartTime.Minute);
                     DateTime endTime = today.AddHours(route.EndTime.Hour).AddMinutes(route.EndTime.Minute);
+                    double latitude = routeByBusStations.FirstOrDefault().IdBusStationNavigation.Location.Coordinate.Y;
+                    double longitude  = routeByBusStations.FirstOrDefault().IdBusStationNavigation.Location.Coordinate.X;
+                    var weatherInfo = await WeatherManager.GetWeatherCondition(latitude, longitude);
                     List<Schedule> schedule = await Task.Run(() => algorithm.GenerateRouteSchedule(
                         startTime,
                         endTime,
                         route.IdRoute,
-                        route.RouteByBusStations.ToList(),
+                        routeByBusStations,
                         route.Buses.ToList(),
-                        "",
+                        weatherInfo,
                         ""
                         ));
                     if (schedule.Any())

@@ -177,47 +177,51 @@ app.MapGet("/schedules/{IdRoute}", async (SitrouteDataContext context, int IdRou
 {
     try
     {
-    BusScheduleAlgorithm algorithm = new BusScheduleAlgorithm();
-    var route = context.Routes
-    .Include(r => r.RouteByBusStations)
-    .ThenInclude(r => r.IdBusStationNavigation)
-    .Include(r => r.Buses)
-    .Where(r => r.IdRoute == IdRoute)
-    .FirstOrDefault();
-    if (route == null)
-    {
-        Results.NotFound(route);
+        BusScheduleAlgorithm algorithm = new BusScheduleAlgorithm();
+        var route = context.Routes
+        .Include(r => r.RouteByBusStations)
+        .ThenInclude(r => r.IdBusStationNavigation)
+        .Include(r => r.Buses)
+        .Where(r => r.IdRoute == IdRoute)
+        .FirstOrDefault();
+        if (route == null)
+        {
+            Results.NotFound(route);
+            return new List<Schedule>();
+        }
+        var buses = route.RouteByBusStations;
+        var schedules = context.Schedules;
+        var todaySchedules = await schedules.Where(s => s.IdBusNavigation.IdRoute == route.IdRoute && s.Time.Date == DateTime.Today.Date).ToListAsync();
+        var routeByBusStations = route.RouteByBusStations.ToList();
+        if (todaySchedules.Any())
+        {
+            Results.Ok(todaySchedules);
+            return todaySchedules;
+        }
+        DateTime today = DateTime.Today;
+        DateTime startTime = today.AddHours(route.StartTime.Hour).AddMinutes(route.StartTime.Minute);
+        DateTime endTime = today.AddHours(route.EndTime.Hour).AddMinutes(route.EndTime.Minute);
+        double latitude = routeByBusStations.FirstOrDefault().IdBusStationNavigation.Location.Coordinate.Y;
+        double longitude = routeByBusStations.FirstOrDefault().IdBusStationNavigation.Location.Coordinate.X;
+        var weatherInfo = await WeatherManager.GetWeatherCondition(latitude, longitude);
+        List<Schedule> schedule = await Task.Run(() => algorithm.GenerateRouteSchedule(
+            startTime,
+            endTime,
+            route.IdRoute,
+            routeByBusStations,
+            route.Buses.ToList(),
+            weatherInfo,
+            ""
+            ));
+        if (schedule.Any())
+        {
+            schedules.RemoveRange(schedules.Where(s => s.Time.Date == DateTime.Today.Date && s.IdBusNavigation.IdRoute == route.IdRoute));
+            await schedules.AddRangeAsync(schedule);
+            await context.SaveChangesAsync();
+            Results.Ok(schedule);
+            return schedule;
+        }
         return new List<Schedule>();
-    }
-    var buses = route.RouteByBusStations;
-    var schedules = context.Schedules;
-    var todaySchedules = await schedules.Where(s => s.IdBusNavigation.IdRoute == route.IdRoute && s.Time.Date == DateTime.Today.Date).ToListAsync();
-    if (todaySchedules.Any())
-    {
-        Results.Ok(todaySchedules);
-        return todaySchedules;
-    }
-    DateTime today = DateTime.Today;
-    DateTime startTime = today.AddHours(route.StartTime.Hour).AddMinutes(route.StartTime.Minute);
-    DateTime endTime = today.AddHours(route.EndTime.Hour).AddMinutes(route.EndTime.Minute);
-    List<Schedule> schedule = await Task.Run(() => algorithm.GenerateRouteSchedule(
-        startTime,
-        endTime,
-        route.IdRoute,
-        route.RouteByBusStations.ToList(),
-        route.Buses.ToList(),
-        "",
-        ""
-        ));
-    if (schedule.Any())
-    {
-        schedules.RemoveRange(schedules.Where(s => s.Time.Date == DateTime.Today.Date && s.IdBusNavigation.IdRoute == route.IdRoute));
-        await schedules.AddRangeAsync(schedule);
-        await context.SaveChangesAsync();
-        Results.Ok(schedule);
-        return schedule;
-    }
-    return new List<Schedule>();
     }
     catch (Exception ex)
     {
