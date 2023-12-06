@@ -12,7 +12,10 @@
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
-        <DataGrid x:Name="routesDataGrid" HorizontalAlignment="Left"/>
+        <StackPanel>
+            <DataGrid x:Name="routesDataGrid" HorizontalAlignment="Left" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=StackPanel}}"
+              Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=StackPanel}}"/>
+        </StackPanel>
 
         <StackPanel HorizontalAlignment="Left" Grid.Row="1">
             <TextBlock 
