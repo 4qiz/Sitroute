@@ -47,6 +47,8 @@ public partial class Bus
     [JsonIgnore]
     public virtual Route? IdRouteNavigation { get; set; }
 
+    public virtual ICollection<RouteHasBu> RouteHasBus { get; set; } = new List<RouteHasBu>();
+
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
 
     public virtual ICollection<Driver> IdDrivers { get; set; } = new List<Driver>();

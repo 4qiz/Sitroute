@@ -144,10 +144,10 @@ namespace SitronicsApi.Algorithm
             {
                 var route = context.Routes
                     .Where(r => r.IdRoute == idRoute)
-                    .Include(r => r.Buses)
+                    .Include(r => r.RouteHasBus)
                     .ThenInclude(b => b.Schedules).FirstOrDefault(r => r.IdRoute == idRoute);
 
-                return (int)route.Buses.Sum(b => b.Schedules.Where(s => s.Time.Date == date.Date).Sum(s => s.PeopleCountBoardingBus));
+                return (int)route.RouteHasBus.Sum(b => b.Schedules.Where(s => s.Time.Date == date.Date).Sum(s => s.PeopleCountBoardingBus));
             }
         }
 
@@ -157,9 +157,9 @@ namespace SitronicsApi.Algorithm
             {
                 var route = context.Routes
                     .Where(r => r.IdRoute == idRoute)
-                    .Include(r => r.Buses)
+                    .Include(r => r.RouteHasBus)
                     .ThenInclude(b => b.Schedules).FirstOrDefault(r => r.IdRoute == idRoute);
-                double? peopleOnBoard = route.Buses
+                double? peopleOnBoard = route.RouteHasBus
                     .Average(b => b.Schedules
                     .Where(s => s.IdBusStation == idBusStation).Average(s => s.PeopleCountBoardingBus));
                 return peopleOnBoard;

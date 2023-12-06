@@ -45,9 +45,7 @@ public partial class Bus
 
     public int Сapacity { get; set; }
 
-    public virtual Route? IdRouteNavigation { get; set; }
-
-    public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
+    public virtual ICollection<RouteHasBu> RouteHasBus { get; set; } = new List<RouteHasBu>();
 
     public virtual ICollection<Driver> IdDrivers { get; set; } = new List<Driver>();
 }

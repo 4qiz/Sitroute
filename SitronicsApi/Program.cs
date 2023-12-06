@@ -58,7 +58,7 @@ app.MapGet("/routesByBusStations", (SitrouteDataContext context) => context.Rout
                                             .ToList());
 
 app.MapGet("/routesStats", (SitrouteDataContext context) => context.Routes
-                    .Include(r => r.Buses)
+                    .Include(r => r.RouteHasBus)
                     .ThenInclude(b => b.Schedules)
                     .ThenInclude(s => s.IdBusStationNavigation)
                     .ToList());
@@ -158,7 +158,7 @@ app.MapGet("/schedules/{IdRoute}/{IdBusStation}", (SitrouteDataContext context, 
     try
     {
         var todaySchedules = context.Schedules
-        .Where(s => s.IdBusNavigation.IdRoute == IdRoute && s.Time.Date == DateTime.Today.Date && s.IdBusStation == IdBusStation)
+        .Where(s => s.Id.IdRoute == IdRoute && s.Time.Date == DateTime.Today.Date && s.IdBusStation == IdBusStation)
         .OrderBy(s => s.Time)
         .ToList();
         Results.Ok(todaySchedules);

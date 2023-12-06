@@ -51,7 +51,7 @@ namespace Sitronics.View
         public StackPanel GetBusInfoStackPanel(Bus bus)
         {
             var busInfoStackPanel = new StackPanel();
-            var shedules = bus.Schedules
+            var shedules = bus.RouteHasBus.FirstOrDefault(rhb=>rhb.IdBusNavigation == bus).Schedules
                 .Where(s => s.PeopleCountBoardingBus != null && s.PeopleCountGettingOffBus != null).ToList();
             busInfoStackPanel.Children.Add(new TextBlock()
             {

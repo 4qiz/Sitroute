@@ -18,8 +18,9 @@ public partial class Schedule
 
     public int? PeopleCountGettingOffBus { get; set; }
 
-    [JsonIgnore]
-    public virtual Bus IdBusNavigation { get; set; } = null!;
+    public int IdRoute { get; set; }
 
     public virtual BusStation IdBusStationNavigation { get; set; } = null!;
+
+    public virtual RouteHasBu Id { get; set; } = null!;
 }
