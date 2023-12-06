@@ -1,10 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SitronicsApi
 {
@@ -15,26 +10,32 @@ namespace SitronicsApi
         public static async Task<string> GetWeatherCondition(double latitude, double longitude)
         {
             string apiUrl = $"http://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid={apiKey}";
-
-            using (HttpClient client = new HttpClient())
+            try
             {
-                HttpResponseMessage response = await client.GetAsync(apiUrl);
-                if (response.IsSuccessStatusCode)
+                using (HttpClient client = new HttpClient())
                 {
-                    string json = await response.Content.ReadAsStringAsync();
+                    HttpResponseMessage response = await client.GetAsync(apiUrl);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string json = await response.Content.ReadAsStringAsync();
 
-                    JObject data = JObject.Parse(json);
+                        JObject data = JObject.Parse(json);
 
-                    JArray weatherArray = (JArray)data["weather"];
+                        JArray weatherArray = (JArray)data["weather"];
 
-                    JObject weatherObject = (JObject)weatherArray[0];
-                    string main = (string)weatherObject["main"];
-                    return main;
+                        JObject weatherObject = (JObject)weatherArray[0];
+                        string main = (string)weatherObject["main"];
+                        return main;
+                    }
+                    else
+                        return "none";
                 }
-                else
-                    return "none";
+            }
+            catch (Exception ex) 
+            {
+                return "none";
             }
         }
     }
-    
+
 }
