@@ -47,7 +47,7 @@ namespace Sitronics.View
             routesDataGrid.Columns[0].Header = "Название маршрута";
             routesDataGrid.Columns[1].Header = "Релевантность";
             routesDataGrid.Columns[2].Header = "Пассажиропоток за сегодняшний день";
-            routesDataGrid.Columns[3].Header = "Время маршрута (минут)";
+            routesDataGrid.Columns[3].Header = "Время в пути (минут)";
 
 
             foreach (var route in routes)

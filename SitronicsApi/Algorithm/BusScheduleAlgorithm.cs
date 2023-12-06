@@ -54,17 +54,19 @@ namespace SitronicsApi.Algorithm
                     .ThenInclude(r => r.IdBusStationNavigation)
                     .FirstOrDefault(r => r.IdRoute == idRoute);
                 var routeByBusStations = route.RouteByBusStations;
-                int routeTime = GetIntervalInMinutesBetweenBusStations(idRoute, routeByBusStations.First().IdBusStation,
-                    routeByBusStations.Last().IdBusStation);
+                int routeTime = GetIntervalInMinutesBetweenBusStations(idRoute, routeByBusStations.OrderBy(r => r.SerialNumberBusStation).First().IdBusStation,
+                    routeByBusStations.OrderBy(r => r.SerialNumberBusStation).Last().IdBusStation);
                 foreach (RouteByBusStation item in routeByBusStations)
                 {
                     var IdBusStation = item.IdBusStation;
                     var averagePeople = GetAveragePeopleOnBusStationByRoute(idRoute, IdBusStation);
                     if (averagePeople != null)
                     {
+
                         peopleSum += (double)averagePeople;
                     }
                 }
+
                 return peopleSum / routeTime;
             }
         }
