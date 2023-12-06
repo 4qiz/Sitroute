@@ -141,7 +141,7 @@
                                             Margin="0,0,0,10"
                                             Padding="5">
                                         <TextBox x:Name="routeNameTextBox"
-                                            MaxLength="6" 
+                                            MaxLength="5" 
                                             Style="{StaticResource DefTB}"
                                             TextChanged="RouteNameTextBox_TextChanged" 
                                             Background="{StaticResource B_background}">
@@ -164,9 +164,11 @@
                                             Margin="0,0,0,10"
                                             Padding="5">
                                                 <TextBox x:Name="startTimeTextBox"
-                                            MaxLength="6" 
-                                            Style="{StaticResource DefTB}"
-                                            Background="{StaticResource B_background}">
+                                                    MaxLength="5" 
+                                                    Style="{StaticResource DefTB}"
+                                                    Background="{StaticResource B_background}"
+                                                    Text="08:00"
+                                                    PreviewTextInput="TimeTextBox_PreviewTextInput">
                                                 </TextBox>
                                             </Border>
                                         </StackPanel>
@@ -188,7 +190,9 @@
                                                 <TextBox x:Name="endTimeTextBox"
                                             MaxLength="6" 
                                             Style="{StaticResource DefTB}"
-                                            Background="{StaticResource B_background}">
+                                            Background="{StaticResource B_background}"
+                                            Text="22:00"
+                                            PreviewTextInput="TimeTextBox_PreviewTextInput">
                                                 </TextBox>
                                             </Border>
 

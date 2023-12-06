@@ -54,11 +54,14 @@ namespace Sitronics.View
                 timeTextBox.Foreground = new SolidColorBrush(Colors.White);
                 timeTextBox.BorderThickness = new Thickness(1);
                 timeTextBox.Width = 60;
-                timeTextBox.Height = 28;
-                timeTextBox.FontSize = 16;
-                timeTextBox.Margin = new Thickness(5, 5, 0, 0);
+                timeTextBox.Height = 32;
+                timeTextBox.FontSize = 18;
+                timeTextBox.Margin = new Thickness(5, 5, 5, 5);
+                timeTextBox.VerticalAlignment= VerticalAlignment.Center;
                 timeTextBox.MaxLength = 5;
+                timeTextBox.Text = "08:00";
                 timeTextBox.PreviewTextInput += TimeTextBox_PreviewTextInput;
+                timeTextBox.TextChanged += TimeTextBox_TextChanged;
 
 
                 StackPanel BusNTimePanel = new StackPanel();
@@ -79,6 +82,17 @@ namespace Sitronics.View
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void TimeTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox timeTextBox = (TextBox)sender;
+
+            if (timeTextBox.Text.Length >= 3)
+            {
+                timeTextBox.Text = timeTextBox.Text.Remove(2, 1).Insert(2, ":");
+                timeTextBox.SelectionStart = timeTextBox.Text.Length; // move cursor to the end
             }
         }
 
@@ -129,11 +143,18 @@ namespace Sitronics.View
 
         private void AddBusStopButton_Click(object sender, RoutedEventArgs e)
         {
-            CreateNewBusStopComboBox();
-            CheckEnabled();
-            mapView.Markers.Clear();
-            Models.Route dbroute = AddBusPointToMap();
-            countBusStation++;
+            try
+            {
+                CreateNewBusStopComboBox();
+                CheckEnabled();
+                mapView.Markers.Clear();
+                Models.Route dbroute = AddBusPointToMap();
+                countBusStation++;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private async void SaveRouteButton_Click(object sender, RoutedEventArgs e)
@@ -167,16 +188,32 @@ namespace Sitronics.View
             List<PointLatLng> points = new List<PointLatLng>();
 
             dbroute.Name = routeNameTextBox.Text;
-            dbroute.StartTime = DateTime.Parse("08:00");
-            dbroute.EndTime = DateTime.Parse("23:00");
+            if (!DateTime.TryParse(startTimeTextBox.Text, out DateTime startTime))
+            {
+                throw new Exception("Неверное время начала маршрута");
+            }
+            if (!DateTime.TryParse(startTimeTextBox.Text, out DateTime endTime))
+            {
+                throw new Exception("Неверное время конца маршрута");
+            }
+            dbroute.StartTime = startTime;
+            dbroute.EndTime = endTime;
             var serialNumberBusStation = 1;
             foreach (StackPanel stackPanel in BusStopsStackPanel.Children)
             {
-                ComboBox comboBox = stackPanel.Children[0] as ComboBox;
-                TextBox textBox = stackPanel.Children[1] as TextBox;
+                TextBox stopTimeTextBox = stackPanel.Children[0] as TextBox;
+                ComboBox comboBox = stackPanel.Children[1] as ComboBox;
+
+                if (!DateTime.TryParse(stopTimeTextBox.Text, out DateTime arrivalTime))
+                {
+                    throw new Exception("Неверное время прибытия на остановку");
+                }
 
                 busStation = (BusStation)comboBox.SelectedItem;
-                rbp = new() { IdBusStation = busStation.IdBusStation, SerialNumberBusStation = serialNumberBusStation, StandardArrivalTime = DateTime.Parse(textBox.Text) };
+                rbp = new() { IdBusStation = busStation.IdBusStation, 
+                    SerialNumberBusStation = serialNumberBusStation, 
+                    StandardArrivalTime = arrivalTime
+                };
                 dbroute.RouteByBusStations.Add(rbp);
                 points.Add(new PointLatLng(busStation.Location.Coordinate.Y, busStation.Location.Coordinate.X));
                 serialNumberBusStation++;
@@ -195,6 +232,7 @@ namespace Sitronics.View
             dbroute.IsBacked = isBackedCheckBox.IsChecked ?? false;
 
             return dbroute;
+
         }
 
         [DllImport("user32.dll")]
