@@ -17,6 +17,7 @@
             <Button Content="Добавить остановку" Click="AddStopButton_Click"/>
             <Button Content="Добавить маршрут" Click="AddRouteButton_Click"/>
             <Button Content="Добавить автобус" Click="AddBusButton_Click"/>
+            <Button x:Name="AddIncidentButton" Content="Добавить происшествие" Click="AddIncidentButton_Click"/>
         </StackPanel>
         <Border ClipToBounds="False"
             CornerRadius="10"

@@ -27,6 +27,11 @@ namespace Sitronics.View
             InitializeComponent();
 
             Manager.MainTimer.Tick += new EventHandler(UpdateTimer_Tick);
+
+            if(Connection.CurrentUser?.Admin?.Role == "Руководитель")
+            {
+                AddIncidentButton.Visibility = Visibility.Collapsed;
+            }
         }
 
         private async void UpdateTimer_Tick(object sender, EventArgs e)
@@ -135,6 +140,12 @@ namespace Sitronics.View
         private void AddRouteButton_Click(object sender, RoutedEventArgs e)
         {
             var fm = new AddRouteWindow();
+            fm.ShowDialog();
+        }
+
+        private void AddIncidentButton_Click(object sender, RoutedEventArgs e)
+        {
+            var fm = new AddIncidentWindow();
             fm.ShowDialog();
         }
     }
