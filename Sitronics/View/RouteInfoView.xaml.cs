@@ -3,6 +3,7 @@ using Sitronics.Models;
 using Sitronics.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http.Json;
@@ -25,9 +26,13 @@ namespace Sitronics.View
     /// </summary>
     public partial class RouteInfoView : UserControl
     {
+        ObservableCollection<Route> Routes { get; set; } = new ObservableCollection<Route>();
+
         public RouteInfoView()
         {
             InitializeComponent();
+
+            RoutesComboBox.ItemsSource = Routes;
         }
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -50,6 +55,13 @@ namespace Sitronics.View
                 .ToList();
 
             routesDataGrid.ItemsSource = modifiedRoutes.Select(mr => new { mr.Route.IdRoute, mr.Route.Name, profit = mr.Profit });
+
+            foreach (var route in await Connection.Client.GetFromJsonAsync<List<Route>>("/routes"))
+            {
+                if (Routes.Any(r => r.Name == route.Name))
+                    continue;
+                Routes.Add(route);
+            }
 
         }
     }

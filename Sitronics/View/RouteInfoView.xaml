@@ -22,7 +22,7 @@
                Foreground="White">
             </TextBlock>
             
-            <ComboBox Width="250" />
+            <ComboBox Width="250" x:Name="RoutesComboBox" DisplayMemberPath="Name"/>
 
             <Button Content="Удалить" Width="140" Margin="5,5,0,0"/>
         </StackPanel>
