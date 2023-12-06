@@ -171,6 +171,8 @@ namespace Sitronics.View
             foreach (StackPanel stackPanel in BusStopsStackPanel.Children)
             {
                 ComboBox comboBox = stackPanel.Children[0] as ComboBox;
+                TextBox textBox = stackPanel.Children[1] as TextBox;
+
                 busStation = (BusStation)comboBox.SelectedItem;
                 rbp = new() { IdBusStation = busStation.IdBusStation, SerialNumberBusStation = serialNumberBusStation };
                 dbroute.RouteByBusStations.Add(rbp);
