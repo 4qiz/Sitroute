@@ -13,17 +13,50 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel Orientation="Horizontal"
+                    Grid.ColumnSpan="2">
             <Button Content="Добавить остановку" Click="AddStopButton_Click"/>
             <Button Content="Добавить маршрут" Click="AddRouteButton_Click"/>
             <Button Content="Добавить автобус" Click="AddBusButton_Click"/>
             <Button x:Name="AddIncidentButton" Content="Добавить происшествие" Click="AddIncidentButton_Click"/>
         </StackPanel>
+
+        <StackPanel Grid.Row="1"
+                    Grid.Column="0">
+            <TextBlock Text="Маршруты"
+                       Foreground="{StaticResource B_onBackground}"
+                       Margin="0,0,0,10"/>
+            <StackPanel>
+            <RadioButton Content="Всё"
+                         Foreground="{StaticResource B_onBackground}"
+                         Checked="AllRoutesRadioButton_Checked"
+                         Margin="3"/>
+            <RadioButton Content="Ничего" 
+                         Checked="NothingRoutesRadioButton_Checked"
+                         Foreground="{StaticResource B_onBackground}"
+                         Margin="3"/>
+        </StackPanel>
+            <ScrollViewer >
+                <StackPanel 
+                    x:Name="checkBoxesStackPanel">
+            </StackPanel>
+        </ScrollViewer>
+            
+        </StackPanel>
+        
+                    
         <Border ClipToBounds="False"
             CornerRadius="10"
             BorderThickness="6"
             BorderBrush="#eaeaea"
-                Grid.Row="1">
+                Grid.Row="1"
+                Grid.Column="1">
             <gmaps:GMapControl x:Name="mapView" Loaded="MapView_Loaded"/>
         </Border>
     </Grid>

@@ -28,10 +28,12 @@ namespace Sitronics.View
 
             Manager.MainTimer.Tick += new EventHandler(UpdateTimer_Tick);
 
-            if(Connection.CurrentUser?.Admin?.Role == "Руководитель")
+            if (Connection.CurrentUser?.Admin?.Role == "Руководитель")
             {
                 AddIncidentButton.Visibility = Visibility.Collapsed;
             }
+
+            
         }
 
         private async void UpdateTimer_Tick(object sender, EventArgs e)
@@ -78,6 +80,16 @@ namespace Sitronics.View
             try
             {
                 await LoadData();
+                if (Routes == null) return;
+                foreach (var route in Routes)
+                {
+                    checkBoxesStackPanel.Children.Add(
+                        new CheckBox()
+                        {
+                            Content = route.Name,
+                            IsChecked = true,
+                        });
+                }
             }
             catch (Exception ex)
             {
@@ -118,6 +130,8 @@ namespace Sitronics.View
                 var point = new PointLatLng(bus.Location.Coordinate.Y, bus.Location.Coordinate.X);
                 MapManager.MapManager.CreateBusMarker(point, ref mapView, bus);
             }
+
+            
         }
 
         private void AddRouteOnMap(List<PointLatLng> points, SolidColorBrush routeColor, RoutingProvider routingProvider)
@@ -147,6 +161,22 @@ namespace Sitronics.View
         {
             var fm = new AddIncidentWindow();
             fm.ShowDialog();
+        }
+
+        private void NothingRoutesRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            foreach (CheckBox routeCheckBox in checkBoxesStackPanel.Children)
+            {
+                routeCheckBox.IsChecked = false;
+            }
+        }
+
+        private void AllRoutesRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            foreach (CheckBox routeCheckBox in checkBoxesStackPanel.Children)
+            {
+                routeCheckBox.IsChecked = true;
+            }
         }
     }
 }
