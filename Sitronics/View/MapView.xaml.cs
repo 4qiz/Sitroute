@@ -3,6 +3,7 @@ using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
 using Sitronics.Models;
 using Sitronics.Repositories;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Windows;
@@ -165,6 +166,7 @@ namespace Sitronics.View
 
         private void NothingRoutesRadioButton_Checked(object sender, RoutedEventArgs e)
         {
+            if (checkBoxesStackPanel == null) return;
             foreach (CheckBox routeCheckBox in checkBoxesStackPanel.Children)
             {
                 routeCheckBox.IsChecked = false;
@@ -173,6 +175,7 @@ namespace Sitronics.View
 
         private void AllRoutesRadioButton_Checked(object sender, RoutedEventArgs e)
         {
+            if (checkBoxesStackPanel == null) return;
             foreach (CheckBox routeCheckBox in checkBoxesStackPanel.Children)
             {
                 routeCheckBox.IsChecked = true;
