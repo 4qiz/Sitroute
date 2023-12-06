@@ -49,18 +49,9 @@ namespace Sitronics.View
                     .Where(s => s.IdBusStation == busStation.IdBusStation)
                     .OrderBy(s => s.Time)
                     .Select(s => new { Time = s.Time.ToString("t"), buses.FirstOrDefault(b => b.IdBus == s.IdBus).Number });
-                scheduleDataGrid.Columns[0].Header = "Время";
+                scheduleDataGrid.Columns[0].Header = "Время прибытия";
+                scheduleDataGrid.Columns[1].Header = "Госномер автобуса";
             }
-
-
-
-            // мб добавим на замену DataGrid
-            /*var sch = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
-            foreach (var i in sch)
-            {
-                ComboBoss.Text += $"{i.Time}   ";
-            }*/
-
         }
 
         private void ScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)

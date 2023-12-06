@@ -135,7 +135,6 @@ namespace Sitronics.View
             List<PointLatLng> points = new List<PointLatLng>();
             RoutingProvider routingProvider =
             mapView.MapProvider as RoutingProvider ?? GMapProviders.OpenStreetMap;
-            Random random = new();
 
             mapView.Markers.Clear();
             if (ShowedRoutes == null)
@@ -148,7 +147,7 @@ namespace Sitronics.View
 
             foreach (var dbroute in ShowedRoutes)
             {
-                var routeColor = new SolidColorBrush(Color.FromArgb(255, (byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255)));
+                var routeColor = new SolidColorBrush(Colors.DarkBlue);
                 points.Clear();
                 foreach (var routePoint in dbroute.RouteByBusStations.OrderBy(r => r.SerialNumberBusStation))
                 {
