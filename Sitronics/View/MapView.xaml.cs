@@ -102,7 +102,7 @@ namespace Sitronics.View
             {
                 var routeColor = new SolidColorBrush(Color.FromArgb(255, (byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255)));
                 points.Clear();
-                foreach (var routePoint in dbroute.RouteByBusStations)
+                foreach (var routePoint in dbroute.RouteByBusStations.OrderBy(r => r.SerialNumberBusStation))
                 {
                     points.Add(new PointLatLng(routePoint.IdBusStationNavigation.Location.Coordinate.Y, routePoint.IdBusStationNavigation.Location.Coordinate.X));
                 }
