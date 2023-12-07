@@ -26,6 +26,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapDelete("/route/{idRoute}", (int idRoute, SitrouteDataContext context) =>
+{
+    try
+    {
+        context.Routes.Where(r => r.IdRoute == idRoute).ExecuteDelete();
+        return Results.Ok();
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest();
+    }
+});
+
 app.MapGet("/admins/{login}/{password}", (string login, string password, SitrouteDataContext context) =>
 {
     var user = context.Users.Include(u => u.Admin)
@@ -58,13 +71,41 @@ app.MapGet("/routesByBusStations", (SitrouteDataContext context) => context.Rout
                                             .ThenInclude(rp => rp.IdBusStationNavigation)
                                             .ToList());
 
-app.MapGet("/routesStats", (SitrouteDataContext context) => context.Routes
-                    .Include(r => r.Buses)
-                    .ThenInclude(b => b.Schedules)
-                    .ThenInclude(s => s.IdBusStationNavigation)
-                    .ToList());
+app.MapGet("/schedule/{idDriver}", (int idDriver, SitrouteDataContext context) => 
+{
+    var schedules = context.Schedules
+        .Include(s => s.IdBusNavigation)
+        .ThenInclude(b => b.IdRouteNavigation)
+        .Include(s => s.IdBusStationNavigation)
+        .Where(s => s.IdBusNavigation.IdDrivers
+        .Any(d => d.IdDriver == idDriver)
+            && s.Time.Date == DateTime.Today.Date)
+        .OrderBy(s => s.Time).ToList();
+    schedules.ForEach(s => s.IdBusNavigation.IdRouteNavigation = null);
+    return schedules;
+});
 
-app.MapGet("/routes", (SitrouteDataContext context) => context.Routes.ToList());
+app.MapGet("/routesStats", (SitrouteDataContext context) =>
+{
+    var routes = context.Routes
+            .Include(r => r.Buses)
+            .ThenInclude(b => b.Schedules)
+            .ThenInclude(s => s.IdBusStationNavigation)
+            .ToList();
+    for (int i = 0; i < routes.Count; i++)
+    {
+        var buses = routes[i].Buses.ToArray();
+        for (int j = 0; j < buses.Count(); j++)
+        {
+            buses[j].IdRouteNavigation = null;
+        }
+        routes[i].Buses = buses;
+    }
+    return routes;
+});
+
+app.MapGet("/routes", (SitrouteDataContext context) => context.Routes.Include(r => r.RouteByBusStations).ToList());
+app.MapGet("/factors", (SitrouteDataContext context) => context.Factors.ToList());
 
 app.MapGet("/chat/{idDriver}/{idDispatcher}", (int idDriver, int idDispatcher, SitrouteDataContext context) =>
 {
@@ -83,8 +124,7 @@ app.MapGet("/chat/{idDriver}", (int idDriver, SitrouteDataContext context) =>
                .Include(m => m.IdRecipientNavigation)
                .Include(m => m.IdSenderNavigation)
                .Where(m => idDriver == m.IdSender
-               || idDriver == m.IdRecipient
-               || null == m.IdRecipient)
+               || idDriver == m.IdRecipient)
                .OrderBy(m => m.Time)
                .ToList();
 });
@@ -92,6 +132,10 @@ app.MapGet("/chat/{idDriver}", (int idDriver, SitrouteDataContext context) =>
 app.MapGet("/bus/{idDriver}", (int idDriver, SitrouteDataContext context) => context.Buses
         .Include(b => b.IdDrivers)
         .FirstOrDefault(b => b.IdDrivers.Any(d => d.IdDriver == idDriver)));
+
+app.MapGet("/bus/{idBus}", (int idBus, SitrouteDataContext context) => context.Buses
+        .Include(b => b.IdDrivers)
+        .FirstOrDefault(b => b.IdBus == idBus));
 
 app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) =>
 {
@@ -109,9 +153,10 @@ app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) 
 
 app.MapPost("/route", (SitronicsApi.Models.Route route, SitrouteDataContext context) =>
 {
-    if (!context.Routes.Any(r => r.Name == route.Name && r.IsBacked == route.IsBacked))
+    var routes = context.Routes.ToList();
+    if (!routes.Any(r => r.Name == route.Name && r.IsBacked == route.IsBacked))
     {
-        context.Routes.Add(route);
+        context.Add(route);
         context.SaveChanges();
         return Results.Ok();
     }
@@ -139,6 +184,7 @@ app.MapPost("/message", (Message message, SitrouteDataContext context) =>
 {
     context.Messages.Add(message);
     context.SaveChanges();
+    return Results.Ok();
 });
 
 app.MapPatch("/message/reply", (Message message, SitrouteDataContext context) =>
@@ -176,47 +222,50 @@ app.MapGet("/schedules/{IdRoute}", async (SitrouteDataContext context, int IdRou
 {
     try
     {
-    BusScheduleAlgorithm algorithm = new BusScheduleAlgorithm();
-    var route = context.Routes
-    .Include(r => r.RouteByBusStations)
-    .ThenInclude(r => r.IdBusStationNavigation)
-    .Include(r => r.Buses)
-    .Where(r => r.IdRoute == IdRoute)
-    .FirstOrDefault();
-    if (route == null)
-    {
-        Results.NotFound(route);
+        BusScheduleAlgorithm algorithm = new BusScheduleAlgorithm();
+        var route = context.Routes
+        .Include(r => r.RouteByBusStations)
+        .ThenInclude(r => r.IdBusStationNavigation)
+        .Include(r => r.Buses)
+        .Where(r => r.IdRoute == IdRoute)
+        .FirstOrDefault();
+        if (route == null)
+        {
+            Results.NotFound(route);
+            return new List<Schedule>();
+        }
+        var buses = route.RouteByBusStations;
+        var schedules = context.Schedules;
+        var todaySchedules = await schedules.Where(s => s.IdBusNavigation.IdRoute == route.IdRoute && s.Time.Date == DateTime.Today.Date).ToListAsync();
+        var routeByBusStations = route.RouteByBusStations.ToList();
+        if (todaySchedules.Any())
+        {
+            Results.Ok(todaySchedules);
+            return todaySchedules;
+        }
+        DateTime today = DateTime.Today;
+        DateTime startTime = today.AddHours(route.StartTime.Hour).AddMinutes(route.StartTime.Minute);
+        DateTime endTime = today.AddHours(route.EndTime.Hour).AddMinutes(route.EndTime.Minute);
+        double latitude = routeByBusStations.FirstOrDefault().IdBusStationNavigation.Location.Coordinate.Y;
+        double longitude = routeByBusStations.FirstOrDefault().IdBusStationNavigation.Location.Coordinate.X;
+        var weatherInfo = await WeatherManager.GetWeatherCondition(latitude, longitude);
+        List<Schedule> schedule = await Task.Run(() => algorithm.GenerateRouteSchedule(
+            startTime,
+            endTime,
+            route.IdRoute,
+            routeByBusStations,
+            route.Buses.ToList(),
+            weatherInfo
+            ));
+        if (schedule.Any())
+        {
+            schedules.RemoveRange(schedules.Where(s => s.Time.Date == DateTime.Today.Date && s.IdBusNavigation.IdRoute == route.IdRoute));
+            await schedules.AddRangeAsync(schedule);
+            await context.SaveChangesAsync();
+            Results.Ok(schedule);
+            return schedule;
+        }
         return new List<Schedule>();
-    }
-    var buses = route.RouteByBusStations;
-    var schedules = context.Schedules;
-    var todaySchedules = await schedules.Where(s => s.IdBusNavigation.IdRoute == route.IdRoute && s.Time.Date == DateTime.Today.Date).ToListAsync();
-    if (todaySchedules.Any())
-    {
-        Results.Ok(todaySchedules);
-        return todaySchedules;
-    }
-    DateTime today = DateTime.Today;
-    DateTime startTime = today.AddHours(route.StartTime.Hour).AddMinutes(route.StartTime.Minute);
-    DateTime endTime = today.AddHours(route.EndTime.Hour).AddMinutes(route.EndTime.Minute);
-    List<Schedule> schedule = await Task.Run(() => algorithm.GenerateRouteSchedule(
-        startTime,
-        endTime,
-        route.IdRoute,
-        route.RouteByBusStations.ToList(),
-        route.Buses.ToList(),
-        "",
-        ""
-        ));
-    if (schedule.Any())
-    {
-        schedules.RemoveRange(schedules.Where(s => s.Time.Date == DateTime.Today.Date && s.IdBusNavigation.IdRoute == route.IdRoute));
-        await schedules.AddRangeAsync(schedule);
-        await context.SaveChangesAsync();
-        Results.Ok(schedule);
-        return schedule;
-    }
-    return new List<Schedule>();
     }
     catch (Exception ex)
     {
@@ -224,6 +273,8 @@ app.MapGet("/schedules/{IdRoute}", async (SitrouteDataContext context, int IdRou
         return new List<Schedule>();
     }
 });
+
+
 static byte[] ComputeSha256Hash(string rawData)
 {
     using (SHA256 sha256Hash = SHA256.Create())

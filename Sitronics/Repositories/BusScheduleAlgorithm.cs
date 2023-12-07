@@ -7,7 +7,17 @@ namespace Sitronics.Repositories
 {
     public class BusScheduleAlgorithm
     {
-        public List<Schedule> GenerateRouteSchedule(DateTime startDate, DateTime endDate, int idRoute, List<RouteByBusStation> routeByBusStation, List<Bus> buses, string weatherInfo, string roadConditions)
+        /// <summary>
+        /// Функция для формирования расписания маршрута по параметрам
+        /// </summary>
+        /// <param name="startDate">Дата начала генерации</param>
+        /// <param name="endDate">Дата конца генерации</param>
+        /// <param name="idRoute">Идентификатор маршрута</param>
+        /// <param name="routeByBusStation">Список остановок на маршруте</param>
+        /// <param name="buses">Список автобусов на маршруте</param>
+        /// <param name="weatherInfo">Погодные условия на момент генерации</param>
+        /// <returns>Расписание</returns>
+        public List<Schedule> GenerateRouteSchedule(DateTime startDate, DateTime endDate, int idRoute, List<RouteByBusStation> routeByBusStation, List<Bus> buses, string weatherInfo)
         {
             List<Schedule> schedules = new List<Schedule>();
             DateTime busStartTime;
@@ -46,7 +56,11 @@ namespace Sitronics.Repositories
 
             return schedules;
         }
-
+        /// <summary>
+        /// Функция для получения релевантности маршрута по его айди
+        /// </summary>
+        /// <param name="idRoute"></param>
+        /// <returns></returns>
         public double GetRouteProfitModifier(int idRoute)
         {
             using (var context = new SitrouteDataContext())
@@ -57,13 +71,14 @@ namespace Sitronics.Repositories
                     .ThenInclude(r => r.IdBusStationNavigation)
                     .FirstOrDefault(r => r.IdRoute == idRoute);
                 var routeByBusStations = route.RouteByBusStations;
-                int routeTime = GetIntervalInMinutesBetweenBusStations(idRoute, routeByBusStations.First().IdBusStation,
-                    routeByBusStations.Last().IdBusStation);
+                int routeTime = GetIntervalInMinutesBetweenBusStations(idRoute, routeByBusStations.OrderBy(r => r.SerialNumberBusStation).First().IdBusStation,
+                    routeByBusStations.OrderBy(r => r.SerialNumberBusStation).Last().IdBusStation);
                 foreach (RouteByBusStation item in routeByBusStations)
                 {
                     var IdBusStation = item.IdBusStation;
                     var averagePeople = GetAveragePeopleOnBusStationByRoute(idRoute, IdBusStation);
-                    if (averagePeople != null){
+                    if (averagePeople != null)
+                    {
 
                         peopleSum += (double)averagePeople;
                     }
@@ -72,7 +87,14 @@ namespace Sitronics.Repositories
                 return peopleSum / routeTime;
             }
         }
-
+        /// <summary>
+        /// Сформировать расписание для автобуса
+        /// </summary>
+        /// <param name="bus">Автобус</param>
+        /// <param name="busStops">Остановки</param>
+        /// <param name="busStartTime">Начальное время</param>
+        /// <param name="weatherCondition">Погодные условия</param>
+        /// <returns></returns>
         public List<Schedule> MakeBusSchedule(Bus bus, List<RouteByBusStation> busStops, DateTime busStartTime, string weatherCondition)
         {
             List<Schedule> schedules = new List<Schedule>();
@@ -100,7 +122,11 @@ namespace Sitronics.Repositories
             }
             return schedules;
         }
-
+        /// <summary>
+        /// Функция для определения часа-пик
+        /// </summary>
+        /// <param name="currentDateTime">Текущее время</param>
+        /// <returns></returns>
         private bool IsRushTime(DateTime currentDateTime)
         {
             var start = new TimeSpan(8, 0, 0);
@@ -110,12 +136,21 @@ namespace Sitronics.Repositories
             TimeSpan now = currentDateTime.TimeOfDay;
             return now >= start && now < end || now >= start2 && now < end2;
         }
-
+        /// <summary>
+        /// Функция для расчета необходимого количества автобусов при определенной задержке между ними
+        /// </summary>
+        /// <param name="minutesToSolveRoute">Время на маршрут в одну сторону</param>
+        /// <param name="delay">Необходимая задержка</param>
+        /// <returns></returns>
         public int CalculateBusCount(int minutesToSolveRoute, int delay)
         {
             return minutesToSolveRoute * 2 / delay;
         }
-
+        /// <summary>
+        /// Функция для определения коэффицента влияния погоды на скорость автобуса
+        /// </summary>
+        /// <param name="weatherInfo"></param>
+        /// <returns></returns>
         private double GetWeatherFactor(string weatherInfo)
         {
             var badWeatherFactors = new Dictionary<string, double>
@@ -129,7 +164,11 @@ namespace Sitronics.Repositories
             else
                 return 1;
         }
-
+        /// <summary>
+        /// Функция для получения количества людей на остановках определенного маршрута
+        /// </summary>
+        /// <param name="idRoute"></param>
+        /// <returns></returns>
         public int GetAmountPeopleOnBusStations(int idRoute)
         {
             using (var context = new SitrouteDataContext())
@@ -141,7 +180,12 @@ namespace Sitronics.Repositories
                 return (int)route.RouteByBusStations.Sum(r => r.IdBusStationNavigation.PeopleCount);
             }
         }
-
+        /// <summary>
+        /// Функция для получения количества пассажиров на маршруте за определенный день
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="idRoute"></param>
+        /// <returns></returns>
         public int GetPeopleOnRouteByDay(DateTime date, int idRoute)
         {
             using (var context = new SitrouteDataContext())
@@ -154,7 +198,12 @@ namespace Sitronics.Repositories
                 return (int)route.Buses.Sum(b => b.Schedules.Where(s => s.Time.Date == date.Date).Sum(s => s.PeopleCountBoardingBus));
             }
         }
-
+        /// <summary>
+        /// Функция для получения среднего количества людей, заходящих на остановках по определенному маршруту
+        /// </summary>
+        /// <param name="idRoute"></param>
+        /// <param name="idBusStation"></param>
+        /// <returns></returns>
         public double? GetAveragePeopleOnBusStationByRoute(int idRoute, int idBusStation)
         {
             using (var context = new SitrouteDataContext())
@@ -166,10 +215,17 @@ namespace Sitronics.Repositories
                 double? peopleOnBoard = route.Buses
                     .Average(b => b.Schedules
                     .Where(s => s.IdBusStation == idBusStation).Average(s => s.PeopleCountBoardingBus));
-                return peopleOnBoard;
+                return peopleOnBoard ?? 0;
             }
         }
-        private int GetIntervalInMinutesBetweenBusStations(int idRoute, int idStartBusStation, int idEndBusStation)
+        /// <summary>
+        /// Функция для получения времени пути между 2 остановками
+        /// </summary>
+        /// <param name="idRoute"></param>
+        /// <param name="idStartBusStation"></param>
+        /// <param name="idEndBusStation"></param>
+        /// <returns></returns>
+        public int GetIntervalInMinutesBetweenBusStations(int idRoute, int idStartBusStation, int idEndBusStation)
         {
             using (var context = new SitrouteDataContext())
             {
@@ -182,7 +238,12 @@ namespace Sitronics.Repositories
                     GetArrivalTime(routeByBusStations, idStartBusStation)).TotalMinutes));
             }
         }
-
+        /// <summary>
+        /// Функция для получения времени прибытия на остановку
+        /// </summary>
+        /// <param name="routeByBusStations"></param>
+        /// <param name="idBusStation"></param>
+        /// <returns></returns>
         private DateTime GetArrivalTime(List<RouteByBusStation> routeByBusStations, int idBusStation)
         {
             return routeByBusStations.FirstOrDefault(s => s.IdBusStation == idBusStation).StandardArrivalTime;

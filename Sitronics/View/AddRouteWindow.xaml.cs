@@ -50,19 +50,23 @@ namespace Sitronics.View
             {
                 TextBox timeTextBox = new TextBox();
                 timeTextBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1C1B1F"));
-                timeTextBox.BorderBrush = new SolidColorBrush(Colors.GhostWhite);
-                timeTextBox.Foreground = new SolidColorBrush(Colors.White);
+                timeTextBox.BorderBrush = new SolidColorBrush(Colors.LightGray);
+                timeTextBox.Foreground = new SolidColorBrush(Colors.LightGray);
                 timeTextBox.BorderThickness = new Thickness(1);
-                timeTextBox.Width = 60;
-                timeTextBox.Height = 28;
-                timeTextBox.FontSize = 16;
-                timeTextBox.Margin = new Thickness(5, 5, 0, 0);
+                timeTextBox.Width = 55;
+                timeTextBox.Height = 26;
+                timeTextBox.FontSize = 18;
+                timeTextBox.Margin = new Thickness(0, 5, 15, 0);
+                timeTextBox.VerticalAlignment = VerticalAlignment.Center;
                 timeTextBox.MaxLength = 5;
+                timeTextBox.Text = "08:00";
                 timeTextBox.PreviewTextInput += TimeTextBox_PreviewTextInput;
+                timeTextBox.TextChanged += TimeTextBox_TextChanged;
 
 
                 StackPanel BusNTimePanel = new StackPanel();
                 BusNTimePanel.Orientation = Orientation.Horizontal;
+                BusNTimePanel.Margin = new Thickness(0, 0, 0, 5);
 
                 await LoadData();
                 ComboBox comboBox = new ComboBox();
@@ -72,13 +76,24 @@ namespace Sitronics.View
                 comboBox.Margin = new Thickness(0, 5, 0, 0);
                 comboBox.SelectionChanged += ComboBox_SelectionChanged;
 
-                BusNTimePanel.Children.Add(comboBox);
                 BusNTimePanel.Children.Add(timeTextBox);
+                BusNTimePanel.Children.Add(comboBox);
                 BusStopsStackPanel.Children.Add(BusNTimePanel);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void TimeTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox timeTextBox = (TextBox)sender;
+
+            if (timeTextBox.Text.Length >= 3)
+            {
+                timeTextBox.Text = timeTextBox.Text.Remove(2, 1).Insert(2, ":");
+                timeTextBox.SelectionStart = timeTextBox.Text.Length; // move cursor to the end
             }
         }
 
@@ -129,11 +144,18 @@ namespace Sitronics.View
 
         private void AddBusStopButton_Click(object sender, RoutedEventArgs e)
         {
-            CreateNewBusStopComboBox();
-            CheckEnabled();
-            mapView.Markers.Clear();
-            Models.Route dbroute = AddBusPointToMap();
-            countBusStation++;
+            try
+            {
+                CreateNewBusStopComboBox();
+                CheckEnabled();
+                mapView.Markers.Clear();
+                Models.Route dbroute = AddBusPointToMap();
+                countBusStation++;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private async void SaveRouteButton_Click(object sender, RoutedEventArgs e)
@@ -167,18 +189,41 @@ namespace Sitronics.View
             List<PointLatLng> points = new List<PointLatLng>();
 
             dbroute.Name = routeNameTextBox.Text;
+            if (!DateTime.TryParse(startTimeTextBox.Text, out DateTime startTime))
+            {
+                throw new Exception("Неверное время начала маршрута");
+            }
+            if (!DateTime.TryParse(endTimeTextBox.Text, out DateTime endTime))
+            {
+                throw new Exception("Неверное время конца маршрута");
+            }
+
+            dbroute.StartTime = startTime;
+            dbroute.EndTime = endTime;
             var serialNumberBusStation = 1;
+
             foreach (StackPanel stackPanel in BusStopsStackPanel.Children)
             {
-                ComboBox comboBox = stackPanel.Children[0] as ComboBox;
-                TextBox textBox = stackPanel.Children[1] as TextBox;
+                TextBox stopTimeTextBox = stackPanel.Children[0] as TextBox;
+                ComboBox comboBox = stackPanel.Children[1] as ComboBox;
+
+                if (!DateTime.TryParse(stopTimeTextBox.Text, out DateTime arrivalTime))
+                {
+                    throw new Exception("Неверное время прибытия на остановку");
+                }
 
                 busStation = (BusStation)comboBox.SelectedItem;
-                rbp = new() { IdBusStation = busStation.IdBusStation, SerialNumberBusStation = serialNumberBusStation };
+                rbp = new()
+                {
+                    IdBusStation = busStation.IdBusStation,
+                    SerialNumberBusStation = serialNumberBusStation,
+                    StandardArrivalTime = arrivalTime
+                };
                 dbroute.RouteByBusStations.Add(rbp);
                 points.Add(new PointLatLng(busStation.Location.Coordinate.Y, busStation.Location.Coordinate.X));
                 serialNumberBusStation++;
             }
+
             for (int i = 0; i < points.Count - 1; i++)
             {
                 route = routingProvider.GetRoute(
@@ -193,6 +238,7 @@ namespace Sitronics.View
             dbroute.IsBacked = isBackedCheckBox.IsChecked ?? false;
 
             return dbroute;
+
         }
 
         [DllImport("user32.dll")]

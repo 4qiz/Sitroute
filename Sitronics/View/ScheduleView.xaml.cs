@@ -24,7 +24,8 @@ namespace Sitronics.View
             {
                 var route = await context.Routes
                 .Include(r => r.RouteByBusStations)
-                .ThenInclude(r => r.IdBusStationNavigation).ToListAsync();
+                .ThenInclude(r => r.IdBusStationNavigation)
+                .Where(r => r.Buses.Count > 1).ToListAsync();
                 routeComboBox.ItemsSource = route;
                 routeComboBox.SelectedIndex = 0;
                 routeComboBox.DisplayMemberPath = "Name";
@@ -41,21 +42,17 @@ namespace Sitronics.View
         {
             List<Schedule> schedule = await Connection.Client.GetFromJsonAsync<List<Schedule>>(
                 $"/schedules/{selectedRoute.IdRoute}/{busStation.IdBusStation}");
+            List<Bus> buses = await Connection.Client.GetFromJsonAsync<List<Bus>>(
+                $"/buses");
             if (schedule.Any())
             {
-                scheduleDataGrid.ItemsSource = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
-                scheduleDataGrid.Columns[0].Header = "Время";
+                scheduleDataGrid.ItemsSource = schedule
+                    .Where(s => s.IdBusStation == busStation.IdBusStation)
+                    .OrderBy(s => s.Time)
+                    .Select(s => new { Time = s.Time.ToString("t"), buses.FirstOrDefault(b => b.IdBus == s.IdBus).Number });
+                scheduleDataGrid.Columns[0].Header = "Время прибытия";
+                scheduleDataGrid.Columns[1].Header = "Госномер автобуса";
             }
-
-
-
-            // мб добавим на замену DataGrid
-            /*var sch = schedule.Where(s => s.IdBusStation == busStation.IdBusStation).OrderBy(s => s.Time).Select(s => new { Time = s.Time.ToString("t"), s.IdBus });
-            foreach (var i in sch)
-            {
-                ComboBoss.Text += $"{i.Time}   ";
-            }*/
-
         }
 
         private void ScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
@@ -110,6 +107,26 @@ namespace Sitronics.View
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private async void GenerateScheduleButton_Click(object sender, RoutedEventArgs e)
+        {
+            scheduleDataGrid.ItemsSource = null;
+            Route route = (Route)routeComboBox.SelectedItem;
+            if (route == null)
+                return;
+
+            LoadingGifReform.Visibility = Visibility.Visible;
+            GenerateScheduleButton.IsEnabled = false;
+            await GenerateSchedule(route);
+            LoadingGifReform.Visibility = Visibility.Collapsed;
+            GenerateScheduleButton.IsEnabled = true;
+        }
+
+        private static async Task GenerateSchedule(Route route)
+        {
+            List<Schedule> schedule = await Connection.Client.GetFromJsonAsync<List<Schedule>>(
+                $"/schedules/{route.IdRoute}");
         }
     }
 }

@@ -6,7 +6,28 @@
              xmlns:local="clr-namespace:Sitronics.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded">
-    <StackPanel>
-        <DataGrid x:Name="routesDataGrid"/>
-    </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <DataGrid x:Name="routesDataGrid" HorizontalAlignment="Left" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=StackPanel}}"
+              Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=StackPanel}}"/>
+        </StackPanel>
+
+        <StackPanel HorizontalAlignment="Left" Grid.Row="1">
+            <TextBlock 
+               Text="Маршрут"
+               Margin="1,10,0,0"
+               FontSize="14"
+               Foreground="White">
+            </TextBlock>
+            
+            <ComboBox Width="250" x:Name="RoutesComboBox" DisplayMemberPath="Name"/>
+
+            <Button x:Name="DeleteButton" Content="Удалить" Width="140" Margin="5,5,0,0" Click="DeleteButton_Click"/>
+        </StackPanel>
+    </Grid>
 </UserControl>

@@ -21,12 +21,21 @@ namespace Sitronics.View
         List<BusStation> BusStations { get; set; }
         List<Bus> Buses { get; set; }
         List<Models.Route> Routes { get; set; }
+        List<Factor> Factors { get; set; }
+        List<Models.Route> ShowedRoutes { get; set; }
 
         public MapView()
         {
             InitializeComponent();
 
             Manager.MainTimer.Tick += new EventHandler(UpdateTimer_Tick);
+
+            if (Connection.CurrentUser?.Admin?.Role == "Руководитель")
+            {
+                AddIncidentButton.Visibility = Visibility.Collapsed;
+            }
+
+
         }
 
         private async void UpdateTimer_Tick(object sender, EventArgs e)
@@ -73,6 +82,41 @@ namespace Sitronics.View
             try
             {
                 await LoadData();
+                if (Routes == null) return;
+                foreach (var route in Routes)
+                {
+                    var routeCheckBox = new CheckBox()
+                    {
+                        Content = route.Name,
+                        IsChecked = true
+                    };
+                    routeCheckBox.Checked += async (object sender, RoutedEventArgs e) =>
+                    {
+                        ShowedRoutes.Add(route);
+                        try
+                        {
+                            await LoadData();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                    };
+                    routeCheckBox.Unchecked += async (object sender, RoutedEventArgs e) =>
+                    {
+                        ShowedRoutes.Remove(route);
+                        try
+                        {
+                            await LoadData();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+
+                    };
+                    checkBoxesStackPanel.Children.Add(routeCheckBox);
+                }
             }
             catch (Exception ex)
             {
@@ -86,32 +130,43 @@ namespace Sitronics.View
             BusStations = await Connection.Client.GetFromJsonAsync<List<BusStation>>("/busStations");
             Buses = await Connection.Client.GetFromJsonAsync<List<Bus>>("/buses");
             Routes = await Connection.Client.GetFromJsonAsync<List<Models.Route>>("/routesByBusStations");
+            Factors = await Connection.Client.GetFromJsonAsync<List<Factor>>("/factors");
 
             List<PointLatLng> points = new List<PointLatLng>();
             RoutingProvider routingProvider =
             mapView.MapProvider as RoutingProvider ?? GMapProviders.OpenStreetMap;
-            Random random = new();
 
             mapView.Markers.Clear();
-            foreach (var dbroute in Routes)
-            {
-                var routeColor = new SolidColorBrush(Color.FromArgb(255, (byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255)));
-                points.Clear();
-                foreach (var routePoint in dbroute.RouteByBusStations)
-                {
-                    points.Add(new PointLatLng(routePoint.IdBusStationNavigation.Location.Coordinate.Y, routePoint.IdBusStationNavigation.Location.Coordinate.X));
-                }
-                AddRouteOnMap(points, routeColor, routingProvider);
-            }
+            if (ShowedRoutes == null)
+                ShowedRoutes = Routes;
             foreach (var busStation in BusStations)
             {
                 var point = new PointLatLng(busStation.Location.Coordinate.Y, busStation.Location.Coordinate.X);
                 MapManager.MapManager.CreateBusStationMarker(point, ref mapView, busStation);
             }
-            foreach (var bus in Buses)
+
+            foreach (var dbroute in ShowedRoutes)
             {
-                var point = new PointLatLng(bus.Location.Coordinate.Y, bus.Location.Coordinate.X);
-                MapManager.MapManager.CreateBusMarker(point, ref mapView, bus);
+                var routeColor = new SolidColorBrush(Colors.DarkBlue);
+                points.Clear();
+                foreach (var routePoint in dbroute.RouteByBusStations.OrderBy(r => r.SerialNumberBusStation))
+                {
+                    points.Add(new PointLatLng(routePoint.IdBusStationNavigation.Location.Coordinate.Y, routePoint.IdBusStationNavigation.Location.Coordinate.X));
+                }
+                AddRouteOnMap(points, routeColor, routingProvider);
+                foreach (var bus in Buses.Where(b => b.IdRoute == dbroute.IdRoute))
+                {
+                    var point = new PointLatLng(bus.Location.Coordinate.Y, bus.Location.Coordinate.X);
+                    MapManager.MapManager.CreateBusMarker(point, ref mapView, bus);
+                }
+            }
+
+            foreach (var factor in Factors)
+            {
+                if (factor.Location == null)
+                    continue;
+                var point = new PointLatLng(factor.Location.Coordinate.Y, factor.Location.Coordinate.X);
+                MapManager.MapManager.CreateIncidentMarker(point, ref mapView, factor);
             }
         }
 
@@ -136,6 +191,30 @@ namespace Sitronics.View
         {
             var fm = new AddRouteWindow();
             fm.ShowDialog();
+        }
+
+        private void AddIncidentButton_Click(object sender, RoutedEventArgs e)
+        {
+            var fm = new AddIncidentWindow();
+            fm.ShowDialog();
+        }
+
+        private void NothingRoutesRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (checkBoxesStackPanel == null) return;
+            foreach (CheckBox routeCheckBox in checkBoxesStackPanel.Children)
+            {
+                routeCheckBox.IsChecked = false;
+            }
+        }
+
+        private void AllRoutesRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (checkBoxesStackPanel == null) return;
+            foreach (CheckBox routeCheckBox in checkBoxesStackPanel.Children)
+            {
+                routeCheckBox.IsChecked = true;
+            }
         }
     }
 }

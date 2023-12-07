@@ -52,10 +52,10 @@ namespace Sitronics.View
         {
             var busInfoStackPanel = new StackPanel();
             var shedules = bus.Schedules
-                .Where(s => s.PeopleCountBoardingBus != null && s.PeopleCountGettingOffBus != null).ToList();
+                .Where(s => s.PeopleCountBoardingBus != null && s.PeopleCountGettingOffBus != null && s.Time.Date == DateTime.Today.Date).ToList();
             busInfoStackPanel.Children.Add(new TextBlock()
             {
-                Text = "Номер:" + bus.Number.ToUpper(),
+                Text = "Номер: " + bus.Number.ToUpper(),
                 FontSize = 30,
                 Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255))
             });
@@ -63,7 +63,7 @@ namespace Sitronics.View
             {
                 busInfoStackPanel.Children.Add(new TextBlock()
                 {
-                    Text = "Людей в автобусе:" + (bus.Schedules.Sum(s => s.PeopleCountBoardingBus) -
+                    Text = "Людей в автобусе: " + (bus.Schedules.Sum(s => s.PeopleCountBoardingBus) -
                         bus.Schedules.Sum(s => s.PeopleCountGettingOffBus)).ToString(),
                     FontSize = 20,
                     Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255))
@@ -142,7 +142,7 @@ namespace Sitronics.View
                 {
                     var busExpander = new Expander()
                     {
-                        Header = bus.Number,
+                        Header = $"{bus.Number} - {bus.Charge}%",
                         FontSize = 20,
                         Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255)),
                         Margin = new Thickness() { Left = 20 },
