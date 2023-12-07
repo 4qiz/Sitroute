@@ -50,7 +50,9 @@ app.MapGet("/admins/{login}/{password}", (string login, string password, Sitrout
 app.MapGet("/drivers/{login}/{password}", (string login, string password, SitrouteDataContext context) =>
 {
     var user = context.Users.Include(u => u.Driver).FirstOrDefault(u => u.Login == login.Trim());
-    user.Driver.IdDriverNavigation = null;
+    
+    if (user.Driver != null)
+        user.Driver.IdDriverNavigation = null;
 
     return Authenticate(user, password);
 });
@@ -71,7 +73,7 @@ app.MapGet("/routesByBusStations", (SitrouteDataContext context) => context.Rout
                                             .ThenInclude(rp => rp.IdBusStationNavigation)
                                             .ToList());
 
-app.MapGet("/schedule/{idDriver}", (int idDriver, SitrouteDataContext context) => 
+app.MapGet("/schedule/{idDriver}", (int idDriver, SitrouteDataContext context) =>
 {
     var schedules = context.Schedules
         .Include(s => s.IdBusNavigation)
