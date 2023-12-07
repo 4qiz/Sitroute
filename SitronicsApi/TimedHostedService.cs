@@ -54,8 +54,7 @@ namespace SitronicsApi
                         route.IdRoute,
                         routeByBusStations,
                         route.Buses.ToList(),
-                        weatherInfo,
-                        ""
+                        weatherInfo
                         ));
                     if (schedule.Any())
                     {

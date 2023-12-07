@@ -235,8 +235,7 @@ app.MapGet("/schedules/{IdRoute}", async (SitrouteDataContext context, int IdRou
             route.IdRoute,
             routeByBusStations,
             route.Buses.ToList(),
-            weatherInfo,
-            ""
+            weatherInfo
             ));
         if (schedule.Any())
         {

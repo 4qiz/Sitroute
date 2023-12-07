@@ -7,6 +7,9 @@ using System.Windows.Shapes;
 
 namespace Sitronics.MapManager
 {
+    /// <summary>
+    /// Класс для работы с картой
+    /// </summary>
     public static class MapManager
     {
         public static string BasicIcon
