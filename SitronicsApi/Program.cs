@@ -136,7 +136,6 @@ app.MapGet("/bus/{idDriver}", (int idDriver, SitrouteDataContext context) => con
 app.MapGet("/bus/{idBus}", (int idBus, SitrouteDataContext context) => context.Buses
         .Include(b => b.IdDrivers)
         .FirstOrDefault(b => b.IdBus == idBus));
-
 app.MapPost("/busStation", (BusStation busStation, SitrouteDataContext context) =>
 {
     try
@@ -191,6 +190,13 @@ app.MapPatch("/message/reply", (Message message, SitrouteDataContext context) =>
 {
     context.Messages.Where(m => m.IdRecipient == null && m.IdSender == message.IdSender)
                     .ExecuteUpdate(setters => setters.SetProperty(m => m.IdRecipient, message.IdRecipient));
+    context.SaveChanges();
+});
+
+app.MapPatch("/bus/changeDriver", (Bus bus, SitrouteDataContext context) =>
+{
+    context.Buses.Where(b => b.IdBus == bus.IdBus)
+                    .ExecuteUpdate(setters => setters.SetProperty(b => b.IdDrivers, bus.IdDrivers));
     context.SaveChanges();
 });
 

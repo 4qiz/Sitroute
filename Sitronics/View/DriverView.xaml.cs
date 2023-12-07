@@ -24,5 +24,10 @@ namespace Sitronics.View
         {
             InitializeComponent();
         }
+
+        private void ChangeDriverBusButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }

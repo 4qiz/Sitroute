@@ -6,7 +6,15 @@
              xmlns:local="clr-namespace:Sitronics.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+    <StackPanel>
+        <TextBlock Text="Автобус" Foreground="{StaticResource B_onSurface}"
+                                       Margin="1"
+                                       FontSize="16"/>
+        <ComboBox x:Name="busComboBox"/>
+        <TextBlock Text="Водитель" Foreground="{StaticResource B_onSurface}"
+                                       Margin="1"
+                                       FontSize="16"/>
+        <ComboBox x:Name="driverComboBox"/>
+        <Button Content="Назначить водителя" Click="ChangeDriverBusButton_Click"/>
+    </StackPanel>
 </UserControl>
