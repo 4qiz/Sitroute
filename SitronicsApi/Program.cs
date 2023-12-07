@@ -28,7 +28,6 @@ if (app.Environment.IsDevelopment())
 
 app.MapDelete("/route/{idRoute}", (int idRoute, SitrouteDataContext context) =>
 {
-    
     try
     {
         context.Routes.Where(r => r.IdRoute == idRoute).ExecuteDelete();
@@ -72,17 +71,38 @@ app.MapGet("/routesByBusStations", (SitrouteDataContext context) => context.Rout
                                             .ThenInclude(rp => rp.IdBusStationNavigation)
                                             .ToList());
 
-app.MapGet("/schedule/{idDriver}", (int idDriver, SitrouteDataContext context) => context.Schedules
-                                                            .Include(s=>s.IdBusStationNavigation)
-                                                            .Where(s=>s.IdBusNavigation.IdDrivers
-                                                            .Any(d=>d.IdDriver == idDriver))
-                                                            .OrderBy(s=>s.Time).ToList());
+app.MapGet("/schedule/{idDriver}", (int idDriver, SitrouteDataContext context) => 
+{
+    var schedules = context.Schedules
+        .Include(s => s.IdBusNavigation)
+        .ThenInclude(b => b.IdRouteNavigation)
+        .Include(s => s.IdBusStationNavigation)
+        .Where(s => s.IdBusNavigation.IdDrivers
+        .Any(d => d.IdDriver == idDriver)
+            && s.Time.Date == DateTime.Today.Date)
+        .OrderBy(s => s.Time).ToList();
+    schedules.ForEach(s => s.IdBusNavigation.IdRouteNavigation = null);
+    return schedules;
+});
 
-app.MapGet("/routesStats", (SitrouteDataContext context) => context.Routes
-                    .Include(r => r.Buses)
-                    .ThenInclude(b => b.Schedules)
-                    .ThenInclude(s => s.IdBusStationNavigation)
-                    .ToList());
+app.MapGet("/routesStats", (SitrouteDataContext context) =>
+{
+    var routes = context.Routes
+            .Include(r => r.Buses)
+            .ThenInclude(b => b.Schedules)
+            .ThenInclude(s => s.IdBusStationNavigation)
+            .ToList();
+    for (int i = 0; i < routes.Count; i++)
+    {
+        var buses = routes[i].Buses.ToArray();
+        for (int j = 0; j < buses.Count(); j++)
+        {
+            buses[j].IdRouteNavigation = null;
+        }
+        routes[i].Buses = buses;
+    }
+    return routes;
+});
 
 app.MapGet("/routes", (SitrouteDataContext context) => context.Routes.Include(r => r.RouteByBusStations).ToList());
 app.MapGet("/factors", (SitrouteDataContext context) => context.Factors.ToList());
