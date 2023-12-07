@@ -5,11 +5,11 @@ namespace SitronicsApi
 {
     public static class WeatherManager
     {
-        public static string apiKey { get; set; } = "a0fc840e31fd67d0ed2f7ca5ebf5de24"; // Замените на ваш собственный ключ API
+        public static string ApiKey { get; set; } = "a0fc840e31fd67d0ed2f7ca5ebf5de24"; // Замените на ваш собственный ключ API
 
         public static async Task<string> GetWeatherCondition(double latitude, double longitude)
         {
-            string apiUrl = $"http://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid={apiKey}";
+            string apiUrl = $"http://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid={ApiKey}";
             try
             {
                 using (HttpClient client = new HttpClient())
