@@ -26,8 +26,8 @@ namespace Sitronics.MapManager
                     StrokeThickness = 1,
                     Stretch = Stretch.Fill,
                     Stroke = Brushes.Black,
-                    Width = 20,
-                    Height = 20,
+                    Width = 15,
+                    Height = 15,
                     Data = (System.Windows.Media.Geometry)converter.ConvertFrom(Icon == null ? BasicIcon : Icon),
                     Fill = fillColor
 
