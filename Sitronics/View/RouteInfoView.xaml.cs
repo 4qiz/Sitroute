@@ -38,16 +38,18 @@ namespace Sitronics.View
                     Profit = Math.Round(busScheduleAlgorithm.GetRouteProfitModifier(r.IdRoute),2),
                     AmountPeopleToday = busScheduleAlgorithm.GetPeopleOnRouteByDay(DateTime.Today, r.IdRoute),
                     RouteTime = busScheduleAlgorithm.GetIntervalInMinutesBetweenBusStations(r.IdRoute, r.RouteByBusStations.OrderBy(r => r.SerialNumberBusStation).First().IdBusStation,
-                    r.RouteByBusStations.OrderBy(r => r.SerialNumberBusStation).Last().IdBusStation)
+                    r.RouteByBusStations.OrderBy(r => r.SerialNumberBusStation).Last().IdBusStation),
+                    busStationCount = r.RouteByBusStations.Count
                 })
                 .OrderByDescending(r => r.Profit)
                 .ToList();
 
-            routesDataGrid.ItemsSource = modifiedRoutes.Select(mr => new { mr.Route.Name, mr.Profit, mr.AmountPeopleToday, mr.RouteTime });
+            routesDataGrid.ItemsSource = modifiedRoutes.Select(mr => new { mr.Route.Name, mr.Profit, mr.AmountPeopleToday, mr.RouteTime, mr.busStationCount });
             routesDataGrid.Columns[0].Header = "Название маршрута";
             routesDataGrid.Columns[1].Header = "Релевантность";
             routesDataGrid.Columns[2].Header = "Пассажиропоток за сегодняшний день";
             routesDataGrid.Columns[3].Header = "Время в пути (минут)";
+            routesDataGrid.Columns[4].Header = "Количество остановок";
 
 
             foreach (var route in routes)
