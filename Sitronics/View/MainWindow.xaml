@@ -42,7 +42,11 @@
         <DataTemplate DataType="{x:Type viewModel:ScheduleViewModel}">
             <local:ScheduleView/>
         </DataTemplate>
-
+        
+        <DataTemplate DataType="{x:Type viewModel:DriverViewModel}">
+            <local:DriverView/>
+        </DataTemplate>
+        
         <DataTemplate DataType="{x:Type viewModel:StopInfoViewModel}">
             <local:StopInfoView/>
         </DataTemplate>
@@ -163,6 +167,17 @@
                                 <StackPanel Orientation="Horizontal">
                                     <fa:IconImage Icon="CalendarDays" Style="{StaticResource menuButtonIcon}"/>
                                     <TextBlock Text="Расписание" Style="{StaticResource menuButtonText}"/>
+                                </StackPanel>
+                            </RadioButton>
+
+                            <RadioButton x:Name="DriverRadioButton" Style="{StaticResource menuButton}"
+                                Tag="{StaticResource B_onBackground}"
+                                Command="{Binding ShowDriverViewCommand}"
+                                         GroupName="Menu">
+
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:IconImage Icon="DriversLicense" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Водитель" Style="{StaticResource menuButtonText}"/>
                                 </StackPanel>
                             </RadioButton>
 

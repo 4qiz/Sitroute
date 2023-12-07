@@ -87,6 +87,7 @@ namespace Sitronics.ViewModel
         public ICommand ShowRouteInfoViewCommand { get; }
         public ICommand ShowStopInfoViewCommand { get; }
         public ICommand ShowScheduleViewCommand { get; }
+        public ICommand ShowDriverViewCommand { get; }
         public ICommand ShowChatViewCommand { get; }
         public ICommand ShowSettingsViewCommand { get; }
 
@@ -98,6 +99,7 @@ namespace Sitronics.ViewModel
             ShowRouteInfoViewCommand = new ViewModelCommand(ExecuteShowRouteInfoViewCommand);
             ShowStopInfoViewCommand = new ViewModelCommand(ExecuteShowStopInfoViewCommand);
             ShowScheduleViewCommand = new ViewModelCommand(ExecuteShowScheduleViewCommand);
+            ShowDriverViewCommand = new ViewModelCommand(ExecuteShowDriverViewCommand);
             ShowChatViewCommand = new ViewModelCommand(ExecuteShowChatViewCommand);
             ShowSettingsViewCommand = new ViewModelCommand(ExecuteShowSettingsViewCommand);
 
@@ -140,6 +142,13 @@ namespace Sitronics.ViewModel
             CurrentChildView = new ScheduleViewModel();
             Caption = "Расписание";
             Icon = IconChar.CalendarDays;
+        }
+
+        private void ExecuteShowDriverViewCommand(object obj)
+        {
+            CurrentChildView = new DriverViewModel();
+            Caption = "Водитель";
+            Icon = IconChar.DriversLicense;
         }
 
         private void ExecuteShowChatViewCommand(object obj)
