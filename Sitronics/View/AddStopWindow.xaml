@@ -173,6 +173,19 @@
                                         Width="250">
                                     </Button>
 
+                                    <Border Height="3" Margin="0,15,0,15">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="{StaticResource sitronicsLogo1}" Offset="0"/>
+                                                <GradientStop Color="{StaticResource sitronicsLogo0}" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                    </Border>
+
+                                    <TextBlock Foreground="LightGray" TextWrapping="Wrap" FontSize="18" >
+                                        Для выбора места автобусной остановки - нажмите ПКМ по карте
+                                    </TextBlock>
+
                                 </StackPanel>
                             </Grid>
 

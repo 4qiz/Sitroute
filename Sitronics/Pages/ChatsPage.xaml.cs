@@ -30,12 +30,19 @@ namespace Sitronics.Pages
 
         private async Task LoadData()
         {
-            chatsStackPanel.Children.Clear();
-            Messages = await Connection.Client.GetFromJsonAsync<List<Message>>($"/chat/{Connection.CurrentUser.IdUser}");
+            try
+            {
+                chatsStackPanel.Children.Clear();
+                Messages = await Connection.Client.GetFromJsonAsync<List<Message>>($"/chat/{Connection.CurrentUser.IdUser}");
 
-            Messages.Reverse();
+                Messages.Reverse();
 
-            Drivers = await Connection.Client.GetFromJsonAsync<List<Driver>>($"/drivers");
+                Drivers = await Connection.Client.GetFromJsonAsync<List<Driver>>($"/drivers");
+            }
+            catch ( Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             foreach (var message in Messages)
             {
