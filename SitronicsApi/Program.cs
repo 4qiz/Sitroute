@@ -119,14 +119,15 @@ app.MapGet("/chat/{idDriver}/{idDispatcher}", (int idDriver, int idDispatcher, S
                 || m.IdRecipient == null && m.IdSender == idDriver)
            .ToList();
 });
-app.MapGet("/chat/{idDriver}", (int idDriver, SitrouteDataContext context) =>
+app.MapGet("/chat/{idUser}", (int idUser, SitrouteDataContext context) =>
 {
-    var isDriverNull = context.Drivers.Any(d => d.IdDriver == idDriver);
+    var isDriver = context.Drivers.Any(d => d.IdDriver == idUser);
     return context.Messages
                .Include(m => m.IdRecipientNavigation)
                .Include(m => m.IdSenderNavigation)
-               .Where(m => idDriver == m.IdSender
-               || idDriver == m.IdRecipient)
+               .Where(m => idUser == m.IdSender
+               || idUser == m.IdRecipient
+               || !isDriver && null == m.IdRecipient)
                .OrderBy(m => m.Time)
                .ToList();
 });
