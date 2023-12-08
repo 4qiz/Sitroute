@@ -26,7 +26,8 @@ namespace SitronicsApi.Algorithm
                 return schedules;
             }
             int workMinutes = endDate.Hour * 60 + endDate.Minute - startDate.Hour * 60 + startDate.Minute;
-            int routeTime = GetIntervalInMinutesBetweenBusStations(idRoute, routeByBusStation.OrderBy(r => r.SerialNumberBusStation).First().IdBusStation, routeByBusStation.OrderBy(r => r.SerialNumberBusStation).Last().IdBusStation);//frequencyInMinutes * (routeByBusStation.Count - 1) * 2;
+            int routeTime = GetIntervalInMinutesBetweenBusStations(idRoute, routeByBusStation.OrderBy(r => r.SerialNumberBusStation).First().IdBusStation,
+                routeByBusStation.OrderBy(r => r.SerialNumberBusStation).Last().IdBusStation);
 
             int delay = routeTime / (busCount / 2);
 
@@ -41,7 +42,7 @@ namespace SitronicsApi.Algorithm
                 busStartTime = startDate;
                 for (int j = 0; j < round; j++)
                 {
-                    busStartTime = busStartTime.AddMinutes(halfRouteTime * j);
+                    busStartTime = busStartTime.AddMinutes(routeTime * j);
                     if (i >= halfBusCount)
                         busStartTime = busStartTime.AddMinutes(halfRouteTime);
                     busStartTime = busStartTime.AddMinutes(IsRushTime(busStartTime) ? rushTimeDelay * i : delay * i);
