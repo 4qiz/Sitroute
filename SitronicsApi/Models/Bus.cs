@@ -44,7 +44,6 @@ public partial class Bus
 
     public int Сapacity { get; set; }
 
-    [JsonIgnore]
     public virtual Route? IdRouteNavigation { get; set; }
 
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();

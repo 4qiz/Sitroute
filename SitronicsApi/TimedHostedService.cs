@@ -36,11 +36,11 @@ namespace SitronicsApi
                 foreach (var route in routes)
                 {
                     Debug.WriteLine($"{route.IdRoute} {route.Name}");
-                    var buses = route.RouteByBusStations;
+                    var buses = route.Buses;
                     var schedules = context.Schedules;
                     var todaySchedules = schedules.Where(s => s.IdBusNavigation.IdRoute == route.IdRoute && s.Time.Date == DateTime.Today.Date);
                     var routeByBusStations = route.RouteByBusStations.ToList();
-                    if (todaySchedules.Any())
+                    if (todaySchedules.Any() || buses.Count <= 1)
                         continue;
                     DateTime today = DateTime.Today;
                     DateTime startTime = today.AddHours(route.StartTime.Hour).AddMinutes(route.StartTime.Minute);
@@ -54,8 +54,7 @@ namespace SitronicsApi
                         route.IdRoute,
                         routeByBusStations,
                         route.Buses.ToList(),
-                        weatherInfo,
-                        ""
+                        weatherInfo
                         ));
                     if (schedule.Any())
                     {

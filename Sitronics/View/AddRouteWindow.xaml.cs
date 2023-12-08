@@ -57,7 +57,7 @@ namespace Sitronics.View
                 timeTextBox.Height = 26;
                 timeTextBox.FontSize = 18;
                 timeTextBox.Margin = new Thickness(0, 5, 15, 0);
-                timeTextBox.VerticalAlignment= VerticalAlignment.Center;
+                timeTextBox.VerticalAlignment = VerticalAlignment.Center;
                 timeTextBox.MaxLength = 5;
                 timeTextBox.Text = "08:00";
                 timeTextBox.PreviewTextInput += TimeTextBox_PreviewTextInput;
@@ -213,8 +213,10 @@ namespace Sitronics.View
                 }
 
                 busStation = (BusStation)comboBox.SelectedItem;
-                rbp = new() { IdBusStation = busStation.IdBusStation, 
-                    SerialNumberBusStation = serialNumberBusStation, 
+                rbp = new()
+                {
+                    IdBusStation = busStation.IdBusStation,
+                    SerialNumberBusStation = serialNumberBusStation,
                     StandardArrivalTime = arrivalTime
                 };
                 dbroute.RouteByBusStations.Add(rbp);

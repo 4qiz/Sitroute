@@ -24,7 +24,8 @@ namespace Sitronics.View
             {
                 var route = await context.Routes
                 .Include(r => r.RouteByBusStations)
-                .ThenInclude(r => r.IdBusStationNavigation).ToListAsync();
+                .ThenInclude(r => r.IdBusStationNavigation)
+                .Where(r => r.Buses.Count > 1).ToListAsync();
                 routeComboBox.ItemsSource = route;
                 routeComboBox.SelectedIndex = 0;
                 routeComboBox.DisplayMemberPath = "Name";

@@ -28,7 +28,6 @@ if (app.Environment.IsDevelopment())
 
 app.MapDelete("/route/{idRoute}", (int idRoute, SitrouteDataContext context) =>
 {
-    
     try
     {
         context.Routes.Where(r => r.IdRoute == idRoute).ExecuteDelete();
@@ -51,7 +50,9 @@ app.MapGet("/admins/{login}/{password}", (string login, string password, Sitrout
 app.MapGet("/drivers/{login}/{password}", (string login, string password, SitrouteDataContext context) =>
 {
     var user = context.Users.Include(u => u.Driver).FirstOrDefault(u => u.Login == login.Trim());
-    user.Driver.IdDriverNavigation = null;
+    
+    if (user.Driver != null)
+        user.Driver.IdDriverNavigation = null;
 
     return Authenticate(user, password);
 });
@@ -72,17 +73,38 @@ app.MapGet("/routesByBusStations", (SitrouteDataContext context) => context.Rout
                                             .ThenInclude(rp => rp.IdBusStationNavigation)
                                             .ToList());
 
-app.MapGet("/routesByBusStation/{idDriver}", (int idDriver, SitrouteDataContext context) => context.Routes
-                                            .Include(r => r.RouteByBusStations)
-                                            .ThenInclude(rp => rp.IdBusStationNavigation)
-                                            .FirstOrDefault(bs=>bs.Buses
-                                            .Any(d=>d.IdDrivers.Any(d=>d.IdDriver == idDriver))));
+app.MapGet("/schedule/{idDriver}", (int idDriver, SitrouteDataContext context) =>
+{
+    var schedules = context.Schedules
+        .Include(s => s.IdBusNavigation)
+        .ThenInclude(b => b.IdRouteNavigation)
+        .Include(s => s.IdBusStationNavigation)
+        .Where(s => s.IdBusNavigation.IdDrivers
+        .Any(d => d.IdDriver == idDriver)
+            && s.Time.Date == DateTime.Today.Date)
+        .OrderBy(s => s.Time).ToList();
+    schedules.ForEach(s => s.IdBusNavigation.IdRouteNavigation = null);
+    return schedules;
+});
 
-app.MapGet("/routesStats", (SitrouteDataContext context) => context.Routes
-                    .Include(r => r.Buses)
-                    .ThenInclude(b => b.Schedules)
-                    .ThenInclude(s => s.IdBusStationNavigation)
-                    .ToList());
+app.MapGet("/routesStats", (SitrouteDataContext context) =>
+{
+    var routes = context.Routes
+            .Include(r => r.Buses)
+            .ThenInclude(b => b.Schedules)
+            .ThenInclude(s => s.IdBusStationNavigation)
+            .ToList();
+    for (int i = 0; i < routes.Count; i++)
+    {
+        var buses = routes[i].Buses.ToArray();
+        for (int j = 0; j < buses.Count(); j++)
+        {
+            buses[j].IdRouteNavigation = null;
+        }
+        routes[i].Buses = buses;
+    }
+    return routes;
+});
 
 app.MapGet("/routes", (SitrouteDataContext context) => context.Routes.Include(r => r.RouteByBusStations).ToList());
 app.MapGet("/factors", (SitrouteDataContext context) => context.Factors.ToList());
@@ -97,14 +119,15 @@ app.MapGet("/chat/{idDriver}/{idDispatcher}", (int idDriver, int idDispatcher, S
                 || m.IdRecipient == null && m.IdSender == idDriver)
            .ToList();
 });
-app.MapGet("/chat/{idDriver}", (int idDriver, SitrouteDataContext context) =>
+app.MapGet("/chat/{idUser}", (int idUser, SitrouteDataContext context) =>
 {
-    var isDriverNull = context.Drivers.Any(d => d.IdDriver == idDriver);
+    var isDriver = context.Drivers.Any(d => d.IdDriver == idUser);
     return context.Messages
                .Include(m => m.IdRecipientNavigation)
                .Include(m => m.IdSenderNavigation)
-               .Where(m => idDriver == m.IdSender
-               || idDriver == m.IdRecipient)
+               .Where(m => idUser == m.IdSender
+               || idUser == m.IdRecipient
+               || !isDriver && null == m.IdRecipient)
                .OrderBy(m => m.Time)
                .ToList();
 });
@@ -235,8 +258,7 @@ app.MapGet("/schedules/{IdRoute}", async (SitrouteDataContext context, int IdRou
             route.IdRoute,
             routeByBusStations,
             route.Buses.ToList(),
-            weatherInfo,
-            ""
+            weatherInfo
             ));
         if (schedule.Any())
         {
