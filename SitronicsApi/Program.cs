@@ -73,7 +73,7 @@ app.MapGet("/routesByBusStations", (SitrouteDataContext context) => context.Rout
                                             .ThenInclude(rp => rp.IdBusStationNavigation)
                                             .ToList());
 
-app.MapGet("/schedules/{idDriver}", (int idDriver, SitrouteDataContext context) =>
+app.MapGet("/schedule/{idDriver}", (int idDriver, SitrouteDataContext context) =>
 {
     var schedules = context.Schedules
         .Include(s => s.IdBusNavigation)
